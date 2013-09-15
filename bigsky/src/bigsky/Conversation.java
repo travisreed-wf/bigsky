@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class Conversation {
 
@@ -112,10 +114,12 @@ public class Conversation {
 		tabbedPane_1.addTab("New Conversation", null, panel_1, null);
 		
 		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_2.setBounds(226, 25, 490, 385);
 		panel.add(panel_2);
 		
 		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_3.setBounds(16, 422, 190, 100);
 		panel.add(panel_3);
 		
