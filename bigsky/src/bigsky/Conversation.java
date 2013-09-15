@@ -1,24 +1,25 @@
 package bigsky;
 
 import java.awt.EventQueue;
+import java.awt.Scrollbar;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
-import javax.swing.JSplitPane;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JList;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.AbstractListModel;
 
 public class Conversation {
 
-	private JFrame frame;
+	private JFrame frmBluetext;
+	private JTextField txtSearch;
 
 	/**
 	 * Launch the application.
@@ -28,7 +29,7 @@ public class Conversation {
 			public void run() {
 				try {
 					Conversation window = new Conversation();
-					window.frame.setVisible(true);
+					window.frmBluetext.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,12 +48,13 @@ public class Conversation {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmBluetext = new JFrame();
+		frmBluetext.setTitle("BlueText");
+		frmBluetext.setBounds(100, 100, 800, 650);
+		frmBluetext.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmBluetext.setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
@@ -71,6 +73,43 @@ public class Conversation {
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
+		
+		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
+		mnHelp.add(mntmAboutBluetext);
+		
+		JPanel panel = new JPanel();
+		frmBluetext.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		txtSearch = new JTextField();
+		txtSearch.setBounds(6, 6, 198, 29);
+		panel.add(txtSearch);
+		txtSearch.setText("Search");
+		txtSearch.setColumns(10);
+		
+		JTextArea txtrEnterMessageHere = new JTextArea();
+		txtrEnterMessageHere.setText("New Message...");
+		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
+		panel.add(txtrEnterMessageHere);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(216, 6, 508, 404);
+		panel.add(tabbedPane);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(16, 41, 188, 369);
+		panel.add(scrollPane);
+		
+		JList list = new JList();
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Create Contact", ""};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		scrollPane.setViewportView(list);
 	}
-
 }
