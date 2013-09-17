@@ -10,7 +10,7 @@ public class SmallChat {
 	public static void main(String[] args){
 		
 		JFrame jfrm = new JFrame("small chat");
-		jfrm.setSize(210,600);
+		jfrm.setSize(210,400);
 		jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JLabel jlab = new JLabel("TEST MESSAGE");
