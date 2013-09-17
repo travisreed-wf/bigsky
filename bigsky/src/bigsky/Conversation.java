@@ -38,7 +38,7 @@ public class Conversation {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the application. 
 	 */
 	public Conversation() {
 		initialize();
