@@ -15,6 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
+import javax.swing.JButton;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class Conversation {
 
@@ -82,19 +85,10 @@ public class Conversation {
 		panel.setLayout(null);
 		
 		txtSearch = new JTextField();
-		txtSearch.setBounds(6, 6, 198, 29);
+		txtSearch.setBounds(16, 6, 190, 29);
 		panel.add(txtSearch);
 		txtSearch.setText("Search");
 		txtSearch.setColumns(10);
-		
-		JTextArea txtrEnterMessageHere = new JTextArea();
-		txtrEnterMessageHere.setText("New Message...");
-		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
-		panel.add(txtrEnterMessageHere);
-		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(216, 6, 508, 404);
-		panel.add(tabbedPane);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(16, 41, 188, 369);
@@ -111,5 +105,31 @@ public class Conversation {
 			}
 		});
 		scrollPane.setViewportView(list);
+		
+		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_1.setBounds(226, 0, 150, 35);
+		panel.add(tabbedPane_1);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane_1.addTab("New Conversation", null, panel_1, null);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_2.setBounds(226, 25, 490, 385);
+		panel.add(panel_2);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_3.setBounds(16, 422, 190, 100);
+		panel.add(panel_3);
+		
+		JButton btnSend = new JButton("Send");
+		btnSend.setBounds(599, 493, 117, 29);
+		panel.add(btnSend);
+		
+		JTextArea txtrEnterMessageHere = new JTextArea();
+		txtrEnterMessageHere.setText("New Message...");
+		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
+		panel.add(txtrEnterMessageHere);
 	}
 }
