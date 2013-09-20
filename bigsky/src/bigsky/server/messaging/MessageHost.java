@@ -29,7 +29,9 @@ class ClientConn implements Runnable {
 			while (true) {
 				String st1 = br.readLine();
 				System.out.println("Client: " + st1);
-				if(st1.equalsIgnoreCase("quit")){
+				if(st1 == null || st1.trim().length() == 0 || st1.equalsIgnoreCase("quit")){
+					br.close();
+					client.getInputStream().close();
 					return;
 				}
 			}
@@ -70,9 +72,7 @@ class MessageHost {
 			while (true) {
 				String servMsg = br2.readLine();
 				ps2.println(servMsg);
-				if(servMsg == null ||
-					servMsg.trim().length() == 0 || 
-					servMsg.toString().equalsIgnoreCase("quit")){
+				if(servMsg == null || servMsg.trim().length() == 0 || servMsg.equalsIgnoreCase("quit")){
 					br2.close();
 					ps2.close();
 					conn.close();
