@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.Canvas;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -38,8 +39,10 @@ public class SmallChat {
 	private JButton btnName;
 	private JButton btnNewButton;
 	private final JTextArea textArea = new JTextArea();
-	private static final String myName = "Jonathan Mielke:\t";
+	private static final String myName = "Jon:\t";
 	private final JButton send = new JButton("Send");
+	private JScrollPane scrollPane;
+	//private JScrollPane scroll;
 	
 
 	/**
@@ -51,9 +54,6 @@ public class SmallChat {
 				try {
 					SmallChat window = new SmallChat();
 					window.frmBluetext.setVisible(true);
-					
-					
-					//window.updateConv();
 					
 					
 				} catch (Exception e) {
@@ -97,22 +97,28 @@ public class SmallChat {
 		frmBluetext.getContentPane().add(send);
 		
 		
-		//textField = new JTextField();
+		
 		textField.setBounds(0, 289, 230, 23);
 		frmBluetext.getContentPane().add(textField);
 		textField.setColumns(10);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 24, 230, 264);
+		frmBluetext.getContentPane().add(scrollPane);
+		scrollPane.setViewportView(textArea);
+		textArea.setBackground(Color.LIGHT_GRAY);
+		textArea.setForeground(Color.BLUE);
+		textArea.setFont(new Font("Courier New", Font.PLAIN, 10));
 		textArea.setLineWrap(true);
 		textArea.setTabSize(2);
-		//textField.getRootPane().setDefaultButton(send);
 		
-		//JTextArea textArea = new JTextArea();
+		
+		
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
-		textArea.setBounds(0, 24, 230, 264);
-		frmBluetext.getContentPane().add(textArea);
-		//textArea.getRootPane().setDefaultButton(send);
 		
-		btnName = new JButton("Jonathan Mielke");
+		
+		btnName = new JButton("Jonathan");
 		btnName.setOpaque(false);
 		btnName.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -131,15 +137,15 @@ public class SmallChat {
 		btnNewButton.setBounds(137, 1, 93, 23);
 		frmBluetext.getContentPane().add(btnNewButton);
 		
+
 	}
+	
 	
 	protected void updateConv(String msg){
 		
 		//Scanner scanner = new Scanner(System.in);
-		textArea.append("" + myName + msg + "\n");
+		textArea.append("" + myName + msg + "\n\n");
 		
 		
 	}
-	
-	
 }
