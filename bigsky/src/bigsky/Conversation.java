@@ -1,23 +1,23 @@
 package bigsky;
 
+import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Scrollbar;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.DefaultListModel;
+import javax.swing.AbstractListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.AbstractListModel;
-import javax.swing.JButton;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
 
 public class Conversation {
 
@@ -50,6 +50,7 @@ public class Conversation {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	
 	private void initialize() {
 		frmBluetext = new JFrame();
 		frmBluetext.setTitle("BlueText");
@@ -62,11 +63,19 @@ public class Conversation {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
-		JMenuItem mntmFile = new JMenuItem("New Contact");
-		mnFile.add(mntmFile);
+		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
+		mnu_new_contact.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				addContact();
+			}
+		});
+		mnFile.add(mnu_new_contact);
 		
-		JMenuItem mntmNewConversation = new JMenuItem("New Conversation");
-		mnFile.add(mntmNewConversation);
+		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
+		mnu_new_conversation.addMouseListener(new MouseAdapter() {
+		});
+		mnFile.add(mnu_new_conversation);
 		
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -131,5 +140,15 @@ public class Conversation {
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+	}
+	
+	private void addContact() {
+		NewContact newCon = new NewContact();
+		newCon.setVisible(true);
+		
+		String first_name = newCon.getFirstName();
+		String last_name = newCon.getLastName();
+		String phone_number = newCon.getPhoneNumber();
+		String second_phone = newCon.getSecondPhone();
 	}
 }
