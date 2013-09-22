@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,7 +23,10 @@ public class Conversation {
 
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
-	private Contact[] contactList = new Contact[500];
+	private int totalAllowableContacts = 500;
+	private Contact[] contactList = new Contact[totalAllowableContacts];
+	private int nextContactNumber = 0;
+	private DefaultListModel listModel = new DefaultListModel();
 	
 	/**
 	 * Launch the application.
@@ -112,12 +114,10 @@ public class Conversation {
 		Contact firstContact = new Contact("Create Contact", null, null, null);
 		contactList[499] = firstContact;
 		
-		DefaultListModel listModel = new DefaultListModel();
+		
 		for (int i=0;i<contactList.length;i++){
 			listModel.addElement(contactList[i].getFirstName());
 		}
-			
-		
 		
 		JList list = new JList(listModel);
 		scrollPane.setViewportView(list);
@@ -155,6 +155,19 @@ public class Conversation {
 		newCon.setVisible(true);
 		//I still need to figure out how to wait until retContact is filled out
 		Contact contactToAdd = newCon.getRetContact();
+		
+		if (nextContactNumber < totalAllowableContacts){
+			//TODO remove previous listElement
+			contactList[nextContactNumber] = contactToAdd;
+			listModel.addElement(contactToAdd.getFirstName());
+			nextContactNumber++;
+		}
+		else {
+			//TODO
+		}
+		
+		
+		
 		
 	}
 }
