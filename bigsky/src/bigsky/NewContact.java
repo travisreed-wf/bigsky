@@ -19,10 +19,8 @@ public class NewContact extends JDialog {
 	private JTextField txt_phone;
 	private JTextField txt_last_name;
 	private JTextField txt_first_name;
-	private String first_name = "";
-	private String last_name = "";
-	private String phone_number = "";
-	private String second_phone = "";
+	
+	private Contact retContact = new Contact(null, null, null, null);
 
 
 	/**
@@ -84,10 +82,12 @@ public class NewContact extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						first_name = txt_first_name.getText();
-						last_name = txt_last_name.getText();
-						phone_number = txt_phone.getText();
-						second_phone = txt_second_phone.getText();
+						String new_first_name = txt_first_name.getText();
+						String new_last_name = txt_last_name.getText();
+						String new_phone_number = txt_phone.getText();
+						String new_second_phone = txt_second_phone.getText();
+						Contact con = new Contact(new_first_name, new_last_name, new_phone_number, new_second_phone);
+						retContact = con;
 						
 					}
 				});
@@ -108,19 +108,8 @@ public class NewContact extends JDialog {
 		
 	}
 	
-	public String getFirstName() {
-		return first_name;
+	public Contact getRetContact(){
+		return retContact;
 	}
-	
-	public String getLastName() {
-		return last_name;
-	}
-	
-	public String getPhoneNumber() {
-		return phone_number;
-	}
-	
-	public String getSecondPhone() {
-		return second_phone;
-	}
+
 }

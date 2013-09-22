@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -23,7 +24,8 @@ public class Conversation {
 
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
-
+	private Contact[] contactList = new Contact[500];
+	
 	/**
 	 * Launch the application.
 	 */
@@ -68,6 +70,7 @@ public class Conversation {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				addContact();
+				
 			}
 		});
 		mnFile.add(mnu_new_contact);
@@ -103,17 +106,22 @@ public class Conversation {
 		scrollPane.setBounds(16, 41, 188, 369);
 		panel.add(scrollPane);
 		
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Create Contact", ""};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		for (int i=0;i<contactList.length;i++){
+			contactList[i] = new Contact("", "", "", "");
+		}
+		Contact firstContact = new Contact("Create Contact", null, null, null);
+		contactList[499] = firstContact;
+		
+		DefaultListModel listModel = new DefaultListModel();
+		for (int i=0;i<contactList.length;i++){
+			listModel.addElement(contactList[i].getFirstName());
+		}
+			
+		
+		
+		JList list = new JList(listModel);
 		scrollPane.setViewportView(list);
+		
 		
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_1.setBounds(226, 0, 150, 35);
@@ -142,13 +150,11 @@ public class Conversation {
 		panel.add(txtrEnterMessageHere);
 	}
 	
-	private void addContact() {
+	private void addContact(){
 		NewContact newCon = new NewContact();
 		newCon.setVisible(true);
+		//I still need to figure out how to wait until retContact is filled out
+		Contact contactToAdd = newCon.getRetContact();
 		
-		String first_name = newCon.getFirstName();
-		String last_name = newCon.getLastName();
-		String phone_number = newCon.getPhoneNumber();
-		String second_phone = newCon.getSecondPhone();
 	}
 }
