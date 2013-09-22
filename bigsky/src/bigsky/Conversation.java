@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.ListSelectionModel;
 
 public class Conversation {
 
@@ -27,6 +28,7 @@ public class Conversation {
 	private Contact[] contactList = new Contact[totalAllowableContacts];
 	private int nextContactNumber = 0;
 	private DefaultListModel listModel = new DefaultListModel();
+	private JList list = new JList(listModel);
 	
 	/**
 	 * Launch the application.
@@ -105,7 +107,7 @@ public class Conversation {
 		txtSearch.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 41, 188, 369);
+		scrollPane.setBounds(16, 41, 188, 346);
 		panel.add(scrollPane);
 		
 		for (int i=0;i<contactList.length;i++){
@@ -119,7 +121,7 @@ public class Conversation {
 			listModel.addElement(contactList[i].getFirstName());
 		}
 		
-		JList list = new JList(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
 		
 		
@@ -148,6 +150,17 @@ public class Conversation {
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+		
+		JButton btn_select_contact = new JButton("Start New Convo");
+		btn_select_contact.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO start new conversation
+				int selectedContactNumber = list.getSelectedIndex();
+			}
+		});
+		btn_select_contact.setBounds(16, 388, 186, 29);
+		panel.add(btn_select_contact);
 	}
 	
 	private void addContact(){
