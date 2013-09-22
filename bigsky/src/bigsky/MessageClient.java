@@ -41,7 +41,8 @@ class MessageClient {
 		try {
 			System.out.println("sending request to peer....");
 			//TODO for this to work you need to hardcode the IP of the server
-			Socket client = new Socket("127.0.0.1", 1300);
+			// Currently set to hit Andy's PC
+			Socket client = new Socket("206.127.186.9", 1300);
 			System.out.println("successfully conneted");
 			@SuppressWarnings("unused")
 			ServerConn conn = new ServerConn(client);
