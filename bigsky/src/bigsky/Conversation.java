@@ -19,6 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.ListSelectionModel;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Conversation {
 
@@ -101,6 +105,20 @@ public class Conversation {
 		panel.setLayout(null);
 		
 		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String searchTerm = txtSearch.getText();
+				searchContact(searchTerm);
+			}
+		});
+		txtSearch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				txtSearch.setText("");
+			}
+		});
+		
 		txtSearch.setBounds(16, 6, 190, 29);
 		panel.add(txtSearch);
 		txtSearch.setText("Search");
@@ -110,15 +128,21 @@ public class Conversation {
 		scrollPane.setBounds(16, 41, 188, 346);
 		panel.add(scrollPane);
 		
+		//TODO this will need to be removed once we actually have data
 		for (int i=0;i<contactList.length;i++){
 			contactList[i] = new Contact("", "", "", "");
 		}
 		Contact firstContact = new Contact("Create Contact", null, null, null);
 		contactList[499] = firstContact;
 		
+		contactList[0] = new Contact("Travis", "Reed", "5633817739", "");
+		contactList[1] = new Contact("Andrew", "Hartman", "523234", "");
+		contactList[2] = new Contact("Jon", "Mielke", "52342", "");
 		
 		for (int i=0;i<contactList.length;i++){
-			listModel.addElement(contactList[i].getFirstName());
+			if (!contactList[i].getFirstName().equals("")){
+				listModel.addElement(contactList[i].getFirstName());
+			}
 		}
 		
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -179,8 +203,27 @@ public class Conversation {
 			//TODO
 		}
 		
-		
-		
-		
+	}
+	
+	private void searchContact(String searchTerm){
+		listModel.removeAllElements();
+		if (!searchTerm.equals("")){
+			for (int i = 0; i < contactList.length-1; i++){
+				if (contactList[i].getFirstName().toLowerCase().contains(searchTerm.toLowerCase())) {
+					listModel.addElement(contactList[i].getFirstName());
+				}
+				else listModel.removeElement(contactList[i].getFirstName());
+			}
+		}
+		else {
+			for (int i = 0; i < contactList.length-1; i++){
+				if (!contactList[i].getFirstName().equals("")) {
+					listModel.addElement(contactList[i].getFirstName());
+				}
+			}
+		}
+		if (listModel.size() < 12){
+			listModel.addElement(contactList[499].getFirstName());
+		}
 	}
 }
