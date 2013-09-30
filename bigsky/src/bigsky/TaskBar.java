@@ -13,7 +13,6 @@ public class TaskBar {
 
 
     public static void main(String[] args) {
-        /* Use an appropriate Look and Feel */
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (UnsupportedLookAndFeelException ex) {
@@ -25,7 +24,6 @@ public class TaskBar {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        //Turn off metal's bold fonts
         UIManager.put("swing.boldMetal", Boolean.FALSE);
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -40,14 +38,19 @@ public class TaskBar {
     }
     
     private static void initialize() {
-        //Check the SystemTray support
         if (!SystemTray.isSupported()) {
             System.out.println("SystemTray is not supported");
             return;
         }
+        
+        
         final PopupMenu menu = new PopupMenu();
-        final TrayIcon trayIcon =
-                new TrayIcon(createImage("BlueText.gif", "tray icon"));
+        final TrayIcon trayIcon =createTrayIconImage();
+               
+        
+       // new TrayIcon(createImage("BlueText.gif", "tray icon"));
+        
+        
         final SystemTray tray = SystemTray.getSystemTray();
        
         //shows full image in taskbar
@@ -114,15 +117,19 @@ public class TaskBar {
         });
     }
      
-    //Obtain the image URL
-    protected static Image createImage(String path, String description) {
-        URL imageURL = TaskBar.class.getResource(path);
+    //Obtain tray icon image
+    protected static TrayIcon createTrayIconImage() {
+       TrayIcon tray;
+   	   URL imageURL = TaskBar.class.getResource("BlueText.gif");
+
+       Image icon = new ImageIcon(imageURL, "tray icon").getImage();
          
         if (imageURL == null) {
-            System.err.println("Resource not found: " + path);
+            System.err.println("Resource not found: " + "BlueText.gif");
             return null;
         } else {
-            return (new ImageIcon(imageURL, description)).getImage();
+        	tray = new TrayIcon(icon);
+            return tray;
         }
     }
 }
