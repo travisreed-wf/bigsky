@@ -64,7 +64,7 @@ public class Conversation {
 		frmBluetext = new JFrame();
 		frmBluetext.setTitle("BlueText");
 		frmBluetext.setBounds(100, 100, 800, 650);
-		frmBluetext.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmBluetext.setJMenuBar(menuBar);

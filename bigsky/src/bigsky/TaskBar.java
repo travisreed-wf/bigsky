@@ -85,7 +85,7 @@ public class TaskBar {
             	
             	Conversation convo = new Conversation();
             	convo.startConversation();
-            	//convo.getFrmBluetext().setVisible(true);
+            	convo.getFrmBluetext().setVisible(true);
             	
             	
 //                JOptionPane.showMessageDialog(null,
@@ -101,7 +101,7 @@ public class TaskBar {
             	
             	SmallChat smallChat = new SmallChat();
             	smallChat.startSmallChat();
-            	//smallChat.getFrmBluetext().setVisible(true);
+            	smallChat.getFrmBluetext().setVisible(true);
            
             }
         });
