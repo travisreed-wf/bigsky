@@ -148,4 +148,14 @@ public class SmallChat {
 		
 		
 	}
+
+	public void startSmallChat() {
+		initialize();
+	}
+
+	public JFrame getFrmBluetext() {
+		// TODO Auto-generated method stub
+		return frmBluetext;
+	}
+
 }

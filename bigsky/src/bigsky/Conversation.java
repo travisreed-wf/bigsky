@@ -20,6 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.ListSelectionModel;
 
+import bigsky.Contact;
+import bigsky.NewContact;
+
 public class Conversation {
 
 	private JFrame frmBluetext;
@@ -182,5 +185,14 @@ public class Conversation {
 		
 		
 		
+	}
+
+	public void startConversation() {
+		initialize();
+	}
+
+	public JFrame getFrmBluetext() {
+		// TODO Auto-generated method stub
+		return frmBluetext;
 	}
 }
