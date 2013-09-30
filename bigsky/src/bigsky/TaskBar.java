@@ -87,7 +87,6 @@ public class TaskBar {
             public void actionPerformed(ActionEvent e) {
             	
             	Conversation convo = new Conversation();
-            	convo.startConversation();
             	convo.getFrmBluetext().setVisible(true);
             	
             	
@@ -103,7 +102,6 @@ public class TaskBar {
             public void actionPerformed(ActionEvent e) {
             	
             	SmallChat smallChat = new SmallChat();
-            	smallChat.startSmallChat();
             	smallChat.getFrmBluetext().setVisible(true);
            
             }

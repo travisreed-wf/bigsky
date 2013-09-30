@@ -182,13 +182,6 @@ public class Conversation {
 			//TODO
 		}
 		
-		
-		
-		
-	}
-
-	public void startConversation() {
-		initialize();
 	}
 
 	public JFrame getFrmBluetext() {
