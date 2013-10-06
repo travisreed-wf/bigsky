@@ -24,6 +24,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import bigsky.Contact;
+import bigsky.NewContact;
+
 public class Conversation {
 
 	private JFrame frmBluetext;
@@ -65,7 +68,7 @@ public class Conversation {
 		frmBluetext = new JFrame();
 		frmBluetext.setTitle("BlueText");
 		frmBluetext.setBounds(100, 100, 800, 650);
-		frmBluetext.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmBluetext.setJMenuBar(menuBar);
@@ -204,6 +207,7 @@ public class Conversation {
 		}
 		
 	}
+<<<<<<< HEAD
 	
 	private void searchContact(String searchTerm){
 		listModel.removeAllElements();
@@ -225,5 +229,11 @@ public class Conversation {
 		if (listModel.size() < 12){
 			listModel.addElement(contactList[499].getFirstName());
 		}
+=======
+
+	public JFrame getFrmBluetext() {
+		// TODO Auto-generated method stub
+		return frmBluetext;
+>>>>>>> master
 	}
 }
