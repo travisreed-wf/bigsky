@@ -32,7 +32,7 @@ import java.awt.Point;
 import java.awt.Insets;
 import java.util.Scanner;
 
-public class SmallChat {
+public class SmallChat  {
 
 	private JFrame frmBluetext;
 	private final JTextField textField = new JTextField();
@@ -91,7 +91,7 @@ public class SmallChat {
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
 		frmBluetext.setTitle("BlueText");
 		frmBluetext.setBounds(100, 100, 236, 340);
-		frmBluetext.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmBluetext.getContentPane().setLayout(null);
 		
 		frmBluetext.getContentPane().add(send);
@@ -148,4 +148,11 @@ public class SmallChat {
 		
 		
 	}
+
+
+	public JFrame getFrmBluetext() {
+		// TODO Auto-generated method stub
+		return frmBluetext;
+	}
+
 }
