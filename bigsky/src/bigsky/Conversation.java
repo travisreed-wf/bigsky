@@ -192,7 +192,7 @@ public class Conversation {
 
 	private void addContact(){
 		NewContact newCon = new NewContact();
-		newCon.setVisible(true);
+		newCon.getJPanel().setVisible(true);
 		//I still need to figure out how to wait until retContact is filled out
 		Contact contactToAdd = newCon.getRetContact();
 
@@ -234,3 +234,4 @@ public class Conversation {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
+}

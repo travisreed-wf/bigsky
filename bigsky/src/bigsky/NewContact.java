@@ -111,5 +111,8 @@ public class NewContact extends JDialog {
 	public Contact getRetContact(){
 		return retContact;
 	}
+	public JPanel getJPanel(){
+		return contentPanel;
+	}
 
 }
