@@ -27,6 +27,12 @@ class ClientConn implements Runnable {
 	}
 }
 
+/**
+ * Deprecating MessageHost because we are going to try and make a direct
+ * connection between phone and PC instead
+ * @author Andrew
+ */
+@Deprecated
 class MessageHost {
 	public static void main(String args[]) throws IOException {
 		
@@ -35,7 +41,7 @@ class MessageHost {
 			socket = new ServerSocket(1300);
 			System.out.print("Waiting for request from peer.....");
 			Socket client = socket.accept();
-			//@SuppressWarnings("unused")
+			@SuppressWarnings("unused")
 			ClientConn conn = new ClientConn(client);
 			System.out.println("request accepted!\n");
 			BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
