@@ -1,118 +1,107 @@
 package bigsky;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class NewContact extends JDialog {
+public class NewContact {
 
-	private final JPanel contentPanel = new JPanel();
-	private JTextField txt_second_phone;
-	private JTextField txt_phone;
-	private JTextField txt_last_name;
-	private JTextField txt_first_name;
-	
-	private Contact retContact = new Contact(null, null, null, null);
-
+	private JFrame frame;
+	private JLabel lblFirstName;
+	private JLabel lblLastName;
+	private JTextField txtFirstName;
+	private JTextField txtLastName;
+	private JTextField txtPhone;
+	private JTextField txtSecondPhone;
+	private JLabel lblPhone;
+	private JLabel lblSecondPhone;
+	private JButton btnSubmit;
+	private JButton btnCancel;
+	private NewContact self = this;
 
 	/**
-	 * Create the dialog.
+	 * Create the application.
 	 */
 	public NewContact() {
-		initUI();
-	}
-	
-	public final void initUI(){
-		setBounds(100, 100, 321, 203);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		{
-			JLabel lblNewLabel = new JLabel("First Name:");
-			lblNewLabel.setBounds(25, 29, 82, 16);
-			contentPanel.add(lblNewLabel);
-		}
-		
-		JLabel lblLastName = new JLabel("Last Name:");
-		lblLastName.setBounds(25, 57, 82, 16);
-		contentPanel.add(lblLastName);
-		
-		JLabel lblPrimaryPhone = new JLabel("Primary Phone:");
-		lblPrimaryPhone.setBounds(25, 89, 99, 16);
-		contentPanel.add(lblPrimaryPhone);
-		
-		JLabel lblSecondaryPhone = new JLabel("Secondary Phone:");
-		lblSecondaryPhone.setBounds(25, 117, 110, 16);
-		contentPanel.add(lblSecondaryPhone);
-		
-		txt_second_phone = new JTextField();
-		txt_second_phone.setBounds(147, 111, 134, 28);
-		contentPanel.add(txt_second_phone);
-		txt_second_phone.setColumns(10);
-		
-		txt_phone = new JTextField();
-		txt_phone.setBounds(147, 83, 134, 28);
-		contentPanel.add(txt_phone);
-		txt_phone.setColumns(10);
-		
-		txt_last_name = new JTextField();
-		txt_last_name.setBounds(147, 51, 134, 28);
-		contentPanel.add(txt_last_name);
-		txt_last_name.setColumns(10);
-		
-		txt_first_name = new JTextField();
-		txt_first_name.setBounds(147, 23, 134, 28);
-		contentPanel.add(txt_first_name);
-		txt_first_name.setColumns(10);
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						String new_first_name = txt_first_name.getText();
-						String new_last_name = txt_last_name.getText();
-						String new_phone_number = txt_phone.getText();
-						String new_second_phone = txt_second_phone.getText();
-						Contact con = new Contact(new_first_name, new_last_name, new_phone_number, new_second_phone);
-						retContact = con;
-						
-					}
-				});
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
-		setModalityType(ModalityType.APPLICATION_MODAL);
-		setTitle("New Contact");
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
-		
-	}
-	
-	public Contact getRetContact(){
-		return retContact;
-	}
-	public JPanel getJPanel(){
-		return contentPanel;
+		initialize();
 	}
 
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 355, 301);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		lblFirstName = new JLabel("First Name:");
+		lblFirstName.setBounds(33, 35, 86, 16);
+		frame.getContentPane().add(lblFirstName);
+		
+		lblLastName = new JLabel("Last Name:");
+		lblLastName.setBounds(33, 80, 86, 16);
+		frame.getContentPane().add(lblLastName);
+		
+		txtFirstName = new JTextField();
+		txtFirstName.setBounds(136, 36, 134, 28);
+		frame.getContentPane().add(txtFirstName);
+		txtFirstName.setColumns(10);
+		
+		txtLastName = new JTextField();
+		txtLastName.setColumns(10);
+		txtLastName.setBounds(136, 81, 134, 28);
+		frame.getContentPane().add(txtLastName);
+		
+		txtPhone = new JTextField();
+		txtPhone.setColumns(10);
+		txtPhone.setBounds(136, 122, 134, 28);
+		frame.getContentPane().add(txtPhone);
+		
+		txtSecondPhone = new JTextField();
+		txtSecondPhone.setColumns(10);
+		txtSecondPhone.setBounds(136, 171, 134, 28);
+		frame.getContentPane().add(txtSecondPhone);
+		
+		lblPhone = new JLabel("Phone:");
+		lblPhone.setBounds(33, 128, 86, 16);
+		frame.getContentPane().add(lblPhone);
+		
+		lblSecondPhone = new JLabel("Second Phone:");
+		lblSecondPhone.setBounds(33, 177, 106, 16);
+		frame.getContentPane().add(lblSecondPhone);
+		
+		btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Contact contactToAdd = new Contact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
+				if (Global.nextContactNumber < Global.totalAllowableContacts){
+					//TODO remove previous listElement
+					Global.contactList[Global.nextContactNumber] = contactToAdd;
+					Global.listModel.addElement(contactToAdd.getFirstName());
+					Global.nextContactNumber++;
+					frame.setVisible(false);
+				}
+				else {
+					//TODO
+				}
+				
+			}
+		});
+		btnSubmit.setBounds(189, 230, 117, 29);
+		frame.getContentPane().add(btnSubmit);
+		
+		btnCancel = new JButton("Cancel");
+		btnCancel.setBounds(33, 230, 117, 29);
+		frame.getContentPane().add(btnCancel);
+		
+	}
+	public JFrame getFrmNewContact(){
+		return frame;
+	}
 }
