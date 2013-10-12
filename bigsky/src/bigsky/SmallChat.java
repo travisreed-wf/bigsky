@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.JToolBar;
 
 import java.awt.Dimension;
@@ -34,17 +35,24 @@ import java.awt.Point;
 import java.awt.Insets;
 import java.util.Scanner;
 
+import javax.swing.JTextPane;
+
 public class SmallChat  {
 
 	private JFrame frmBluetext;
 	private final JTextField textField = new JTextField();
 	private JButton btnName;
 	private JButton btnNewButton;
-	private final JTextArea textArea = new JTextArea();
+	//private final JTextArea textArea = new JTextArea();
+	
+	
 	
 	private final JButton send = new JButton("Send");
 	private JScrollPane scrollPane;
+	private JTextPane textPane;
 	//private JScrollPane scroll;
+	
+	private int offset = 0;
 	
 
 	/**
@@ -77,7 +85,12 @@ public class SmallChat  {
 			public void actionPerformed(ActionEvent e) {
 				String msgOut = textField.getText();
 				String msgIn = "HEY!";
-				updateConv(msgOut, msgIn);
+				try {
+					updateConv(msgOut, msgIn);
+				} catch (BadLocationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				textField.setText("");
 			}
 		});
@@ -111,17 +124,25 @@ public class SmallChat  {
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 24, 230, 264);
 		frmBluetext.getContentPane().add(scrollPane);
-		scrollPane.setViewportView(textArea);
-		textArea.setBackground(Color.LIGHT_GRAY);
-		textArea.setForeground(Color.BLUE);
-		textArea.setFont(new Font("Courier New", Font.PLAIN, 10));
-		textArea.setLineWrap(true);
-		textArea.setTabSize(2);
+		
+		textPane = new JTextPane();
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+		textPane.setEditable(false);
+		scrollPane.setViewportView(textPane);
+
 		
 		
 		
-		textArea.setWrapStyleWord(true);
-		textArea.setEditable(false);
+//		scrollPane.setViewportView(textArea);
+		
+		
+//		textArea.setBackground(Color.LIGHT_GRAY);
+//		textArea.setForeground(Color.BLUE);
+//		textArea.setFont(new Font("Courier New", Font.PLAIN, 10));
+//		textArea.setLineWrap(true);
+//		textArea.setTabSize(2);
+//		textArea.setWrapStyleWord(true);
+//		textArea.setEditable(false);
 		
 		
 		btnName = new JButton("Jonathan");
@@ -147,17 +168,27 @@ public class SmallChat  {
 	}
 	
 	
-	protected void updateConv(String msgSend, String msgRecieved){
+	protected void updateConv(String msgSend, String msgRecieved) throws BadLocationException{
 		Contact me = new Contact("Jonathan", "Mielke", "6185204620","");
 		Contact you = new Contact("Friendly", "Friend", "55555555555", "");
 		TextMessage textSent = new TextMessage(me, you, msgSend);
 		TextMessage textRecieved = new TextMessage(you, me, msgRecieved);
+		
+		
+		
+		
 		if(!textSent.getContent().trim().isEmpty()){
-			textArea.append(textSent.getSender().getFirstName() + ":\t" + textSent.getContent() + "\n\n");
+			textSent.setContent(textSent.getSender().getFirstName() + ":\t" + textSent.getContent() + "\n\n");
+//			textArea.append(textSent.getSender().getFirstName() + ":\t" + textSent.getContent() + "\n\n");
+			textPane.getDocument().insertString(offset, textSent.getContent(), null);
+			offset+=textSent.getContent().length();
 		}
 		
 		if(!textRecieved.getContent().trim().isEmpty()){
-			textArea.append(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
+			textRecieved.setContent(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
+//			textArea.append(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
+			textPane.getDocument().insertString(offset, textRecieved.getContent(), null);
+			offset+=textRecieved.getContent().length();
 		}
 	}
 
@@ -166,5 +197,4 @@ public class SmallChat  {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
-
 }
