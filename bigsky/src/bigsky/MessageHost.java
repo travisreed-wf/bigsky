@@ -14,11 +14,12 @@ class ClientConn implements Runnable {
 	}
 
 	public void run() {
-		BufferedReader br = null;
+		//BufferedReader br = null;
+		ObjectInputStream br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			br = new ObjectInputStream(client.getInputStream());
 			while (br != null) {
-				String st1 = br.readLine();
+				String st1 = ((TextMessage) br.readObject()).getContent();
 				System.out.println("Client: " + st1);
 			}
 		} catch (Exception e) {
@@ -37,13 +38,21 @@ class MessageHost {
 			Socket client = socket.accept();
 			@SuppressWarnings("unused")
 			ClientConn conn = new ClientConn(client);
-			System.out.println("request accepted!\n");
+			System.out.println("request accepted!\nBeginning of chat:");
 			BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
-			PrintStream ps2 = new PrintStream(client.getOutputStream());
+			ObjectOutputStream ps2 = new ObjectOutputStream(client.getOutputStream());
+			
+			Contact tempContact = new Contact("Andy", "G",    "+1 5072542815", null);
+			//Contact tempContact = new Contact("Travis", "Reed", "+1 5633817739", null);
 			
 			while (true) {
 				String servMsg = br2.readLine();
-				ps2.println(servMsg);
+				//ps2.println(servMsg);
+				if(servMsg == null){
+					break;
+				}
+				ps2.writeObject(new TextMessage(null, tempContact, servMsg));
+				ps2.flush();
 			}
 		} 
 		finally{

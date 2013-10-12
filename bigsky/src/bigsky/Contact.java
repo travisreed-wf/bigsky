@@ -1,7 +1,10 @@
 package bigsky;
 
-public class Contact {
+import java.io.Serializable;
 
+public class Contact implements Serializable {
+
+	private static final long serialVersionUID = 1394646218153182251L;
 	private String first_name;
 	private String last_name;
 	private String phone_number;
