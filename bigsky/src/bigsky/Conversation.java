@@ -169,7 +169,7 @@ public class Conversation {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//TODO start new conversation
-				//int selectedContactNumber = list.getSelectedIndex();
+				String selectedContact = (String)list.getSelectedValue();
 				
 			}
 		});
@@ -184,14 +184,30 @@ public class Conversation {
 		});
 		btnAddContact.setBounds(26, 538, 117, 29);
 		panel.add(btnAddContact);
+		
+		JButton editContact = new JButton("EditContact");
+		editContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String selectedContact = (String)list.getSelectedValue();
+				Contact selectedContactCon;
+				for (int i=0;i<Global.contactList.length;i++){
+					if (Global.contactList[i].getFirstName().equals(selectedContact)){
+						selectedContactCon = Global.contactList[i];
+						EditContact editCon = new EditContact(selectedContactCon, i);
+						editCon.getFrmEditContact().setVisible(true);
+						break;
+					}
+				}
+			}
+		});
+		editContact.setBounds(150, 538, 117, 29);
+		panel.add(editContact);
 	}
 
 	private void openNewContactWindow(){
 		NewContact newCon = new NewContact();
 		newCon.getFrmNewContact().setVisible(true);
-
 	}
-	
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){

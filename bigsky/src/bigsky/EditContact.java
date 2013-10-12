@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class NewContact {
+public class EditContact {
 
 	private JFrame frame;
 	private JLabel lblFirstName;
@@ -20,11 +20,17 @@ public class NewContact {
 	private JLabel lblSecondPhone;
 	private JButton btnSubmit;
 	private JButton btnCancel;
+	private Contact contactToEdit;
+	private int contactArrayNumber;
+	private String oldFirstName;
 
 	/**
 	 * Create the application.
 	 */
-	public NewContact() {
+	public EditContact(Contact contact, int contactNumber) {
+		contactToEdit = contact;
+		contactArrayNumber = contactNumber;
+		oldFirstName = contactToEdit.getFirstName();
 		initialize();
 	}
 
@@ -37,6 +43,7 @@ public class NewContact {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setTitle("Edit Contact");
 		
 		lblFirstName = new JLabel("First Name:");
 		lblFirstName.setBounds(33, 35, 86, 16);
@@ -50,21 +57,25 @@ public class NewContact {
 		txtFirstName.setBounds(136, 36, 134, 28);
 		frame.getContentPane().add(txtFirstName);
 		txtFirstName.setColumns(10);
+		txtFirstName.setText(contactToEdit.getFirstName());
 		
 		txtLastName = new JTextField();
 		txtLastName.setColumns(10);
 		txtLastName.setBounds(136, 81, 134, 28);
 		frame.getContentPane().add(txtLastName);
+		txtLastName.setText(contactToEdit.getLastName());
 		
 		txtPhone = new JTextField();
 		txtPhone.setColumns(10);
 		txtPhone.setBounds(136, 122, 134, 28);
 		frame.getContentPane().add(txtPhone);
+		txtPhone.setText(contactToEdit.getPhoneNumber());
 		
 		txtSecondPhone = new JTextField();
 		txtSecondPhone.setColumns(10);
 		txtSecondPhone.setBounds(136, 171, 134, 28);
 		frame.getContentPane().add(txtSecondPhone);
+		txtSecondPhone.setText(contactToEdit.getSecondPhone());
 		
 		lblPhone = new JLabel("Phone:");
 		lblPhone.setBounds(33, 128, 86, 16);
@@ -77,17 +88,14 @@ public class NewContact {
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Contact contactToAdd = new Contact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
-				if (Global.nextContactNumber < Global.totalAllowableContacts){
-					//TODO remove previous listElement
-					Global.contactList[Global.nextContactNumber] = contactToAdd;
-					Global.listModel.addElement(contactToAdd.getFirstName());
-					Global.nextContactNumber++;
-					frame.setVisible(false);
-				}
-				else {
-					//TODO
-				}
+				contactToEdit.setFirstName(txtFirstName.getText());
+				contactToEdit.setLastName(txtLastName.getText());
+				contactToEdit.setPhoneNumber(txtPhone.getText());
+				contactToEdit.setSecondPhone(txtSecondPhone.getText());
+				Global.contactList[contactArrayNumber] = contactToEdit;
+				Global.listModel.removeElement(oldFirstName);
+				Global.listModel.addElement(contactToEdit.getFirstName());
+				frame.setVisible(false);
 				//TODO validation
 				
 			}
@@ -100,7 +108,7 @@ public class NewContact {
 		frame.getContentPane().add(btnCancel);
 		
 	}
-	public JFrame getFrmNewContact(){
+	public JFrame getFrmEditContact(){
 		return frame;
 	}
 }
