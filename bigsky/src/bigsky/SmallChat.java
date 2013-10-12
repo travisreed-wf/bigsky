@@ -8,6 +8,8 @@ import java.awt.Button;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.TextArea;
 import java.awt.Color;
 import java.awt.Font;
@@ -39,7 +41,7 @@ public class SmallChat  {
 	private JButton btnName;
 	private JButton btnNewButton;
 	private final JTextArea textArea = new JTextArea();
-	private static final String myName = "Jon:\t";
+	
 	private final JButton send = new JButton("Send");
 	private JScrollPane scrollPane;
 	//private JScrollPane scroll;
@@ -73,8 +75,9 @@ public class SmallChat  {
 		
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String yourMsg = textField.getText();
-				updateConv(yourMsg);
+				String msgOut = textField.getText();
+				String msgIn = "HEY!";
+				updateConv(msgOut, msgIn);
 				textField.setText("");
 			}
 		});
@@ -85,12 +88,15 @@ public class SmallChat  {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		
+		
 		frmBluetext = new JFrame();
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
 		frmBluetext.setTitle("BlueText");
-		frmBluetext.setBounds(100, 100, 236, 340);
+		frmBluetext.setBounds(gd.getDisplayMode().getWidth() - 243, gd.getDisplayMode().getHeight() - 385, 236, 340);
 		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmBluetext.getContentPane().setLayout(null);
 		
@@ -141,12 +147,18 @@ public class SmallChat  {
 	}
 	
 	
-	protected void updateConv(String msg){
+	protected void updateConv(String msgSend, String msgRecieved){
+		Contact me = new Contact("Jonathan", "Mielke", "6185204620","");
+		Contact you = new Contact("Friendly", "Friend", "55555555555", "");
+		TextMessage textSent = new TextMessage(me, you, msgSend);
+		TextMessage textRecieved = new TextMessage(you, me, msgRecieved);
+		if(textSent.getContent() != ""){
+			textArea.append(textSent.getSender().getFirstName() + ":\t" + textSent.getContent() + "\n\n");
+		}
 		
-		//Scanner scanner = new Scanner(System.in);
-		textArea.append("" + myName + msg + "\n\n");
-		
-		
+		if(textRecieved.getContent() != ""){
+			textArea.append(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
+		}
 	}
 
 
