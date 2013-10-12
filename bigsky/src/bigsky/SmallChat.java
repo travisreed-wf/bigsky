@@ -152,11 +152,11 @@ public class SmallChat  {
 		Contact you = new Contact("Friendly", "Friend", "55555555555", "");
 		TextMessage textSent = new TextMessage(me, you, msgSend);
 		TextMessage textRecieved = new TextMessage(you, me, msgRecieved);
-		if(textSent.getContent() != ""){
+		if(!textSent.getContent().trim().isEmpty()){
 			textArea.append(textSent.getSender().getFirstName() + ":\t" + textSent.getContent() + "\n\n");
 		}
 		
-		if(textRecieved.getContent() != ""){
+		if(!textRecieved.getContent().trim().isEmpty()){
 			textArea.append(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
 		}
 	}
