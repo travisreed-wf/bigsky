@@ -14,7 +14,6 @@ class ClientConn implements Runnable {
 	}
 
 	public void run() {
-		//BufferedReader br = null;
 		ObjectInputStream br = null;
 		try {
 			br = new ObjectInputStream(client.getInputStream());
@@ -30,7 +29,7 @@ class ClientConn implements Runnable {
 
 class MessageHost {
 	public static void main(String args[]) throws IOException {
-		
+
 		ServerSocket socket = null;
 		try{
 			socket = new ServerSocket(1300);
@@ -41,14 +40,13 @@ class MessageHost {
 			System.out.println("request accepted!\nBeginning of chat:");
 			BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
 			ObjectOutputStream ps2 = new ObjectOutputStream(client.getOutputStream());
-			
+
 			Contact tempContact = new Contact("Andy", "G",    "+1 5072542815", null);
 			//Contact tempContact = new Contact("Travis", "Reed", "+1 5633817739", null);
-			
+
 			while (true) {
 				String servMsg = br2.readLine();
-				//ps2.println(servMsg);
-				if(servMsg == null){
+				if(servMsg == null ||  servMsg.equalsIgnoreCase("quit")){
 					break;
 				}
 				ps2.writeObject(new TextMessage(null, tempContact, servMsg));
@@ -58,7 +56,7 @@ class MessageHost {
 		finally{
 			System.out.println("Closing server socket.");
 			if(socket != null) socket.close();
-			
+
 		}
 	}
 }
