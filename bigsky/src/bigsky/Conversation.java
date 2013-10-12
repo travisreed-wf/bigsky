@@ -234,3 +234,4 @@ public class Conversation {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
+}
