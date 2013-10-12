@@ -47,7 +47,7 @@ class MessageHost {
 			while (true) {
 				String servMsg = br2.readLine();
 				if(servMsg == null ||  servMsg.equalsIgnoreCase("quit")){
-					break;
+					return;
 				}
 				ps2.writeObject(new TextMessage(null, tempContact, servMsg));
 				ps2.flush();
