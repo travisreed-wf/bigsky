@@ -45,14 +45,16 @@ public class SmallChat  {
 	private JButton btnNewButton;
 	//private final JTextArea textArea = new JTextArea();
 	
-	
-	
+
 	private final JButton send = new JButton("Send");
 	private JScrollPane scrollPane;
 	private JTextPane textPane;
 	//private JScrollPane scroll;
 	
 	private int offset = 0;
+	
+	private Contact me = new Contact("Jonathan", "Mielke", "6185204620", "");
+	private Contact you = new Contact("Friendly", "Friend", "55555555555", "");
 	
 
 	/**
@@ -62,7 +64,7 @@ public class SmallChat  {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SmallChat window = new SmallChat();
+					SmallChat window = new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), new Contact("Friendly", "Friend", "55555555555", ""));
 					window.frmBluetext.setVisible(true);
 					
 					
@@ -75,9 +77,11 @@ public class SmallChat  {
 	}
 
 	/**
-	 * Create the application.
+	 * initiallizes a quick chat window
+	 * @param me
+	 * @param you
 	 */
-	public SmallChat() {
+	public SmallChat(Contact me, Contact you) {
 		initialize();
 		
 		
@@ -169,8 +173,6 @@ public class SmallChat  {
 	
 	
 	protected void updateConv(String msgSend, String msgRecieved) throws BadLocationException{
-		Contact me = new Contact("Jonathan", "Mielke", "6185204620","");
-		Contact you = new Contact("Friendly", "Friend", "55555555555", "");
 		TextMessage textSent = new TextMessage(me, you, msgSend);
 		TextMessage textRecieved = new TextMessage(you, me, msgRecieved);
 		
