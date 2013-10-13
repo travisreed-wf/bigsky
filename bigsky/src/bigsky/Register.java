@@ -30,6 +30,11 @@ public class Register extends JFrame {
 	private JTextField secondaryPhone;
 	private JPasswordField password;
 	private JPasswordField confirmPassword;
+	private JLabel confirmPasswordIncorrect;
+	private JLabel passwordIncorrect;
+	private JLabel usernameIncorrect;
+	private JLabel firstNameIncorrect;
+	private JLabel lastNameIncorrect;
 
 	/**
 	 * Launch the application.
@@ -52,38 +57,38 @@ public class Register extends JFrame {
 	 */
 	public Register() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 500);
+		setBounds(100, 100, 541, 500);
 		getContentPane().setLayout(null);
 		contentPane = new JPanel();
 
 		firstName = new JTextField();
 		firstName.setForeground(SystemColor.inactiveCaptionText);
-		firstName.setBounds(78, 75, 134, 28);
+		firstName.setBounds(196, 69, 134, 28);
 		getContentPane().add(firstName);
 		firstName.setColumns(10);
 		
-		JLabel lblFirstName = new JLabel("First Name");
-		lblFirstName.setBounds(5, 81, 73, 16);
+		JLabel lblFirstName = new JLabel("First Name *");
+		lblFirstName.setBounds(5, 75, 73, 16);
 		getContentPane().add(lblFirstName);
 		
-		JLabel lblLastName = new JLabel("Last Name");
-		lblLastName.setBounds(5, 109, 73, 16);
+		JLabel lblLastName = new JLabel("Last Name *");
+		lblLastName.setBounds(5, 120, 73, 16);
 		getContentPane().add(lblLastName);
 		
 		lastName = new JTextField();
 		lastName.setForeground(SystemColor.inactiveCaptionText);
 		lastName.setColumns(10);
-		lastName.setBounds(78, 103, 134, 28);
+		lastName.setBounds(196, 114, 134, 28);
 		getContentPane().add(lastName);
 		
-		JLabel lblPrimaryPhoneNumber = new JLabel("Primary Phone Number (Username)");
-		lblPrimaryPhoneNumber.setBounds(19, 27, 221, 16);
+		JLabel lblPrimaryPhoneNumber = new JLabel("Primary Phone Number (Username) *");
+		lblPrimaryPhoneNumber.setBounds(-56, 27, 221, 16);
 		getContentPane().add(lblPrimaryPhoneNumber);
 		
 		primaryPhone = new JTextField();
 		primaryPhone.setForeground(SystemColor.inactiveCaptionText);
 		primaryPhone.setColumns(10);
-		primaryPhone.setBounds(252, 21, 134, 28);
+		primaryPhone.setBounds(196, 21, 134, 28);
 		getContentPane().add(primaryPhone);
 		
 		JLabel lblSecondaryPhoneNumber = new JLabel("Secondary Phone Number");
@@ -93,29 +98,59 @@ public class Register extends JFrame {
 		secondaryPhone = new JTextField();
 		secondaryPhone.setForeground(SystemColor.inactiveCaptionText);
 		secondaryPhone.setColumns(10);
-		secondaryPhone.setBounds(170, 195, 134, 28);
+		secondaryPhone.setBounds(196, 195, 134, 28);
 		getContentPane().add(secondaryPhone);
 		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(6, 261, 61, 16);
+		JLabel lblPassword = new JLabel("Password *");
+		lblPassword.setBounds(6, 261, 72, 16);
 		getContentPane().add(lblPassword);
 		
 		password = new JPasswordField();
 		password.setToolTipText("\n");
-		password.setBounds(121, 255, 134, 28);
+		password.setBounds(196, 255, 134, 28);
 		getContentPane().add(password);
 		
-		JLabel lblConfirmPassword = new JLabel("Confirm Password");
+		JLabel lblConfirmPassword = new JLabel("Confirm Password *");
 		lblConfirmPassword.setBounds(5, 313, 123, 16);
 		getContentPane().add(lblConfirmPassword);
 		
 		confirmPassword = new JPasswordField();
-		confirmPassword.setBounds(121, 307, 134, 28);
+		confirmPassword.setBounds(196, 307, 134, 28);
 		getContentPane().add(confirmPassword);
 		
 		JButton Register = new JButton("Register");
 		Register.setBounds(138, 379, 117, 29);
 		getContentPane().add(Register);
+		
+		usernameIncorrect = new JLabel("incorrect");
+		usernameIncorrect.setForeground(Color.RED);
+		usernameIncorrect.setBounds(340, 28, 46, 14);
+		getContentPane().add(usernameIncorrect);
+		usernameIncorrect.setVisible(false);
+		
+		firstNameIncorrect = new JLabel("incorrect");
+		firstNameIncorrect.setForeground(Color.RED);
+		firstNameIncorrect.setBounds(340, 76, 46, 14);
+		getContentPane().add(firstNameIncorrect);
+		firstNameIncorrect.setVisible(false);
+		
+		lastNameIncorrect = new JLabel("incorrect");
+		lastNameIncorrect.setForeground(Color.RED);
+		lastNameIncorrect.setBounds(340, 121, 46, 14);
+		getContentPane().add(lastNameIncorrect);
+		lastNameIncorrect.setVisible(false);
+		
+		passwordIncorrect = new JLabel("incorrect");
+		passwordIncorrect.setForeground(Color.RED);
+		passwordIncorrect.setBounds(340, 262, 46, 14);
+		getContentPane().add(passwordIncorrect);
+		passwordIncorrect.setVisible(false);
+		
+		confirmPasswordIncorrect = new JLabel("incorrect");
+		confirmPasswordIncorrect.setForeground(Color.RED);
+		confirmPasswordIncorrect.setBounds(340, 314, 46, 14);
+		getContentPane().add(confirmPasswordIncorrect);
+		confirmPasswordIncorrect.setVisible(false);
 		
 		
 		
@@ -125,19 +160,6 @@ public class Register extends JFrame {
 	        public void actionPerformed(ActionEvent e) {
 	        
 	        	if(registerChecks()){
-	        		
-	        		System.out.println(getPassword(password));
-	        		System.out.println(getPassword(confirmPassword));
-	        		System.out.println(getUsername());
-	        		System.out.println(getFirstName());
-	        		System.out.println(getLastName());
-	        		System.out.println(getSecondaryPhone());
-	        		System.out.println("-----------------");
-	        		System.out.println("-----------------");
-	        		System.out.println("-----------------");
-	        		System.out.println("-----------------");
-	        		System.out.println("-----------------");
-	        		System.out.println("-----------------");
 
 	        		try {
 						putInSystem();
@@ -152,21 +174,9 @@ public class Register extends JFrame {
 	        	}
 	        	else{
 	        		retry();
-	        	}
-	        	
-	        	try {
-					wait(5000);
-					System.exit(0);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        
+	        	}       
 	        }
-
-		
 	    });
-
 	}
 	
 	
@@ -180,39 +190,62 @@ public class Register extends JFrame {
 	}
 	
 	private String getUsername(){
-	String user = primaryPhone.getText();
-	//takes out all not  digits
-	user = user.replaceAll("\\D+","");
+		String user = primaryPhone.getText();
+		//takes out all not  digits
+		user = user.replaceAll("\\D+","");
 		return  user.trim();	
 	}
 	private String getFirstName(){
 		String user = firstName.getText();
-			return  user.trim();	
+		return  user.trim();	
 		}
 	private String getLastName(){
 		String user = lastName.getText();
-			return  user.trim();	
+		return  user.trim();	
 		}
 	private String getSecondaryPhone(){
 		String user = secondaryPhone.getText();
 		//takes out all not  digits
 		user = user.replaceAll("\\D+","");
-			return  user.trim();	
+		return  user.trim();	
 		}
 	
 	
 	
 	private boolean registerChecks(){
+		int count = 0;
+		String pass = getPassword(password);
+		String confirmPass = getPassword(confirmPassword);
+		String username = getUsername();
+		String firstName = getFirstName();
+		String lastName = getLastName();
 		
-		if(!getPassword(password).equals(getPassword(confirmPassword))){
-			return false;
+		if(pass == null || confirmPass == null || pass.equals("")|| confirmPass.equals("")|| !pass.equals(confirmPass)){
+			passwordIncorrect.setVisible(true);
+			confirmPasswordIncorrect.setVisible(true);
+			count++;
 		}
 		
-		if(getUsername().length() != 10){
-			return false;
+		if(username == null || username.length() != 10){
+			usernameIncorrect.setVisible(true);
+			count++;
 		}
 		
-		return true;
+		if(firstName == null || lastName == null || firstName.equals("") || lastName.equals("")){
+			firstNameIncorrect.setVisible(true);
+			count++;
+		}
+		
+		if( lastName == null || lastName.equals("")){
+			lastNameIncorrect.setVisible(true);
+			count++;
+		}
+		
+		if(count == 0){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private void putInSystem() throws ClassNotFoundException, SQLException{
@@ -224,22 +257,8 @@ public class Register extends JFrame {
 		String query = "INSERT INTO testTable  (phoneNumber, lastName, firstName, password) VALUES " +
 				"('" + getUsername() + "', '" + getLastName() + "', '" + getFirstName() + "','" + getPassword(password) +
 				"')";
-		
-		System.out.println(query);
-		System.out.println(getUsername().length());
-		
+	
 		stmt.executeUpdate(query);
-		
-		
-		
-//		Class.forName("com.mysql.jdbc.Driver");
-//		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
-//		Statement stmt = con.createStatement();
-//		
-//		//stmt.executeUpdate("INSERT INTO testTable (phoneNumber, lastName, firstName, password, secondaryPhone) VALUES ('2222222222','Bismark','Clark','secret','3333333333')");
-//		System.out.println("Got HEre");
-//		stmt.executeUpdate("INSERT INTO 	testTable (`phoneNumber`, `lastName`, `firstName`,`password`) VALUES ('1231231239', 'lastname', 'firstname','secret')");
-
 		con.close();		
 	}
 	
@@ -247,22 +266,4 @@ public class Register extends JFrame {
 	private void retry() {
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
