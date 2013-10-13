@@ -98,17 +98,15 @@ public class SmallChat  {
 				String msgOut = textField.getText();
 				String msgIn = "HEY!";
 				try {
-					BufferedImage img = ImageIO.read(new File("C:/Users/Public/Pictures/Sample Pictures/Penguins.jpg"));
-					toaster.setBackgroundImage(img);
+					//BufferedImage img = ImageIO.read(new File());
+					//toaster.setBackgroundImage(img);
 					toaster.showToaster("NEW MESSAGE");
 					updateConv(msgOut, msgIn);
 				} catch (BadLocationException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (IOException e2)
-				{
-					e2.printStackTrace();
-				}
+				} 
+
 				
 				textField.setText("");
 			}
