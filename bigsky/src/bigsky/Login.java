@@ -90,15 +90,7 @@ public class Login extends JFrame {
 						
 						Conversation convo = new Conversation();
 		            	convo.getFrmBluetext().setVisible(true);
-		            	
-		            	
-		            	phoneIP();
-		            	
-		            	
-		            	
-		            	
-		            	
-						
+		            	phoneIP();						
 					}
 					else{
 						System.out.println("FAIL");
@@ -172,18 +164,6 @@ public class Login extends JFrame {
 		}
 		
 		
-		System.out.println(getPassword(passwordField_1));
-		System.out.println(getUsername());
-		System.out.println("-----------------");
-		System.out.println("-----------------");
-		System.out.println("-----------------");
-		System.out.println("-----------------");
-		System.out.println("-----------------");
-		System.out.println("-----------------");
-		System.out.println(rs.getString("password"));
-		System.out.println(rs.getString("phoneNumber"));
-		
-		
 		if(getUsername().equals(rs.getString("phonenumber")) && getPassword(passwordField_1).equals(rs.getString("password"))){
 			
 			System.out.println("Login Successful");
@@ -199,47 +179,7 @@ public class Login extends JFrame {
 			
 			System.out.println("Would You Like to Register");
 		}
-		
-		
-		
-		
-//		int count = 0;;
-//		rs.last();
-//		int numRows = rs.getRow();
-//		rs.first();
-//		for(int i =0; i <numRows; i++){
-//			count = 0;	
-//			if(rs.getString("phoneNumber") != null){
-//				System.out.println("Username Input is: " + getUsername());
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("Username Database is: " + rs.getString("phonenumber"));
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("--------------------------------------------------");
-//				if(getUsername().equals(rs.getString("phonenumber"))){
-//					count++;
-//				}
-//			}
-//			
-//			if(rs.getString("password") != null){
-//				System.out.println("Password Input is: " + getPassword());
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("Password Database is: " + rs.getString("password"));
-//				System.out.println("--------------------------------------------------");
-//				System.out.println("--------------------------------------------------");
-//				if(getPassword().equals(rs.getString("password"))){
-//					count++;
-//				}
-//			}
-//				
-//			
-//			if(count == 2){
-//				return rs.getRow();
-//			}
-//			
-//			rs.next();
-//		}
+
 		
 		
 		rs.close();		
