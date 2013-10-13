@@ -2,12 +2,14 @@ package bigsky;
 
 import java.awt.EventQueue;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import java.awt.Button;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.TextArea;
@@ -33,9 +35,13 @@ import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 import javax.swing.JTextPane;
+
+import com.nitido.utils.toaster.Toaster;
 
 public class SmallChat  {
 
@@ -45,7 +51,7 @@ public class SmallChat  {
 	private JButton btnNewButton;
 	//private final JTextArea textArea = new JTextArea();
 	
-
+	
 	private final JButton send = new JButton("Send");
 	private JScrollPane scrollPane;
 	private JTextPane textPane;
@@ -56,6 +62,7 @@ public class SmallChat  {
 	private Contact me = new Contact("Jonathan", "Mielke", "6185204620", "");
 	private Contact you = new Contact("Friendly", "Friend", "55555555555", "");
 	
+	private Toaster toaster = new Toaster();
 
 	/**
 	 * Launch the application.
@@ -85,16 +92,24 @@ public class SmallChat  {
 		initialize();
 		
 		
+		
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String msgOut = textField.getText();
 				String msgIn = "HEY!";
 				try {
+					BufferedImage img = ImageIO.read(new File("C:/Users/Public/Pictures/Sample Pictures/Penguins.jpg"));
+					toaster.setBackgroundImage(img);
+					toaster.showToaster("NEW MESSAGE");
 					updateConv(msgOut, msgIn);
 				} catch (BadLocationException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (IOException e2)
+				{
+					e2.printStackTrace();
 				}
+				
 				textField.setText("");
 			}
 		});
@@ -197,6 +212,14 @@ public class SmallChat  {
 		}
 	}
 
+	public Contact getLocalContact()
+	{
+		return me;
+	}
+	
+	public Contact getFromContact(){
+		return you;
+	}
 
 	public JFrame getFrmBluetext() {
 		// TODO Auto-generated method stub
