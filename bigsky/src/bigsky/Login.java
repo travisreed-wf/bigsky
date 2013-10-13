@@ -24,6 +24,8 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField_1;
+	private JLabel promptRegister;
+	private JLabel wrongInfo;
 
 	/**
 	 * Launch the application.
@@ -75,9 +77,20 @@ public class Login extends JFrame {
 		contentPane.add(login);
 		
 		JButton register = new JButton("Register");
-		register.setBounds(250, 211, 75, 29);
+		register.setBounds(250, 211, 90, 29);
 		contentPane.add(register);
 		
+		wrongInfo = new JLabel("Wrong username or password");
+		wrongInfo.setForeground(Color.RED);
+		wrongInfo.setBounds(190, 154, 215, 14);
+		contentPane.add(wrongInfo);
+		wrongInfo.setVisible(false);
+		
+		promptRegister = new JLabel("Would you like to register");
+		promptRegister.setForeground(Color.RED);
+		promptRegister.setBounds(190, 154, 150, 14);
+		contentPane.add(promptRegister);
+		promptRegister.setVisible(false);
 
 		
 		login.addActionListener(new ActionListener() {
@@ -85,9 +98,7 @@ public class Login extends JFrame {
             	            	
             	try {
 					if(login()){
-						
-						System.out.println("Works");
-						
+										
 						Conversation convo = new Conversation();
 		            	convo.getFrmBluetext().setVisible(true);
 		            	phoneIP();						
@@ -112,6 +123,7 @@ public class Login extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	  
             	Register reg = new Register();
+            	reg.setVisible(true);
             }
         });	
 
@@ -127,12 +139,9 @@ public class Login extends JFrame {
 	}
 	
 	private String getUsername(){
-		
-	String user = textField.getText();
-	
-	//takes out all not  digits
-	user = user.replaceAll("\\D+","");
-		
+		String user = textField.getText();
+		//takes out all not  digits
+		user = user.replaceAll("\\D+","");
 		return  user.trim();	
 	}
 	
@@ -155,29 +164,23 @@ public class Login extends JFrame {
 		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + getUsername() + "'");
 	
 		if(rs.next() == false){
-			System.out.println("Username not found");
+			promptRegister.setVisible(true);
 			return false;
 		}
 		if(rs.getString("password") == null){
-			System.out.println("Password not found");
+			promptRegister.setVisible(true);
 			return false;			
 		}
-		
-		
-		if(getUsername().equals(rs.getString("phonenumber")) && getPassword(passwordField_1).equals(rs.getString("password"))){
 			
-			System.out.println("Login Successful");
-		}
-		
-		else if(getUsername().equals(rs.getString("phonenumber")) && !getPassword(passwordField_1).equals(rs.getString("password"))){
-			
-			System.out.println("Wrong Password");
+		else if(!getUsername().equals(rs.getString("phonenumber")) || !getPassword(passwordField_1).equals(rs.getString("password"))){
+			wrongInfo.setVisible(true);
+			return false;
 		}
 
 		
-		else if(!getUsername().equals(rs.getString("phonenumber")) || !getPassword(passwordField_1).equals(rs.getString("password"))){
-			
-			System.out.println("Would You Like to Register");
+		else if(!getUsername().equals(rs.getString("phonenumber")) && !getPassword(passwordField_1).equals(rs.getString("password"))){
+			promptRegister.setVisible(true);
+			return false;
 		}
 
 		

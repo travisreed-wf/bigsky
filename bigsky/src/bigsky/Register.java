@@ -27,7 +27,6 @@ public class Register extends JFrame {
 	private JTextField firstName;
 	private JTextField lastName;
 	private JTextField primaryPhone;
-	private JTextField secondaryPhone;
 	private JPasswordField password;
 	private JPasswordField confirmPassword;
 	private JLabel confirmPasswordIncorrect;
@@ -63,7 +62,7 @@ public class Register extends JFrame {
 
 		firstName = new JTextField();
 		firstName.setForeground(SystemColor.inactiveCaptionText);
-		firstName.setBounds(196, 69, 134, 28);
+		firstName.setBounds(260, 69, 134, 28);
 		getContentPane().add(firstName);
 		firstName.setColumns(10);
 		
@@ -78,44 +77,34 @@ public class Register extends JFrame {
 		lastName = new JTextField();
 		lastName.setForeground(SystemColor.inactiveCaptionText);
 		lastName.setColumns(10);
-		lastName.setBounds(196, 114, 134, 28);
+		lastName.setBounds(260, 114, 134, 28);
 		getContentPane().add(lastName);
 		
 		JLabel lblPrimaryPhoneNumber = new JLabel("Primary Phone Number (Username) *");
-		lblPrimaryPhoneNumber.setBounds(-56, 27, 221, 16);
+		lblPrimaryPhoneNumber.setBounds(5, 27, 221, 16);
 		getContentPane().add(lblPrimaryPhoneNumber);
 		
 		primaryPhone = new JTextField();
 		primaryPhone.setForeground(SystemColor.inactiveCaptionText);
 		primaryPhone.setColumns(10);
-		primaryPhone.setBounds(196, 21, 134, 28);
+		primaryPhone.setBounds(260, 21, 134, 28);
 		getContentPane().add(primaryPhone);
 		
-		JLabel lblSecondaryPhoneNumber = new JLabel("Secondary Phone Number");
-		lblSecondaryPhoneNumber.setBounds(5, 201, 160, 16);
-		getContentPane().add(lblSecondaryPhoneNumber);
-		
-		secondaryPhone = new JTextField();
-		secondaryPhone.setForeground(SystemColor.inactiveCaptionText);
-		secondaryPhone.setColumns(10);
-		secondaryPhone.setBounds(196, 195, 134, 28);
-		getContentPane().add(secondaryPhone);
-		
 		JLabel lblPassword = new JLabel("Password *");
-		lblPassword.setBounds(6, 261, 72, 16);
+		lblPassword.setBounds(5, 194, 72, 16);
 		getContentPane().add(lblPassword);
 		
 		password = new JPasswordField();
 		password.setToolTipText("\n");
-		password.setBounds(196, 255, 134, 28);
+		password.setBounds(260, 188, 134, 28);
 		getContentPane().add(password);
 		
 		JLabel lblConfirmPassword = new JLabel("Confirm Password *");
-		lblConfirmPassword.setBounds(5, 313, 123, 16);
+		lblConfirmPassword.setBounds(5, 233, 123, 16);
 		getContentPane().add(lblConfirmPassword);
 		
 		confirmPassword = new JPasswordField();
-		confirmPassword.setBounds(196, 307, 134, 28);
+		confirmPassword.setBounds(260, 227, 134, 28);
 		getContentPane().add(confirmPassword);
 		
 		JButton Register = new JButton("Register");
@@ -124,31 +113,31 @@ public class Register extends JFrame {
 		
 		usernameIncorrect = new JLabel("incorrect");
 		usernameIncorrect.setForeground(Color.RED);
-		usernameIncorrect.setBounds(340, 28, 46, 14);
+		usernameIncorrect.setBounds(404, 28, 60, 14);
 		getContentPane().add(usernameIncorrect);
 		usernameIncorrect.setVisible(false);
 		
 		firstNameIncorrect = new JLabel("incorrect");
 		firstNameIncorrect.setForeground(Color.RED);
-		firstNameIncorrect.setBounds(340, 76, 46, 14);
+		firstNameIncorrect.setBounds(404, 76, 60, 14);
 		getContentPane().add(firstNameIncorrect);
 		firstNameIncorrect.setVisible(false);
 		
 		lastNameIncorrect = new JLabel("incorrect");
 		lastNameIncorrect.setForeground(Color.RED);
-		lastNameIncorrect.setBounds(340, 121, 46, 14);
+		lastNameIncorrect.setBounds(404, 121, 60, 14);
 		getContentPane().add(lastNameIncorrect);
 		lastNameIncorrect.setVisible(false);
 		
 		passwordIncorrect = new JLabel("incorrect");
 		passwordIncorrect.setForeground(Color.RED);
-		passwordIncorrect.setBounds(340, 262, 46, 14);
+		passwordIncorrect.setBounds(404, 195, 60, 14);
 		getContentPane().add(passwordIncorrect);
 		passwordIncorrect.setVisible(false);
 		
 		confirmPasswordIncorrect = new JLabel("incorrect");
 		confirmPasswordIncorrect.setForeground(Color.RED);
-		confirmPasswordIncorrect.setBounds(340, 314, 46, 14);
+		confirmPasswordIncorrect.setBounds(404, 234, 60, 14);
 		getContentPane().add(confirmPasswordIncorrect);
 		confirmPasswordIncorrect.setVisible(false);
 		
@@ -203,14 +192,7 @@ public class Register extends JFrame {
 		String user = lastName.getText();
 		return  user.trim();	
 		}
-	private String getSecondaryPhone(){
-		String user = secondaryPhone.getText();
-		//takes out all not  digits
-		user = user.replaceAll("\\D+","");
-		return  user.trim();	
-		}
-	
-	
+		
 	
 	private boolean registerChecks(){
 		int count = 0;
