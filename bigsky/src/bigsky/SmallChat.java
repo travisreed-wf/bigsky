@@ -184,6 +184,9 @@ public class SmallChat  {
 			offset+=textSent.getContent().length();
 		}
 		
+		
+		
+		
 		if(!textRecieved.getContent().trim().isEmpty()){
 			textRecieved.setContent(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
 //			textArea.append(textRecieved.getSender().getFirstName() + ":\t" + textRecieved.getContent() + "\n\n");
