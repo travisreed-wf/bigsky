@@ -2,7 +2,6 @@ package bigsky;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -11,6 +10,8 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -112,6 +113,9 @@ public class Login extends JFrame {
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
             	      
             }
@@ -152,42 +156,51 @@ public class Login extends JFrame {
 	}
 	
 	//returns row number of users database row
-	public boolean login() throws ClassNotFoundException, SQLException{
+	public boolean login() throws ClassNotFoundException, SQLException, UnknownHostException{
 		
 		
 		
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
 		Statement stmt = con.createStatement();
+		InetAddress iP =InetAddress.getLocalHost();
 		
-		//stmt.executeUpdate("insert into testTable (phoneNumber,lastName,firstName, password) values ('1111111111','Johnson','Missy','mypassword')");
+		
 		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + getUsername() + "'");
 	
 		if(rs.next() == false){
 			promptRegister.setVisible(true);
+			rs.close();		
+			con.close();
 			return false;
 		}
 		if(rs.getString("password") == null){
 			promptRegister.setVisible(true);
+			rs.close();		
+			con.close();
 			return false;			
 		}
 			
 		else if(!getUsername().equals(rs.getString("phonenumber")) || !getPassword(passwordField_1).equals(rs.getString("password"))){
 			wrongInfo.setVisible(true);
+			rs.close();		
+			con.close();
 			return false;
 		}
 
 		
 		else if(!getUsername().equals(rs.getString("phonenumber")) && !getPassword(passwordField_1).equals(rs.getString("password"))){
 			promptRegister.setVisible(true);
+			rs.close();		
+			con.close();
 			return false;
 		}
 
 		
+		//stmt.executeUpdate("UPDATE testTable SET phoneNumber='" + getUsername() + "' WHERE IP_Computer='" + iP + "';");
 		
 		rs.close();		
 		con.close();
-
 		return true;
 		
 	}
