@@ -101,7 +101,7 @@ public class TaskBar {
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	SmallChat smallChat = new SmallChat();
+            	SmallChat smallChat = new SmallChat(null, null);
             	smallChat.getFrmBluetext().setVisible(true);
            
             }

@@ -2,6 +2,10 @@
 ## Eclipse
 #################
 
+#Test classes
+bigsky/src/bigsky/experiments/
+bigsky/config.properties
+
 *.pydevproject
 .project
 .metadata
