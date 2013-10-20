@@ -84,9 +84,10 @@ public class NewContact {
 					if (Global.nextContactNumber < Global.totalAllowableContacts){
 						//TODO remove previous listElement
 						Global.contactList[Global.nextContactNumber] = contactToAdd;
-						addContactToListModel(Global.nextContactNumber);
-						Global.nextContactNumber++;
-						frame.setVisible(false);
+						if (addContactToListModel(Global.nextContactNumber)){
+							Global.nextContactNumber++;
+							frame.setVisible(false);
+						}	
 					}
 					else {
 						//TODO
@@ -147,8 +148,9 @@ public class NewContact {
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 	
-	private void addContactToListModel(int i){
+	private boolean addContactToListModel(int i){
 		String newEntry;
+		Contact[] test = Global.contactList;
 		if (!Global.contactList[i].getFirstName().equals("")){
 			if (!Global.contactList[i].getLastName().equals("")){
 				newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
@@ -158,14 +160,24 @@ public class NewContact {
 			}
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
-			Global.listModel.add(j, newEntry);
+			if (Global.listModel.get(j).equals(newEntry)){
+				JOptionPane.showMessageDialog(null, "This Name already exists. Please Alter Name");
+				Global.contactList[i] = new Contact("", "", "", "");
+				return false;
+			}
+			else {
+				Global.listModel.add(j, newEntry);
+				return true;
+			}
 		}
 		else if (!Global.contactList[i].getLastName().equals("")){
 			newEntry = Global.contactList[i].getLastName();
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
 			Global.listModel.add(j, newEntry);
+			return true;
 		}
+		return false;
 	}
 	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
 		String testEntry = newEntry.toLowerCase();

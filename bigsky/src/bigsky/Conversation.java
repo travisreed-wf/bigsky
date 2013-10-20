@@ -129,6 +129,7 @@ public class Conversation {
 		Global.contactList[1] = new Contact("Andrew", "Hartman", "1234567890", "");
 		Global.contactList[2] = new Contact("Jon", "Mielke", "1234567890", "");
 		Global.contactList[3] = new Contact("Andrew", "Guibert", "1234567890", "");
+		Global.nextContactNumber += 4;
 
 		for (int i=0;i<Global.contactList.length;i++){
 			addContactToListModel(i);
@@ -249,6 +250,8 @@ public class Conversation {
 	
 	private int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactList.length-1;i++){
+			String test = (String)Global.contactList[i].getFirstName();
+			String last = (String)Global.contactList[i].getLastName();
 			if (Global.contactList[i].getFirstName().equals(selectedValue)){
 				return i;
 			}
