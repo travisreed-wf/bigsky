@@ -148,13 +148,36 @@ public class NewContact {
 	}
 	
 	private void addContactToListModel(int i){
+		String newEntry;
 		if (!Global.contactList[i].getFirstName().equals("")){
-			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
-			Global.listModel.addElement(newEntry);
+			if (!Global.contactList[i].getLastName().equals("")){
+				newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			}
+			else {
+				newEntry = Global.contactList[i].getFirstName();
+			}
+			int j = Global.listModel.size()/2;
+			j = getNewPositionBasedOnStringComparision(j, newEntry);
+			Global.listModel.add(j, newEntry);
 		}
 		else if (!Global.contactList[i].getLastName().equals("")){
-			String newEntry = Global.contactList[i].getLastName();
-			Global.listModel.addElement(newEntry);
+			newEntry = Global.contactList[i].getLastName();
+			int j = Global.listModel.size()/2;
+			j = getNewPositionBasedOnStringComparision(j, newEntry);
+			Global.listModel.add(j, newEntry);
 		}
+	}
+	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
+		String testEntry = newEntry.toLowerCase();
+		String listEntry = (String)Global.listModel.get(j);
+		while (testEntry.compareTo(listEntry.toLowerCase()) < 0 & j!=0){
+			j = j /2;
+			listEntry = (String)Global.listModel.get(j);
+		}
+		while (testEntry.compareTo(listEntry.toLowerCase()) > 0 & j < Global.listModel.size()-1){
+			j++;
+			listEntry = (String)Global.listModel.get(j);
+		}
+		return j;
 	}
 }

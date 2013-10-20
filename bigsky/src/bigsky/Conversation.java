@@ -228,6 +228,7 @@ public class Conversation {
 		else {
 			for (int i = 0; i < Global.contactList.length-1; i++){
 				addContactToListModel(i);
+				sortListModel();
 			}
 		}
 		if (Global.listModel.size() < 12){
@@ -247,7 +248,7 @@ public class Conversation {
 	}
 	
 	private int findContactInListModel(String selectedValue){
-		for (int i=0;i<Global.contactList.length;i++){
+		for (int i=0;i<Global.contactList.length-1;i++){
 			if (Global.contactList[i].getFirstName().equals(selectedValue)){
 				return i;
 			}

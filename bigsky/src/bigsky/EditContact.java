@@ -99,6 +99,7 @@ public class EditContact {
 				addContactToListModel(contactArrayNumber);
 				frame.setVisible(false);
 				//TODO validation
+				//TODO Place in correct order
 				
 			}
 		});
