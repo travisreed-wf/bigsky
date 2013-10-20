@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,7 +18,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -133,6 +133,7 @@ public class Conversation {
 		for (int i=0;i<Global.contactList.length;i++){
 			addContactToListModel(i);
 		}
+		sortListModel();
 
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
@@ -263,6 +264,18 @@ public class Conversation {
 	public JFrame getFrmBluetext() {
 		// TODO Auto-generated method stub
 		return frmBluetext;
+	}
+	
+	private void sortListModel(){
+		String[] tempList = new String[Global.listModel.size()];
+		for (int i=0; i<Global.listModel.size(); i++) {
+			tempList[i] = (String)Global.listModel.get(i);
+		}
+		Global.listModel.removeAllElements();
+		Arrays.sort(tempList);
+		for (int i=0; i<tempList.length;i++){
+			Global.listModel.addElement(tempList[i]);
+		}
 	}
 }
 
