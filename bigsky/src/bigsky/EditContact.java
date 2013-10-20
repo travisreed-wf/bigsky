@@ -24,15 +24,15 @@ public class EditContact {
 	private JButton btnCancel;
 	private Contact contactToEdit;
 	private int contactArrayNumber;
-	private String oldFirstName;
+	private String oldName;
 
 	/**
 	 * Create the application.
 	 */
-	public EditContact(Contact contact, int contactNumber) {
+	public EditContact(Contact contact, int contactNumber, String selectedValue) {
 		contactToEdit = contact;
 		contactArrayNumber = contactNumber;
-		oldFirstName = contactToEdit.getFirstName();
+		oldName = selectedValue;
 		initialize();
 	}
 
@@ -95,8 +95,8 @@ public class EditContact {
 				contactToEdit.setPhoneNumber(txtPhone.getText());
 				contactToEdit.setSecondPhone(txtSecondPhone.getText());
 				Global.contactList[contactArrayNumber] = contactToEdit;
-				Global.listModel.removeElement(oldFirstName);
-				Global.listModel.addElement(contactToEdit.getFirstName());
+				Global.listModel.removeElement(oldName);
+				addContactToListModel(contactArrayNumber);
 				frame.setVisible(false);
 				//TODO validation
 				
@@ -152,4 +152,17 @@ public class EditContact {
 		}
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
+	
+	public void addContactToListModel(int i){
+		if (!Global.contactList[i].getFirstName().equals("")){
+			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+		else if (!Global.contactList[i].getLastName().equals("")){
+			String newEntry = Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+	}
+	
+	
 }

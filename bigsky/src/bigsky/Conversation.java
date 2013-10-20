@@ -28,6 +28,7 @@ public class Conversation {
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	private JList list = new JList(Global.listModel);
+	private final int returnsNull = 99999;
 
 	/**
 	 * Launch the application.
@@ -125,13 +126,12 @@ public class Conversation {
 		Global.contactList[499] = firstContact;
 
 		Global.contactList[0] = new Contact("Travis", "Reed", "5633817739", "");
-		Global.contactList[1] = new Contact("Andrew", "Hartman", "523234", "");
-		Global.contactList[2] = new Contact("Jon", "Mielke", "52342", "");
+		Global.contactList[1] = new Contact("Andrew", "Hartman", "1234567890", "");
+		Global.contactList[2] = new Contact("Jon", "Mielke", "1234567890", "");
+		Global.contactList[3] = new Contact("Andrew", "Guibert", "1234567890", "");
 
 		for (int i=0;i<Global.contactList.length;i++){
-			if (!Global.contactList[i].getFirstName().equals("")){
-				Global.listModel.addElement(Global.contactList[i].getFirstName());
-			}
+			addContactToListModel(i);
 		}
 
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -188,16 +188,15 @@ public class Conversation {
 		JButton editContact = new JButton("EditContact");
 		editContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String selectedContact = (String)list.getSelectedValue();
-				Contact selectedContactCon;
-				for (int i=0;i<Global.contactList.length;i++){
-					if (Global.contactList[i].getFirstName().equals(selectedContact)){
-						selectedContactCon = Global.contactList[i];
-						EditContact editCon = new EditContact(selectedContactCon, i);
-						editCon.getFrmEditContact().setVisible(true);
-						break;
-					}
+				String selectedValue = (String)list.getSelectedValue();
+				int i = findContactInListModel(selectedValue);
+				if (i != returnsNull){
+					Contact selectedContactCon = Global.contactList[i];
+					EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
+					editCon.getFrmEditContact().setVisible(true);
 				}
+				else System.out.println("Error in Edit Contact");
+					
 			}
 		});
 		editContact.setBounds(150, 538, 117, 29);
@@ -213,21 +212,47 @@ public class Conversation {
 		if (!searchTerm.equals("")){
 			for (int i = 0; i < Global.contactList.length-1; i++){
 				if (Global.contactList[i].getFirstName().toLowerCase().contains(searchTerm.toLowerCase())) {
-					Global.listModel.addElement(Global.contactList[i].getFirstName());
+						addContactToListModel(i);
 				}
-				else Global.listModel.removeElement(Global.contactList[i].getFirstName());
+				else if (Global.contactList[i].getLastName().toLowerCase().contains(searchTerm.toLowerCase())) {
+					addContactToListModel(i);
+				}
 			}
 		}
 		else {
 			for (int i = 0; i < Global.contactList.length-1; i++){
-				if (!Global.contactList[i].getFirstName().equals("")) {
-					Global.listModel.addElement(Global.contactList[i].getFirstName());
-				}
+				addContactToListModel(i);
 			}
 		}
 		if (Global.listModel.size() < 12){
 			Global.listModel.addElement(Global.contactList[499].getFirstName());
 		}
+	}
+	
+	private void addContactToListModel(int i){
+		if (!Global.contactList[i].getFirstName().equals("")){
+			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+		else if (!Global.contactList[i].getLastName().equals("")){
+			String newEntry = Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+	}
+	
+	private int findContactInListModel(String selectedValue){
+		for (int i=0;i<Global.contactList.length;i++){
+			if (Global.contactList[i].getFirstName().equals(selectedValue)){
+				return i;
+			}
+			else if (Global.contactList[i].getLastName().equals(selectedValue)){
+				return i;
+			}
+			else if ((Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName()).equals(selectedValue)){
+				return i;
+			}
+		}
+		return returnsNull;
 	}
 
 	public JFrame getFrmBluetext() {
@@ -235,3 +260,4 @@ public class Conversation {
 		return frmBluetext;
 	}
 }
+

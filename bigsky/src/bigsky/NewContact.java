@@ -80,14 +80,11 @@ public class NewContact {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Contact contactToAdd = validateContact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
-				if (contactToAdd == null){
-					
-				}
-				else {
+				if (contactToAdd != null){
 					if (Global.nextContactNumber < Global.totalAllowableContacts){
 						//TODO remove previous listElement
 						Global.contactList[Global.nextContactNumber] = contactToAdd;
-						Global.listModel.addElement(contactToAdd.getFirstName());
+						addContactToListModel(Global.nextContactNumber);
 						Global.nextContactNumber++;
 						frame.setVisible(false);
 					}
@@ -148,5 +145,16 @@ public class NewContact {
 			}
 		}
 		return new Contact(firstName, lastName, phone, secondPhone);
+	}
+	
+	private void addContactToListModel(int i){
+		if (!Global.contactList[i].getFirstName().equals("")){
+			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+		else if (!Global.contactList[i].getLastName().equals("")){
+			String newEntry = Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
 	}
 }
