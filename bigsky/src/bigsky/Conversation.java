@@ -138,17 +138,16 @@ public class Conversation {
 		scrollPane.setViewportView(list);
 
 
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBounds(226, 0, 150, 35);
-		panel.add(tabbedPane_1);
+		Global.conversationPane.setBounds(226, 0, 490, 35);
+		panel.add(Global.conversationPane);
 
 		JPanel panel_1 = new JPanel();
-		tabbedPane_1.addTab("New Conversation", null, panel_1, null);
+		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_2.setBounds(226, 25, 490, 385);
-		panel.add(panel_2);
+		JPanel conversationPanel = new JPanel();
+		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		conversationPanel.setBounds(226, 25, 490, 385);
+		panel.add(conversationPanel);
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -165,6 +164,12 @@ public class Conversation {
 		panel.add(txtrEnterMessageHere);
 
 		JButton btn_select_contact = new JButton("Start New Convo");
+		btn_select_contact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel panel_2 = new JPanel();
+				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
+			}
+		});
 		btn_select_contact.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
