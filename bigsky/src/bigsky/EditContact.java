@@ -1,11 +1,13 @@
 package bigsky;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class EditContact {
 
@@ -110,5 +112,44 @@ public class EditContact {
 	}
 	public JFrame getFrmEditContact(){
 		return frame;
+	}
+	
+	private Contact validateContact(String firstName, String lastName, String phone, String secondPhone){
+		if (firstName.equals("")) {
+			if (lastName.equals("")) {
+				if (phone.equals("")) {
+					JOptionPane.showMessageDialog(null, "Please Enter a First Name, Last Name, or Phone Number");
+					return null;
+				}
+				else {
+					firstName = phone;
+				}
+			}
+		}
+		if (phone.equals("")){
+			if (secondPhone.equals("")){
+				JOptionPane.showMessageDialog(null, "Please Enter a Phone Number");
+				return null;
+			}
+			else {
+				phone = secondPhone;
+				secondPhone = "";
+			}
+		}
+		else {
+			phone = phone.replaceAll("\\D+","");
+			if (phone.length() != 10){
+				JOptionPane.showMessageDialog(null, "Please Enter all Phone Numbers with 10 digits");
+				return null;
+			}
+		}
+		if (!secondPhone.equals("")){
+			secondPhone = secondPhone.replaceAll("\\D+","");
+			if (secondPhone.length() != 10){
+				JOptionPane.showMessageDialog(null, "Please Enter all Phone Numbers with 10 digits");
+				return null;
+			}
+		}
+		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 }
