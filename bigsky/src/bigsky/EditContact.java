@@ -1,11 +1,13 @@
 package bigsky;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class EditContact {
 
@@ -22,15 +24,15 @@ public class EditContact {
 	private JButton btnCancel;
 	private Contact contactToEdit;
 	private int contactArrayNumber;
-	private String oldFirstName;
+	private String oldName;
 
 	/**
 	 * Create the application.
 	 */
-	public EditContact(Contact contact, int contactNumber) {
+	public EditContact(Contact contact, int contactNumber, String selectedValue) {
 		contactToEdit = contact;
 		contactArrayNumber = contactNumber;
-		oldFirstName = contactToEdit.getFirstName();
+		oldName = selectedValue;
 		initialize();
 	}
 
@@ -93,10 +95,11 @@ public class EditContact {
 				contactToEdit.setPhoneNumber(txtPhone.getText());
 				contactToEdit.setSecondPhone(txtSecondPhone.getText());
 				Global.contactList[contactArrayNumber] = contactToEdit;
-				Global.listModel.removeElement(oldFirstName);
-				Global.listModel.addElement(contactToEdit.getFirstName());
+				Global.listModel.removeElement(oldName);
+				addContactToListModel(contactArrayNumber);
 				frame.setVisible(false);
 				//TODO validation
+				//TODO Place in correct order
 				
 			}
 		});
@@ -111,4 +114,56 @@ public class EditContact {
 	public JFrame getFrmEditContact(){
 		return frame;
 	}
+	
+	private Contact validateContact(String firstName, String lastName, String phone, String secondPhone){
+		if (firstName.equals("")) {
+			if (lastName.equals("")) {
+				if (phone.equals("")) {
+					JOptionPane.showMessageDialog(null, "Please Enter a First Name, Last Name, or Phone Number");
+					return null;
+				}
+				else {
+					firstName = phone;
+				}
+			}
+		}
+		if (phone.equals("")){
+			if (secondPhone.equals("")){
+				JOptionPane.showMessageDialog(null, "Please Enter a Phone Number");
+				return null;
+			}
+			else {
+				phone = secondPhone;
+				secondPhone = "";
+			}
+		}
+		else {
+			phone = phone.replaceAll("\\D+","");
+			if (phone.length() != 10){
+				JOptionPane.showMessageDialog(null, "Please Enter all Phone Numbers with 10 digits");
+				return null;
+			}
+		}
+		if (!secondPhone.equals("")){
+			secondPhone = secondPhone.replaceAll("\\D+","");
+			if (secondPhone.length() != 10){
+				JOptionPane.showMessageDialog(null, "Please Enter all Phone Numbers with 10 digits");
+				return null;
+			}
+		}
+		return new Contact(firstName, lastName, phone, secondPhone);
+	}
+	
+	public void addContactToListModel(int i){
+		if (!Global.contactList[i].getFirstName().equals("")){
+			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+		else if (!Global.contactList[i].getLastName().equals("")){
+			String newEntry = Global.contactList[i].getLastName();
+			Global.listModel.addElement(newEntry);
+		}
+	}
+	
+	
 }
