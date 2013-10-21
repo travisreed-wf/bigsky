@@ -1,4 +1,4 @@
-package bigsky;
+package bigsky.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bigsky.Contact;
+import bigsky.Global;
 
 public class EditContact {
 

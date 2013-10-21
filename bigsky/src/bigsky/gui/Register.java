@@ -1,4 +1,4 @@
-package bigsky;
+package bigsky.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
