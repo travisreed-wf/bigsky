@@ -1,4 +1,4 @@
-package bigsky;
+package bigsky.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class EditContact {
+import bigsky.Contact;
+import bigsky.Global;
+
+public class NewContact {
 
 	private JFrame frame;
 	private JLabel lblFirstName;
@@ -22,17 +25,11 @@ public class EditContact {
 	private JLabel lblSecondPhone;
 	private JButton btnSubmit;
 	private JButton btnCancel;
-	private Contact contactToEdit;
-	private int contactArrayNumber;
-	private String oldName;
 
 	/**
 	 * Create the application.
 	 */
-	public EditContact(Contact contact, int contactNumber, String selectedValue) {
-		contactToEdit = contact;
-		contactArrayNumber = contactNumber;
-		oldName = selectedValue;
+	public NewContact() {
 		initialize();
 	}
 
@@ -45,7 +42,6 @@ public class EditContact {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setTitle("Edit Contact");
 		
 		lblFirstName = new JLabel("First Name:");
 		lblFirstName.setBounds(33, 35, 86, 16);
@@ -59,25 +55,21 @@ public class EditContact {
 		txtFirstName.setBounds(136, 36, 134, 28);
 		frame.getContentPane().add(txtFirstName);
 		txtFirstName.setColumns(10);
-		txtFirstName.setText(contactToEdit.getFirstName());
 		
 		txtLastName = new JTextField();
 		txtLastName.setColumns(10);
 		txtLastName.setBounds(136, 81, 134, 28);
 		frame.getContentPane().add(txtLastName);
-		txtLastName.setText(contactToEdit.getLastName());
 		
 		txtPhone = new JTextField();
 		txtPhone.setColumns(10);
 		txtPhone.setBounds(136, 122, 134, 28);
 		frame.getContentPane().add(txtPhone);
-		txtPhone.setText(contactToEdit.getPhoneNumber());
 		
 		txtSecondPhone = new JTextField();
 		txtSecondPhone.setColumns(10);
 		txtSecondPhone.setBounds(136, 171, 134, 28);
 		frame.getContentPane().add(txtSecondPhone);
-		txtSecondPhone.setText(contactToEdit.getSecondPhone());
 		
 		lblPhone = new JLabel("Phone:");
 		lblPhone.setBounds(33, 128, 86, 16);
@@ -90,17 +82,22 @@ public class EditContact {
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				contactToEdit.setFirstName(txtFirstName.getText());
-				contactToEdit.setLastName(txtLastName.getText());
-				contactToEdit.setPhoneNumber(txtPhone.getText());
-				contactToEdit.setSecondPhone(txtSecondPhone.getText());
-				Global.contactList[contactArrayNumber] = contactToEdit;
-				Global.listModel.removeElement(oldName);
-				addContactToListModel(contactArrayNumber);
-				frame.setVisible(false);
-				//TODO validation
-				//TODO Place in correct order
-				
+				Contact contactToAdd = validateContact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
+				if (contactToAdd != null){
+					if (Global.nextContactNumber < Global.totalAllowableContacts){
+						//TODO remove previous listElement
+						Global.contactList[Global.nextContactNumber] = contactToAdd;
+						if (addContactToListModel(Global.nextContactNumber)){
+							Global.nextContactNumber++;
+							frame.setVisible(false);
+						}	
+					}
+					else {
+						//TODO
+					}
+					
+				}
+					
 			}
 		});
 		btnSubmit.setBounds(189, 230, 117, 29);
@@ -108,7 +105,7 @@ public class EditContact {
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
 			}
 		});
@@ -116,7 +113,7 @@ public class EditContact {
 		frame.getContentPane().add(btnCancel);
 		
 	}
-	public JFrame getFrmEditContact(){
+	public JFrame getFrmNewContact(){
 		return frame;
 	}
 	
@@ -159,16 +156,48 @@ public class EditContact {
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 	
-	public void addContactToListModel(int i){
+	private boolean addContactToListModel(int i){
+		String newEntry;
+		Contact[] test = Global.contactList;
 		if (!Global.contactList[i].getFirstName().equals("")){
-			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
-			Global.listModel.addElement(newEntry);
+			if (!Global.contactList[i].getLastName().equals("")){
+				newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+			}
+			else {
+				newEntry = Global.contactList[i].getFirstName();
+			}
+			int j = Global.listModel.size()/2;
+			j = getNewPositionBasedOnStringComparision(j, newEntry);
+			if (Global.listModel.get(j).equals(newEntry)){
+				JOptionPane.showMessageDialog(null, "This Name already exists. Please Alter Name");
+				Global.contactList[i] = new Contact("", "", "", "");
+				return false;
+			}
+			else {
+				Global.listModel.add(j, newEntry);
+				return true;
+			}
 		}
 		else if (!Global.contactList[i].getLastName().equals("")){
-			String newEntry = Global.contactList[i].getLastName();
-			Global.listModel.addElement(newEntry);
+			newEntry = Global.contactList[i].getLastName();
+			int j = Global.listModel.size()/2;
+			j = getNewPositionBasedOnStringComparision(j, newEntry);
+			Global.listModel.add(j, newEntry);
+			return true;
 		}
+		return false;
 	}
-	
-	
+	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
+		String testEntry = newEntry.toLowerCase();
+		String listEntry = (String)Global.listModel.get(j);
+		while (testEntry.compareTo(listEntry.toLowerCase()) < 0 & j!=0){
+			j = j /2;
+			listEntry = (String)Global.listModel.get(j);
+		}
+		while (testEntry.compareTo(listEntry.toLowerCase()) > 0 & j < Global.listModel.size()-1){
+			j++;
+			listEntry = (String)Global.listModel.get(j);
+		}
+		return j;
+	}
 }

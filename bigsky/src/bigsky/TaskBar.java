@@ -5,6 +5,9 @@ import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import javax.swing.*;
+
+import bigsky.gui.Conversation;
+import bigsky.gui.SmallChat;
  
 
 

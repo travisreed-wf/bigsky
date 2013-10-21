@@ -1,4 +1,5 @@
-package bigsky;
+
+package bigsky.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -23,6 +24,20 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 
+import bigsky.Contact;
+import bigsky.Global;
+/**
+	 * Launch the application.
+	 */
+/**
+	 * Create the application.
+	 */
+/**
+	 * Initialize the contents of the frame.
+	 */
+//TODO this will need to be removed once we actually have data
+//TODO start new conversation
+// TODO Auto-generated method stub
 public class Conversation {
 
 	private JFrame frmBluetext;
@@ -283,4 +298,3 @@ public class Conversation {
 		}
 	}
 }
-
