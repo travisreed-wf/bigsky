@@ -224,6 +224,9 @@ public class Conversation {
 				else if (Global.contactList[i].getLastName().toLowerCase().contains(searchTerm.toLowerCase())) {
 					addContactToListModel(i);
 				}
+				else if ((Global.contactList[i].getFirstName().toLowerCase() + " " + Global.contactList[i].getLastName().toLowerCase()).contains(searchTerm.toLowerCase())) {
+					addContactToListModel(i);
+				}
 			}
 		}
 		else {
