@@ -101,6 +101,11 @@ public class NewContact {
 		frame.getContentPane().add(btnSubmit);
 		
 		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+			}
+		});
 		btnCancel.setBounds(33, 230, 117, 29);
 		frame.getContentPane().add(btnCancel);
 		

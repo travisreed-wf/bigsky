@@ -250,8 +250,6 @@ public class Conversation {
 	
 	private int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactList.length-1;i++){
-			String test = (String)Global.contactList[i].getFirstName();
-			String last = (String)Global.contactList[i].getLastName();
 			if (Global.contactList[i].getFirstName().equals(selectedValue)){
 				return i;
 			}
