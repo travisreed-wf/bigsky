@@ -2,6 +2,10 @@ package bigsky.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -82,12 +86,37 @@ public class NewContact {
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Contact contactToAdd = validateContact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
+				String first = txtFirstName.getText();
+				String last = txtLastName.getText();
+				String phone = txtPhone.getText();
+				String secondPhone = txtSecondPhone.getText();
+				Contact contactToAdd = validateContact(first, last, phone, secondPhone);
 				if (contactToAdd != null){
 					if (Global.nextContactNumber < Global.totalAllowableContacts){
 						//TODO remove previous listElement
 						Global.contactList[Global.nextContactNumber] = contactToAdd;
 						if (addContactToListModel(Global.nextContactNumber)){
+							String newLine = System.getProperty("line.separator");
+							String data = first + ", " + last + ", " + phone + ", " + secondPhone + newLine;
+							 
+				    		File file =new File("contact.txt");
+				 
+				    		try {
+				    			//if file doesnt exists, then create it
+					    		if(!file.exists()){
+									file.createNewFile();
+					    		}
+					 
+					    		//true = append file
+					    		FileWriter fileWritter = new FileWriter(file.getName(),true);
+					    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+					    	    bufferWritter.write(data);
+					    	    bufferWritter.close();
+				    		}
+				    		catch (IOException ie){
+				    			
+				    		}
+				    		
 							Global.nextContactNumber++;
 							frame.setVisible(false);
 						}	

@@ -9,6 +9,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -140,11 +143,27 @@ public class Conversation {
 		Contact firstContact = new Contact("Create Contact", null, null, null);
 		Global.contactList[499] = firstContact;
 
-		Global.contactList[0] = new Contact("Travis", "Reed", "5633817739", "");
-		Global.contactList[1] = new Contact("Andrew", "Hartman", "1234567890", "");
-		Global.contactList[2] = new Contact("Jon", "Mielke", "1234567890", "");
-		Global.contactList[3] = new Contact("Andrew", "Guibert", "1234567890", "");
-		Global.nextContactNumber += 4;
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader("contact.txt"));
+			String sCurrentLine;
+			while ((sCurrentLine = br.readLine()) != null) {
+				String[] splitline = sCurrentLine.split(",");
+				String first = splitline[0];
+				String last = splitline[1];
+				String phone = splitline[2];
+				String secondPhone = splitline[3];
+				Global.contactList[Global.nextContactNumber] = new Contact(first, last, phone, secondPhone);
+				Global.nextContactNumber++;
+			}
+			br.close();
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			
+		}
 
 		for (int i=0;i<Global.contactList.length;i++){
 			addContactToListModel(i);
