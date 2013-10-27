@@ -88,10 +88,21 @@ public class Conversation {
 		menuBar.add(mnFile);
 
 		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
+		mnu_new_contact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openNewContactWindow();
+			}
+		});
 
 		mnFile.add(mnu_new_contact);
 
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
+		mnu_new_conversation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JPanel panel_2 = new JPanel();
+				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
+			}
+		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
 		});
 		mnFile.add(mnu_new_conversation);
@@ -174,8 +185,7 @@ public class Conversation {
 			public void mouseClicked(MouseEvent arg0) {
 				String selectedContact = (String)list.getSelectedValue();
 				if (selectedContact.equals("Create Contact ")) {
-					NewContact newCon = new NewContact();
-					newCon.getFrmNewContact().setVisible(true);
+					openNewContactWindow();
 				}
 				else {
 					//TODO start new convo
@@ -230,18 +240,9 @@ public class Conversation {
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
 
-		JButton btnAddContact = new JButton("AddContact");
-		btnAddContact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				openNewContactWindow();
-			}
-		});
-		btnAddContact.setBounds(26, 538, 117, 29);
-		panel.add(btnAddContact);
-
 		JButton editContact = new JButton("EditContact");
 		editContact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			 public void actionPerformed(ActionEvent e) {
 				String selectedValue = (String)list.getSelectedValue();
 				int i = findContactInListModel(selectedValue);
 				if (i != returnsNull){
