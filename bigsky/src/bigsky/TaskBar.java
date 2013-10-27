@@ -3,17 +3,32 @@ package bigsky;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.ObjectInputStream;
 import java.net.URL;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
-import bigsky.gui.Conversation;
-import bigsky.gui.SmallChat;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+
+import bigsky.gui.*;
+import bigsky.*;
+
  
 
 
-public class TaskBar {
+public class TaskBar{
 
 
+public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
+public static ArrayList<TextMessage> textHistory = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
+public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
+public static SmallChat smallChatWindow = null;
+public static Contact me = new Contact("me", "me","me","");
+public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
+public static final TrayIcon trayIcon = createTrayIconImage();
+private static final SystemTray tray = SystemTray.getSystemTray();
 
     public static void main(String[] args) {
         try {
@@ -28,10 +43,18 @@ public class TaskBar {
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
+        
+        smallChatWindow = createSmallChat(me,you);
+        
+       	Login login = new Login();
+    	login.setVisible(true);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-               initialize();
+            	initialize();
+          
+                	
+               	
             }
         });
     }
@@ -48,13 +71,13 @@ public class TaskBar {
         
         
         final PopupMenu menu = new PopupMenu();
-        final TrayIcon trayIcon =createTrayIconImage();
+        
                
         
        // new TrayIcon(createImage("BlueText.gif", "tray icon"));
         
         
-        final SystemTray tray = SystemTray.getSystemTray();
+        
        
         //shows full image in taskbar
         trayIcon.setImageAutoSize(true);
@@ -69,14 +92,9 @@ public class TaskBar {
         menu.add(smallChat);
         menu.add(exitItem);
         trayIcon.setPopupMenu(menu);
+
          
-        try {
-            tray.add(trayIcon);
-        } catch (AWTException e) {
-            System.out.println("TrayIcon could not be added.");
-            return;
-        }
-         
+        
         
 //        trayIcon.addMouseListener(new MouseAdapter() {
 //            public void mouseReleased(MouseEvent e) {
@@ -88,6 +106,9 @@ public class TaskBar {
          
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
+
+            	
             	
             	Conversation convo = new Conversation();
             	convo.getFrmBluetext().setVisible(true);
@@ -104,9 +125,7 @@ public class TaskBar {
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	SmallChat smallChat = new SmallChat(null, null);
-            	smallChat.getFrmBluetext().setVisible(true);
-           
+            	smallChatWindow.getFrmBluetext().setVisible(true);
             }
         });
                 
@@ -116,6 +135,15 @@ public class TaskBar {
                 System.exit(0);
             }
         });
+    }
+    
+    public static void putIconInSystemTray(){
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            System.out.println("TrayIcon could not be added.");
+        }
+    	
     }
      
     //Obtain tray icon image
@@ -133,4 +161,41 @@ public class TaskBar {
             return tray;
         }
     }
+    
+    protected static SmallChat createSmallChat(Contact me, Contact you){
+    	SmallChat smallChat = new SmallChat(me,you);
+    	smallChat.getFrmBluetext().setVisible(false);
+    	return smallChat;
+    }
+
+	
+
 }
+
+class Queue<T>{
+	protected LinkedList<T> list;
+	
+	public Queue(){
+		list = new LinkedList<T>();
+	}
+	
+	public void add(T element){
+		list.add(element);
+	}
+	
+	public T removeFirst(){
+		return list.removeFirst();
+	}
+	
+	public boolean isEmpty(){
+		if(list.isEmpty()){
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	
+}
+
+
