@@ -97,7 +97,7 @@ public class NewContact {
 						Global.contactList[Global.nextContactNumber] = contactToAdd;
 						if (addContactToListModel(Global.nextContactNumber)){
 							String newLine = System.getProperty("line.separator");
-							String data = first + ", " + last + ", " + phone + ", " + secondPhone + newLine;
+							String data = first + "," + last + "," + phone + "," + secondPhone + newLine;
 							 
 				    		File file =new File("contact.txt");
 				 
