@@ -140,7 +140,7 @@ public class Conversation {
 		for (int i=0;i<Global.contactList.length;i++){
 			Global.contactList[i] = new Contact("", "", "", "");
 		}
-		Contact firstContact = new Contact("Create Contact", null, null, null);
+		Contact firstContact = new Contact("Create Contact", "", "", "");
 		Global.contactList[499] = firstContact;
 
 		try
@@ -169,6 +169,19 @@ public class Conversation {
 			addContactToListModel(i);
 		}
 		sortListModel();
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String selectedContact = (String)list.getSelectedValue();
+				if (selectedContact.equals("Create Contact ")) {
+					NewContact newCon = new NewContact();
+					newCon.getFrmNewContact().setVisible(true);
+				}
+				else {
+					//TODO start new convo
+				}
+			}
+		});
 
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
