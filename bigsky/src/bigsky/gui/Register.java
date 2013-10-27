@@ -2,6 +2,9 @@ package bigsky.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,6 +37,11 @@ public class Register extends JFrame {
 	private JLabel usernameIncorrect;
 	private JLabel firstNameIncorrect;
 	private JLabel lastNameIncorrect;
+	private JLabel usernameAlreadyRegistered;
+	private JLabel finishLogin;
+	private JButton Login;
+	private JButton Register;
+	private JLabel requiredToRegister;
 
 	/**
 	 * Launch the application.
@@ -55,8 +63,13 @@ public class Register extends JFrame {
 	 * Create the frame.
 	 */
 	public Register() {
+		JFrame frame = new JFrame();
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/gui/BlueText.gif")));
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 541, 500);
+		setBounds((width/2)-260, (height/2)-217, 521, 434);
 		getContentPane().setLayout(null);
 		contentPane = new JPanel();
 
@@ -67,11 +80,11 @@ public class Register extends JFrame {
 		firstName.setColumns(10);
 		
 		JLabel lblFirstName = new JLabel("First Name *");
-		lblFirstName.setBounds(5, 75, 73, 16);
+		lblFirstName.setBounds(5, 75, 161, 16);
 		getContentPane().add(lblFirstName);
 		
 		JLabel lblLastName = new JLabel("Last Name *");
-		lblLastName.setBounds(5, 120, 73, 16);
+		lblLastName.setBounds(5, 120, 161, 16);
 		getContentPane().add(lblLastName);
 		
 		lastName = new JTextField();
@@ -81,7 +94,7 @@ public class Register extends JFrame {
 		getContentPane().add(lastName);
 		
 		JLabel lblPrimaryPhoneNumber = new JLabel("Primary Phone Number (Username) *");
-		lblPrimaryPhoneNumber.setBounds(5, 27, 221, 16);
+		lblPrimaryPhoneNumber.setBounds(5, 27, 250, 16);
 		getContentPane().add(lblPrimaryPhoneNumber);
 		
 		primaryPhone = new JTextField();
@@ -91,7 +104,7 @@ public class Register extends JFrame {
 		getContentPane().add(primaryPhone);
 		
 		JLabel lblPassword = new JLabel("Password *");
-		lblPassword.setBounds(5, 194, 72, 16);
+		lblPassword.setBounds(5, 194, 202, 16);
 		getContentPane().add(lblPassword);
 		
 		password = new JPasswordField();
@@ -100,15 +113,15 @@ public class Register extends JFrame {
 		getContentPane().add(password);
 		
 		JLabel lblConfirmPassword = new JLabel("Confirm Password *");
-		lblConfirmPassword.setBounds(5, 233, 123, 16);
+		lblConfirmPassword.setBounds(5, 233, 212, 16);
 		getContentPane().add(lblConfirmPassword);
 		
 		confirmPassword = new JPasswordField();
 		confirmPassword.setBounds(260, 227, 134, 28);
 		getContentPane().add(confirmPassword);
 		
-		JButton Register = new JButton("Register");
-		Register.setBounds(138, 379, 117, 29);
+		Register = new JButton("Register");
+		Register.setBounds(188, 328, 117, 29);
 		getContentPane().add(Register);
 		
 		usernameIncorrect = new JLabel("incorrect");
@@ -141,31 +154,74 @@ public class Register extends JFrame {
 		getContentPane().add(confirmPasswordIncorrect);
 		confirmPasswordIncorrect.setVisible(false);
 		
+		usernameAlreadyRegistered = new JLabel("Username Already Registered");
+		usernameAlreadyRegistered.setForeground(Color.RED);
+		usernameAlreadyRegistered.setBounds(188, 303, 246, 14);
+		getContentPane().add(usernameAlreadyRegistered);
+		usernameAlreadyRegistered.setVisible(false);
 		
+		
+		Login = new JButton("Login");
+		Login.setBounds(188, 328, 117, 29);
+		getContentPane().add(Login);
+		Login.setVisible(false);
+		
+		finishLogin = new JLabel("Login to finish registrtion");
+		finishLogin.setForeground(Color.BLUE);
+		finishLogin.setBounds(188, 303, 171, 14);
+		getContentPane().add(finishLogin);
+		finishLogin.setVisible(false);
+		
+		requiredToRegister = new JLabel("* Required to register");
+		requiredToRegister.setForeground(Color.RED);
+		requiredToRegister.setBounds(182, 367, 212, 16);
+		getContentPane().add(requiredToRegister);
+		requiredToRegister.setVisible(false);
 		
 	
 	
 		Register.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        
-	        	if(registerChecks()){
+	        	try {
+					if(registerChecks()){
 
-	        		try {
-						putInSystem();
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						try {
+							putInSystem();
+							
+							Register.setVisible(false);
+							Login.setVisible(true);
+							finishLogin.setVisible(true);
+							
+							
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						        		
 					}
-	        		        		
-	        	}
-	        	else{
-	        		retry();
-	        	}       
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+     
 	        }
 	    });
+		
+		Login.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	        	dispose();
+	        	Login log = new Login();
+	        	log.setVisible(true);
+	        }
+	    });
+		
 	}
 	
 	
@@ -194,13 +250,24 @@ public class Register extends JFrame {
 		}
 		
 	
-	private boolean registerChecks(){
+	private boolean registerChecks() throws ClassNotFoundException, SQLException{
 		int count = 0;
 		String pass = getPassword(password);
 		String confirmPass = getPassword(confirmPassword);
 		String username = getUsername();
 		String firstName = getFirstName();
 		String lastName = getLastName();
+		
+		passwordIncorrect.setVisible(false);
+		confirmPasswordIncorrect.setVisible(false);
+		usernameIncorrect.setVisible(false);
+		lastNameIncorrect.setVisible(false);
+		requiredToRegister.setVisible(false);
+		
+		if(isInSystem()){
+			usernameAlreadyRegistered.setVisible(true);
+			return false;
+		}
 		
 		if(pass == null || confirmPass == null || pass.equals("")|| confirmPass.equals("")|| !pass.equals(confirmPass)){
 			passwordIncorrect.setVisible(true);
@@ -213,7 +280,7 @@ public class Register extends JFrame {
 			count++;
 		}
 		
-		if(firstName == null || lastName == null || firstName.equals("") || lastName.equals("")){
+		if(firstName == null || firstName.equals("")){
 			firstNameIncorrect.setVisible(true);
 			count++;
 		}
@@ -245,7 +312,24 @@ public class Register extends JFrame {
 	}
 	
 	
-	private void retry() {
+	private boolean isInSystem() throws ClassNotFoundException, SQLException{
 		
+		
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		Statement stmt = con.createStatement();
+	
+		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + getUsername() + "'");
+		//boolean temp = rs.next();
+		if(rs.next() == true){
+			
+			rs.close();		
+			con.close();
+			return true;
+		}
+		
+		rs.close();		
+		con.close();
+		return false;
 	}
 }
