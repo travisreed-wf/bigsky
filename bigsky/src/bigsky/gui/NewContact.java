@@ -16,9 +16,13 @@ import javax.swing.JTextField;
 import bigsky.Contact;
 import bigsky.Global;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+
 public class NewContact {
 
-	private JFrame frame;
+	private JFrame frmNewContact;
 	private JLabel lblFirstName;
 	private JLabel lblLastName;
 	private JTextField txtFirstName;
@@ -41,47 +45,52 @@ public class NewContact {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 355, 301);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmNewContact = new JFrame();
+		frmNewContact.setTitle("New Contact");
+		frmNewContact.setIconImage(Toolkit.getDefaultToolkit().getImage(NewContact.class.getResource("/bigsky/BlueText.gif")));
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		frmNewContact.setBounds((width/2)-177, (height/2)-150, 355, 301);
+		frmNewContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmNewContact.getContentPane().setLayout(null);
+		frmNewContact.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		lblFirstName = new JLabel("First Name:");
 		lblFirstName.setBounds(33, 35, 86, 16);
-		frame.getContentPane().add(lblFirstName);
+		frmNewContact.getContentPane().add(lblFirstName);
 		
 		lblLastName = new JLabel("Last Name:");
 		lblLastName.setBounds(33, 80, 86, 16);
-		frame.getContentPane().add(lblLastName);
+		frmNewContact.getContentPane().add(lblLastName);
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setBounds(136, 36, 134, 28);
-		frame.getContentPane().add(txtFirstName);
+		frmNewContact.getContentPane().add(txtFirstName);
 		txtFirstName.setColumns(10);
 		
 		txtLastName = new JTextField();
 		txtLastName.setColumns(10);
 		txtLastName.setBounds(136, 81, 134, 28);
-		frame.getContentPane().add(txtLastName);
+		frmNewContact.getContentPane().add(txtLastName);
 		
 		txtPhone = new JTextField();
 		txtPhone.setColumns(10);
 		txtPhone.setBounds(136, 122, 134, 28);
-		frame.getContentPane().add(txtPhone);
+		frmNewContact.getContentPane().add(txtPhone);
 		
 		txtSecondPhone = new JTextField();
 		txtSecondPhone.setColumns(10);
 		txtSecondPhone.setBounds(136, 171, 134, 28);
-		frame.getContentPane().add(txtSecondPhone);
+		frmNewContact.getContentPane().add(txtSecondPhone);
 		
 		lblPhone = new JLabel("Phone:");
 		lblPhone.setBounds(33, 128, 86, 16);
-		frame.getContentPane().add(lblPhone);
+		frmNewContact.getContentPane().add(lblPhone);
 		
 		lblSecondPhone = new JLabel("Second Phone:");
 		lblSecondPhone.setBounds(33, 177, 106, 16);
-		frame.getContentPane().add(lblSecondPhone);
+		frmNewContact.getContentPane().add(lblSecondPhone);
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
@@ -118,7 +127,7 @@ public class NewContact {
 				    		}
 				    		
 							Global.nextContactNumber++;
-							frame.setVisible(false);
+							frmNewContact.setVisible(false);
 						}	
 					}
 					else {
@@ -130,7 +139,7 @@ public class NewContact {
 			}
 		});
 		btnSubmit.setBounds(189, 230, 117, 29);
-		frame.getContentPane().add(btnSubmit);
+		frmNewContact.getContentPane().add(btnSubmit);
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
@@ -139,11 +148,11 @@ public class NewContact {
 			}
 		});
 		btnCancel.setBounds(33, 230, 117, 29);
-		frame.getContentPane().add(btnCancel);
+		frmNewContact.getContentPane().add(btnCancel);
 		
 	}
 	public JFrame getFrmNewContact(){
-		return frame;
+		return frmNewContact;
 	}
 	
 	private Contact validateContact(String firstName, String lastName, String phone, String secondPhone){

@@ -12,6 +12,10 @@ import javax.swing.JTextField;
 import bigsky.Contact;
 import bigsky.Global;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+
 public class EditContact {
 
 	private JFrame frame;
@@ -44,7 +48,11 @@ public class EditContact {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 355, 301);
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(EditContact.class.getResource("/bigsky/BlueText.gif")));
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		frame.setBounds((width/2)-177, (height/2)-150, 355, 301);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

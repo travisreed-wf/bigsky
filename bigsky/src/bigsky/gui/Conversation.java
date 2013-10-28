@@ -3,6 +3,8 @@ package bigsky.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -26,21 +28,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import java.awt.Toolkit;
 
 import bigsky.Contact;
 import bigsky.Global;
-/**
-	 * Launch the application.
-	 */
-/**
-	 * Create the application.
-	 */
-/**
-	 * Initialize the contents of the frame.
-	 */
-//TODO this will need to be removed once we actually have data
-//TODO start new conversation
-// TODO Auto-generated method stub
+
 public class Conversation {
 
 	private JFrame frmBluetext;
@@ -87,6 +79,25 @@ public class Conversation {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 
+=======
+
+	private void initialize() {
+		frmBluetext = new JFrame();
+		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
+		frmBluetext.setTitle("BlueText");
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		frmBluetext.setBounds((width/2)-400, (height/2)-325, 800, 650);
+		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		JMenuBar menuBar = new JMenuBar();
+		frmBluetext.setJMenuBar(menuBar);
+
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+
+>>>>>>> upstream/master
 		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
 		mnu_new_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -168,12 +179,12 @@ public class Conversation {
 				Global.nextContactNumber++;
 			}
 			br.close();
- 
+
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 		finally {
-			
+
 		}
 
 		for (int i=0;i<Global.contactList.length;i++){
@@ -251,7 +262,7 @@ public class Conversation {
 					editCon.getFrmEditContact().setVisible(true);
 				}
 				else System.out.println("Error in Edit Contact");
-					
+
 			}
 		});
 		editContact.setBounds(150, 538, 117, 29);
@@ -287,7 +298,7 @@ public class Conversation {
 			Global.listModel.addElement(Global.contactList[499].getFirstName());
 		}
 	}
-	
+
 	private void addContactToListModel(int i){
 		if (!Global.contactList[i].getFirstName().equals("")){
 			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
@@ -298,7 +309,7 @@ public class Conversation {
 			Global.listModel.addElement(newEntry);
 		}
 	}
-	
+
 	private int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactList.length-1;i++){
 			if (Global.contactList[i].getFirstName().equals(selectedValue)){
@@ -318,7 +329,7 @@ public class Conversation {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
-	
+
 	private void sortListModel(){
 		String[] tempList = new String[Global.listModel.size()];
 		for (int i=0; i<Global.listModel.size(); i++) {
