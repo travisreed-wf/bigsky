@@ -3,15 +3,20 @@ package bigsky;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Properties;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
 import bigsky.gui.*;
+import bigsky.messaging.MessageHost;
 import bigsky.*;
 
  
@@ -29,10 +34,12 @@ public static Contact me = new Contact("me", "me","me","");
 public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
+public static MessageHost messageHost = null;
+
 
     public static void main(String[] args) {
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        	UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -45,16 +52,26 @@ private static final SystemTray tray = SystemTray.getSystemTray();
         UIManager.put("swing.boldMetal", Boolean.FALSE);
         
         smallChatWindow = createSmallChat(me,you);
-        
-       	Login login = new Login();
-    	login.setVisible(true);
-
+        // Checks to see if the user setting is to save username and password
+        if(savedInfo()){
+        	Conversation convo = new Conversation();
+        	convo.getFrmBluetext().setVisible(true);
+        	
+        	TaskBar.putIconInSystemTray();
+			if(messageHost==null){   
+	   	   		messageHost = new MessageHost();
+	   	   		messageHost.start();
+	        }
+        }
+       	
+        else{
+        	Login login = new Login();
+           	login.setVisible(true);
+        }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
           
-                	
-               	
             }
         });
     }
@@ -168,6 +185,28 @@ private static final SystemTray tray = SystemTray.getSystemTray();
     	return smallChat;
     }
 
+    public static boolean savedInfo(){
+		
+		Properties prop = new Properties();
+		String compare = "1";
+			
+		try {
+			prop.load(new FileInputStream("userPreferences.properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if(compare.equals(prop.getProperty("save"))){
+			return true;
+		}
+		
+		return false;
+	}
+    
 	
 
 }
