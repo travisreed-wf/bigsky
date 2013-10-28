@@ -2,9 +2,13 @@ package bigsky.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JPasswordField;
@@ -12,6 +16,9 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -19,6 +26,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -34,6 +42,7 @@ public class Login extends JFrame {
 	private JLabel promptRegister;
 	private JLabel wrongInfo;
 	public static MessageHost messageHost = null;
+	private JRadioButton saveInfo;
 
 	/**
 	 * Launch the application.
@@ -55,50 +64,60 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
+		setResizable(false);
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds((width/2)-325, (height/2)-200, 650, 400);
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.PINK);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
 		textField = new JTextField();
 		textField.setBackground(Color.GRAY);
-		textField.setBounds(190, 65, 165, 28);
+		textField.setBounds(239, 97, 165, 28);
 		contentPane.add(textField);
 		
 		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(190, 115, 165, 28);
+		passwordField_1.setBounds(239, 149, 165, 28);
 		contentPane.add(passwordField_1);
 		
 		JLabel lblPhoneNumber = new JLabel("Phone Number");
-		lblPhoneNumber.setBounds(80, 71, 98, 16);
+		lblPhoneNumber.setBounds(131, 103, 98, 16);
 		contentPane.add(lblPhoneNumber);
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(80, 121, 98, 16);
+		lblPassword.setBounds(134, 155, 98, 16);
 		contentPane.add(lblPassword);
 		
 		JButton login = new JButton("Login");
-		login.setBounds(106, 211, 75, 29);
+		login.setBounds(204, 258, 90, 29);
 		contentPane.add(login);
 		
 		JButton register = new JButton("Register");
-		register.setBounds(250, 211, 90, 29);
+		register.setBounds(319, 258, 90, 29);
 		contentPane.add(register);
 		
 		wrongInfo = new JLabel("Wrong username or password");
 		wrongInfo.setForeground(Color.RED);
-		wrongInfo.setBounds(190, 154, 215, 14);
+		wrongInfo.setBounds(236, 233, 215, 14);
 		contentPane.add(wrongInfo);
 		wrongInfo.setVisible(false);
 		
 		promptRegister = new JLabel("Would you like to register");
 		promptRegister.setForeground(Color.RED);
-		promptRegister.setBounds(190, 154, 150, 14);
+		promptRegister.setBounds(259, 233, 192, 14);
 		contentPane.add(promptRegister);
 		promptRegister.setVisible(false);
+		
+		saveInfo = new JRadioButton("Save Username/Password");
+		saveInfo.setBackground(Color.WHITE);
+		saveInfo.setBounds(239, 203, 212, 23);
+		contentPane.add(saveInfo);
+		saveInfo.setOpaque(false);
 
 		
 		login.addActionListener(new ActionListener() {
@@ -114,8 +133,7 @@ public class Login extends JFrame {
 				   	   		messageHost.start();
 				        }
 						//Conversation convo = new Conversation();
-		            	//convo.getFrmBluetext().setVisible(true);
-		            	phoneIP();						
+		            	//convo.getFrmBluetext().setVisible(true);						
 					}
 					else{
 						System.out.println("FAIL");
@@ -138,11 +156,19 @@ public class Login extends JFrame {
 		
 		register.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	  
+            	dispose();
             	Register reg = new Register();
             	reg.setVisible(true);
             }
         });	
+		
+		//save password and username button
+				saveInfo.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
+		            	  
+		            	saveInfo();
+		            }
+		        });	
 
 	}
 	
@@ -163,11 +189,6 @@ public class Login extends JFrame {
 	}
 	
 	
-	public void phoneIP(){
-		
-		
-	}
-	
 	//returns row number of users database row
 	public boolean login() throws ClassNotFoundException, SQLException, UnknownHostException{
 		
@@ -176,8 +197,7 @@ public class Login extends JFrame {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
 		Statement stmt = con.createStatement();
-		InetAddress iP =InetAddress.getLocalHost();
-		
+		String iP =InetAddress.getLocalHost().getHostAddress();		
 		
 		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + getUsername() + "'");
 	
@@ -210,7 +230,7 @@ public class Login extends JFrame {
 		}
 
 		
-		//stmt.executeUpdate("UPDATE testTable SET phoneNumber='" + getUsername() + "' WHERE IP_Computer='" + iP + "';");
+		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + getUsername() + "';");
 		
 		rs.close();		
 		con.close();
@@ -218,6 +238,27 @@ public class Login extends JFrame {
 		
 	}
 	
+	public void saveInfo(){
+		
+		Properties prop = new Properties();
+		
+		prop.setProperty("username", getUsername());
+		prop.setProperty("password", getPassword(passwordField_1));
+		prop.setProperty("save", "1");
+		
+		
+		try {
+			prop.store(new FileOutputStream("userPreferences.properties"),null);
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 	
 	
 }

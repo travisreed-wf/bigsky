@@ -2,6 +2,8 @@ package bigsky.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -25,6 +27,7 @@ import javax.swing.border.LineBorder;
 
 import bigsky.Contact;
 import bigsky.Global;
+import java.awt.Toolkit;
 
 public class Conversation {
 
@@ -62,8 +65,12 @@ public class Conversation {
 
 	private void initialize() {
 		frmBluetext = new JFrame();
+		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
 		frmBluetext.setTitle("BlueText");
-		frmBluetext.setBounds(100, 100, 800, 650);
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		frmBluetext.setBounds((width/2)-400, (height/2)-325, 800, 650);
 		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JMenuBar menuBar = new JMenuBar();

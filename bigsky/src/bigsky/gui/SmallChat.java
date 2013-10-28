@@ -23,6 +23,7 @@ import bigsky.Contact;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.messaging.*;
+import java.awt.Toolkit;
 
 public class SmallChat  {
 
@@ -91,6 +92,7 @@ public class SmallChat  {
 		send = new JButton("Send");
 		
 		frmBluetext = new JFrame();
+		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(SmallChat.class.getResource("/bigsky/BlueText.gif")));
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
