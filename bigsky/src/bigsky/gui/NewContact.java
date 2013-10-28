@@ -1,5 +1,8 @@
 package bigsky.gui;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -7,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,10 +19,6 @@ import javax.swing.JTextField;
 
 import bigsky.Contact;
 import bigsky.Global;
-
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 
 public class NewContact {
 
@@ -99,6 +99,9 @@ public class NewContact {
 				String last = txtLastName.getText();
 				String phone = txtPhone.getText();
 				String secondPhone = txtSecondPhone.getText();
+				if (secondPhone == ""){
+					secondPhone = "0";
+				}
 				Contact contactToAdd = validateContact(first, last, phone, secondPhone);
 				if (contactToAdd != null){
 					if (Global.nextContactNumber < Global.totalAllowableContacts){
@@ -144,7 +147,7 @@ public class NewContact {
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				frmNewContact.setVisible(false);
 			}
 		});
 		btnCancel.setBounds(33, 230, 117, 29);
@@ -206,6 +209,7 @@ public class NewContact {
 			}
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
+			DefaultListModel test2 = Global.listModel;
 			if (Global.listModel.get(j).equals(newEntry)){
 				JOptionPane.showMessageDialog(null, "This Name already exists. Please Alter Name");
 				Global.contactList[i] = new Contact("", "", "", "");

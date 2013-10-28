@@ -67,19 +67,6 @@ public class Conversation {
 	 * Initialize the contents of the frame.
 	 */
 
-	private void initialize() {
-		frmBluetext = new JFrame();
-		frmBluetext.setTitle("BlueText");
-		frmBluetext.setBounds(100, 100, 800, 650);
-		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		JMenuBar menuBar = new JMenuBar();
-		frmBluetext.setJMenuBar(menuBar);
-
-		JMenu mnFile = new JMenu("File");
-		menuBar.add(mnFile);
-
-=======
 
 	private void initialize() {
 		frmBluetext = new JFrame();
@@ -97,7 +84,6 @@ public class Conversation {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 
->>>>>>> upstream/master
 		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
 		mnu_new_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -174,7 +160,13 @@ public class Conversation {
 				String first = splitline[0];
 				String last = splitline[1];
 				String phone = splitline[2];
-				String secondPhone = splitline[3];
+				String secondPhone = "";
+				try {
+					secondPhone = splitline[3];
+				}
+				catch (ArrayIndexOutOfBoundsException a){
+					//This just means the contact doesn't have a second phone number
+				}
 				Global.contactList[Global.nextContactNumber] = new Contact(first, last, phone, secondPhone);
 				Global.nextContactNumber++;
 			}
