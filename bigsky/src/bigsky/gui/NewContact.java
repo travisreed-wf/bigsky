@@ -99,9 +99,6 @@ public class NewContact {
 				String last = txtLastName.getText();
 				String phone = txtPhone.getText();
 				String secondPhone = txtSecondPhone.getText();
-				if (secondPhone == ""){
-					secondPhone = "0";
-				}
 				Contact contactToAdd = validateContact(first, last, phone, secondPhone);
 				if (contactToAdd != null){
 					if (Global.nextContactNumber < Global.totalAllowableContacts){
@@ -199,7 +196,6 @@ public class NewContact {
 	
 	private boolean addContactToListModel(int i){
 		String newEntry;
-		Contact[] test = Global.contactList;
 		if (!Global.contactList[i].getFirstName().equals("")){
 			if (!Global.contactList[i].getLastName().equals("")){
 				newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
@@ -209,7 +205,6 @@ public class NewContact {
 			}
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
-			DefaultListModel test2 = Global.listModel;
 			if (Global.listModel.get(j).equals(newEntry)){
 				JOptionPane.showMessageDialog(null, "This Name already exists. Please Alter Name");
 				Global.contactList[i] = new Contact("", "", "", "");
