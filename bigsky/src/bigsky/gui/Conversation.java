@@ -1,4 +1,3 @@
-
 package bigsky.gui;
 
 import java.awt.Color;
@@ -11,9 +10,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -28,10 +24,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
-import java.awt.Toolkit;
 
 import bigsky.Contact;
 import bigsky.Global;
+import java.awt.Toolkit;
 
 public class Conversation {
 
@@ -67,7 +63,6 @@ public class Conversation {
 	 * Initialize the contents of the frame.
 	 */
 
-
 	private void initialize() {
 		frmBluetext = new JFrame();
 		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
@@ -85,21 +80,10 @@ public class Conversation {
 		menuBar.add(mnFile);
 
 		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
-		mnu_new_contact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openNewContactWindow();
-			}
-		});
 
 		mnFile.add(mnu_new_contact);
 
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
-		mnu_new_conversation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
-			}
-		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
 		});
 		mnFile.add(mnu_new_conversation);
@@ -148,53 +132,19 @@ public class Conversation {
 		for (int i=0;i<Global.contactList.length;i++){
 			Global.contactList[i] = new Contact("", "", "", "");
 		}
-		Contact firstContact = new Contact("Create Contact", "", "", "");
+		Contact firstContact = new Contact("Create Contact", null, null, null);
 		Global.contactList[499] = firstContact;
 
-		try
-		{
-			BufferedReader br = new BufferedReader(new FileReader("contact.txt"));
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				String[] splitline = sCurrentLine.split(",");
-				String first = splitline[0];
-				String last = splitline[1];
-				String phone = splitline[2];
-				String secondPhone = "";
-				try {
-					secondPhone = splitline[3];
-				}
-				catch (ArrayIndexOutOfBoundsException a){
-					//This just means the contact doesn't have a second phone number
-				}
-				Global.contactList[Global.nextContactNumber] = new Contact(first, last, phone, secondPhone);
-				Global.nextContactNumber++;
-			}
-			br.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-
-		}
+		Global.contactList[0] = new Contact("Travis", "Reed", "5633817739", "");
+		Global.contactList[1] = new Contact("Andrew", "Hartman", "1234567890", "");
+		Global.contactList[2] = new Contact("Jon", "Mielke", "1234567890", "");
+		Global.contactList[3] = new Contact("Andrew", "Guibert", "1234567890", "");
+		Global.nextContactNumber += 4;
 
 		for (int i=0;i<Global.contactList.length;i++){
 			addContactToListModel(i);
 		}
 		sortListModel();
-		list.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				String selectedContact = (String)list.getSelectedValue();
-				if (selectedContact.equals("Create Contact ")) {
-					openNewContactWindow();
-				}
-				else {
-					//TODO start new convo
-				}
-			}
-		});
 
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
@@ -243,9 +193,18 @@ public class Conversation {
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
 
+		JButton btnAddContact = new JButton("AddContact");
+		btnAddContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				openNewContactWindow();
+			}
+		});
+		btnAddContact.setBounds(26, 538, 117, 29);
+		panel.add(btnAddContact);
+
 		JButton editContact = new JButton("EditContact");
 		editContact.addActionListener(new ActionListener() {
-			 public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				String selectedValue = (String)list.getSelectedValue();
 				int i = findContactInListModel(selectedValue);
 				if (i != returnsNull){
@@ -254,7 +213,7 @@ public class Conversation {
 					editCon.getFrmEditContact().setVisible(true);
 				}
 				else System.out.println("Error in Edit Contact");
-
+					
 			}
 		});
 		editContact.setBounds(150, 538, 117, 29);
@@ -275,9 +234,6 @@ public class Conversation {
 				else if (Global.contactList[i].getLastName().toLowerCase().contains(searchTerm.toLowerCase())) {
 					addContactToListModel(i);
 				}
-				else if ((Global.contactList[i].getFirstName().toLowerCase() + " " + Global.contactList[i].getLastName().toLowerCase()).contains(searchTerm.toLowerCase())) {
-					addContactToListModel(i);
-				}
 			}
 		}
 		else {
@@ -290,7 +246,7 @@ public class Conversation {
 			Global.listModel.addElement(Global.contactList[499].getFirstName());
 		}
 	}
-
+	
 	private void addContactToListModel(int i){
 		if (!Global.contactList[i].getFirstName().equals("")){
 			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
@@ -301,9 +257,11 @@ public class Conversation {
 			Global.listModel.addElement(newEntry);
 		}
 	}
-
+	
 	private int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactList.length-1;i++){
+			String test = (String)Global.contactList[i].getFirstName();
+			String last = (String)Global.contactList[i].getLastName();
 			if (Global.contactList[i].getFirstName().equals(selectedValue)){
 				return i;
 			}
@@ -321,7 +279,7 @@ public class Conversation {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
-
+	
 	private void sortListModel(){
 		String[] tempList = new String[Global.listModel.size()];
 		for (int i=0; i<Global.listModel.size(); i++) {
