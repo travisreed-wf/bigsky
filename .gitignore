@@ -2,6 +2,9 @@
 ## Eclipse
 #################
 
+bigsky/contact.txt
+bigsky/userPreferences.properties
+
 #Test classes
 bigsky/src/bigsky/experiments/
 bigsky/config.properties
