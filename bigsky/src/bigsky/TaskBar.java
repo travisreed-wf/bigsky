@@ -19,7 +19,7 @@ import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
 import bigsky.*;
 
- 
+
 
 
 public class TaskBar{
@@ -50,20 +50,20 @@ public static MessageHost messageHost = null;
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-        
+
         smallChatWindow = createSmallChat(me,you);
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	Conversation convo = new Conversation();
         	convo.getFrmBluetext().setVisible(true);
-        	
+
         	TaskBar.putIconInSystemTray();
-			if(messageHost==null){   
+			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
 	        }
         }
-       	
+
         else{
         	Login login = new Login();
            	login.setVisible(true);
@@ -71,81 +71,81 @@ public static MessageHost messageHost = null;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
-          
+
             }
         });
     }
-     
+
     public void startTaskBar(){
     	initialize();
     }
-    
+
     private static void initialize() {
         if (!SystemTray.isSupported()) {
             System.out.println("SystemTray is not supported");
             return;
         }
-        
-        
+
+
         final PopupMenu menu = new PopupMenu();
-        
-               
-        
+
+
+
        // new TrayIcon(createImage("BlueText.gif", "tray icon"));
-        
-        
-        
-       
+
+
+
+
         //shows full image in taskbar
         trayIcon.setImageAutoSize(true);
-         
+
         //  menu items
         MenuItem conversation = new MenuItem("Open BlueText");
         MenuItem smallChat = new MenuItem("Side Chat");
         MenuItem exitItem = new MenuItem("Exit");
-         
+
         //Adding  menu items
         menu.add(conversation);
         menu.add(smallChat);
         menu.add(exitItem);
         trayIcon.setPopupMenu(menu);
 
-         
-        
-        
+
+
+
 //        trayIcon.addMouseListener(new MouseAdapter() {
 //            public void mouseReleased(MouseEvent e) {
 //                if (e.isPopupTrigger()) {
-//                
+//
 //                }
 //            }
 //        });
-         
+
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	
 
-            	
-            	
+
+
+
             	Conversation convo = new Conversation();
             	convo.getFrmBluetext().setVisible(true);
-            	
-            	
+
+
 //                JOptionPane.showMessageDialog(null,
 //                        "This dialog box is run from the About menu item Something different");
-//                
+//
 //                trayIcon.displayMessage("Sun TrayIcon Demo",
 //                        "This is an error message", TrayIcon.MessageType.ERROR);
             }
         });
-         
+
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	
+
             	smallChatWindow.getFrmBluetext().setVisible(true);
             }
         });
-                
+
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tray.remove(trayIcon);
@@ -153,23 +153,23 @@ public static MessageHost messageHost = null;
             }
         });
     }
-    
+
     public static void putIconInSystemTray(){
         try {
             tray.add(trayIcon);
         } catch (AWTException e) {
             System.out.println("TrayIcon could not be added.");
         }
-    	
+
     }
-     
+
     //Obtain tray icon image
     protected static TrayIcon createTrayIconImage() {
        TrayIcon tray;
    	   URL imageURL = TaskBar.class.getResource("BlueText.gif");
 
        Image icon = new ImageIcon(imageURL, "tray icon").getImage();
-         
+
         if (imageURL == null) {
             System.err.println("Resource not found: " + "BlueText.gif");
             return null;
@@ -178,7 +178,7 @@ public static MessageHost messageHost = null;
             return tray;
         }
     }
-    
+
     protected static SmallChat createSmallChat(Contact me, Contact you){
     	SmallChat smallChat = new SmallChat(me,you);
     	smallChat.getFrmBluetext().setVisible(false);
@@ -186,10 +186,10 @@ public static MessageHost messageHost = null;
     }
 
     public static boolean savedInfo(){
-		
+
 		Properties prop = new Properties();
 		String compare = "1";
-			
+
 		try {
 			prop.load(new FileInputStream("userPreferences.properties"));
 		} catch (FileNotFoundException e) {
@@ -203,29 +203,29 @@ public static MessageHost messageHost = null;
 		if(compare.equals(prop.getProperty("save"))){
 			return true;
 		}
-		
+
 		return false;
 	}
-    
-	
+
+
 
 }
 
 class Queue<T>{
 	protected LinkedList<T> list;
-	
+
 	public Queue(){
 		list = new LinkedList<T>();
 	}
-	
+
 	public void add(T element){
 		list.add(element);
 	}
-	
+
 	public T removeFirst(){
 		return list.removeFirst();
 	}
-	
+
 	public boolean isEmpty(){
 		if(list.isEmpty()){
 			return true;
@@ -233,8 +233,8 @@ class Queue<T>{
 		else
 			return false;
 	}
-	
-	
+
+
 }
 
 

@@ -64,7 +64,7 @@ public class Register extends JFrame {
 	 */
 	public Register() {
 		JFrame frame = new JFrame();
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/gui/BlueText.gif")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
