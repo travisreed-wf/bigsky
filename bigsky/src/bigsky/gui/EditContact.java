@@ -101,15 +101,15 @@ public class EditContact {
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				contactToEdit.setFirstName(txtFirstName.getText());
-				contactToEdit.setLastName(txtLastName.getText());
-				contactToEdit.setPhoneNumber(txtPhone.getText());
-				contactToEdit.setSecondPhone(txtSecondPhone.getText());
-				Global.contactList[contactArrayNumber] = contactToEdit;
-				Global.listModel.removeElement(oldName);
-				addContactToListModel(contactArrayNumber);
-				frame.setVisible(false);
-				//TODO validation
+				Contact validatedContact = validateContact(txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), txtSecondPhone.getText());
+				if (validatedContact != null) {
+					Global.contactList[contactArrayNumber] = validatedContact;
+					Global.listModel.removeElement(oldName);
+					addContactToListModel(contactArrayNumber);
+					frame.setVisible(false);
+				}
+				
+				
 				//TODO Place in correct order
 				
 			}
@@ -118,6 +118,11 @@ public class EditContact {
 		frame.getContentPane().add(btnSubmit);
 		
 		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.setVisible(false);
+			}
+		});
 		btnCancel.setBounds(33, 230, 117, 29);
 		frame.getContentPane().add(btnCancel);
 		
