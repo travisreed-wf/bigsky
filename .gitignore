@@ -3,7 +3,7 @@
 #################
 
 bigsky/contact.txt
-bigsky/userPreferences.properties
+bigsky/*.properties
 
 #Test classes
 bigsky/src/bigsky/experiments/
