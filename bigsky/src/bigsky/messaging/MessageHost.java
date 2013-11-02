@@ -4,13 +4,14 @@ import java.net.*;
 import java.awt.TrayIcon.MessageType;
 import java.io.*;
 
+import bigsky.Contact;
+import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.gui.SmallChat;
 
 class ClientConn implements Runnable {
 	
-	public TextMessage st1;
 	public boolean newMessage = false;
 	
 	Thread t;
@@ -28,18 +29,29 @@ class ClientConn implements Runnable {
 		try {
 			br = new ObjectInputStream(client.getInputStream());
 			while (br != null) {
-				st1 = ((TextMessage) br.readObject());
-				System.out.println("Client: " + st1.getContent());
-				newMessage = true;
-				
-				if(st1.getSender() == null){
-					st1.setSender(TaskBar.you);
-					st1.setReceiver(TaskBar.me);
+				Object streamObject = br.readObject();
+				if(streamObject instanceof Contact)
+				{
+					Contact ct = (Contact) streamObject;
+					System.out.println("Got contact first=" + ct.getFirstName() + " last=" + ct.getLastName() + " number=" + ct.getPhoneNumber());				
 				}
-				TaskBar.textHistory.add(st1);
-				TaskBar.trayIcon.displayMessage("New Message", "message from:\t" + st1.getSender(), MessageType.INFO);
-				TaskBar.smallChatWindow.recievedText(st1);
-         	   //TaskBar.notification.displayMessage("New Message", "NEW MESSAGE", null);
+				else if(streamObject instanceof TextMessage)
+				{
+					TextMessage txtMessage = (TextMessage) streamObject;
+					System.out.println("Client: " + txtMessage.getContent());
+					newMessage = true;
+					
+					if(txtMessage.getSender() == null){
+						txtMessage.setSender(TaskBar.you);
+						txtMessage.setReceiver(TaskBar.me);
+					}
+					TaskBar.textHistory.add(txtMessage);
+					TaskBar.trayIcon.displayMessage("New Message", "message from:\t" + txtMessage.getSender(), MessageType.INFO);
+					TaskBar.smallChatWindow.recievedText(txtMessage);
+				}
+				else{
+					System.out.println("Unknown object sent through stream");
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " inside run()");
