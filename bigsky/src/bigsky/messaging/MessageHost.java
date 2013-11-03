@@ -8,6 +8,8 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import bigsky.gui.Conversation;
+import bigsky.gui.LoadScreen;
 import bigsky.gui.SmallChat;
 
 class ClientConn implements Runnable {
@@ -66,14 +68,19 @@ public class MessageHost extends Thread{
 	
 	public void run(){
 		
-		
+		LoadScreen load = new LoadScreen();
 		ServerSocket socket = null;
 		try{
+			
 			socket = new ServerSocket(1300);
 			System.out.print("Waiting for request from peer.....");
+			load.setVisible(true);
 			Socket client = socket.accept();
 			conn = new ClientConn(client);
 			System.out.println("request accepted!\nBeginning of chat:");
+			load.dispose();
+			Conversation convo = new Conversation();
+			convo.getFrmBluetext().setVisible(true);
 			BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 

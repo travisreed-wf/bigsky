@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
@@ -54,9 +55,6 @@ public static MessageHost messageHost = null;
         smallChatWindow = createSmallChat(me,you);
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
-        	Conversation convo = new Conversation();
-        	convo.getFrmBluetext().setVisible(true);
-
         	TaskBar.putIconInSystemTray();
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
@@ -102,11 +100,13 @@ public static MessageHost messageHost = null;
         //  menu items
         MenuItem conversation = new MenuItem("Open BlueText");
         MenuItem smallChat = new MenuItem("Side Chat");
+        MenuItem logout = new MenuItem("Log out");
         MenuItem exitItem = new MenuItem("Exit");
 
         //Adding  menu items
         menu.add(conversation);
         menu.add(smallChat);
+        menu.add(logout);
         menu.add(exitItem);
         trayIcon.setPopupMenu(menu);
 
@@ -143,6 +143,12 @@ public static MessageHost messageHost = null;
             public void actionPerformed(ActionEvent e) {
 
             	smallChatWindow.getFrmBluetext().setVisible(true);
+            }
+        });
+        
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	logout();
             }
         });
 
@@ -225,6 +231,43 @@ public static MessageHost messageHost = null;
 
 	}
 
+    public static void logout(){
+    	
+    	Frame j = new Frame();
+    	Frame[] frames = j.getFrames();
+    	System.out.println(frames.length);
+    	for(int i = 0; i < frames.length; i ++){
+    		frames[i].dispose();
+    	}
+    	
+    	tray.remove(trayIcon);
+    	Login log = new Login();
+    	log.setVisible(true);
+		Properties prop = new Properties();
+
+		try {
+			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		prop.setProperty("save", "0");
+	
+		try {
+			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+    }
 
 }
 
