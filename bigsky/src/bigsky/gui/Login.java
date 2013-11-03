@@ -149,9 +149,6 @@ public class Login extends JFrame {
 						if(hit){
 							saveInfo();
 						}
-						LoadScreen test = new LoadScreen();
-						test.setVisible(true);
-						
 					}
 					else{
 						System.out.println("FAIL");
