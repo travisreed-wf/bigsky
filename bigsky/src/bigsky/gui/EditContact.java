@@ -49,14 +49,14 @@ public class EditContact {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(EditContact.class.getResource("/bigsky/BlueText.gif")));
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		frame.setBounds((width/2)-177, (height/2)-150, 355, 301);
+
+		frame.setSize(355, 301);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle("Edit Contact");
+        frame.setLocationRelativeTo(null);
+
 		
 		lblFirstName = new JLabel("First Name:");
 		lblFirstName.setBounds(33, 35, 86, 16);
