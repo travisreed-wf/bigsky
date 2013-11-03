@@ -65,12 +65,10 @@ public class Register extends JFrame {
 	public Register() {
 		JFrame frame = new JFrame();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds((width/2)-260, (height/2)-217, 521, 434);
+		setSize(521, 434);
 		getContentPane().setLayout(null);
+        this.setLocationRelativeTo(null);
 		contentPane = new JPanel();
 
 		firstName = new JTextField();
