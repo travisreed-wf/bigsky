@@ -1,6 +1,7 @@
 package bigsky.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -31,6 +32,8 @@ import java.awt.Toolkit;
 
 import bigsky.Contact;
 import bigsky.Global;
+import bigsky.TaskBar;
+
 import java.awt.Toolkit;
 
 public class Conversation {
@@ -71,12 +74,10 @@ public class Conversation {
 		frmBluetext = new JFrame();
 		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
 		frmBluetext.setTitle("BlueText");
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		frmBluetext.setBounds((width/2)-400, (height/2)-325, 800, 650);
+		frmBluetext.setSize(new Dimension(800,650));
 		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+		frmBluetext.setLocationRelativeTo(null);
+		
 		JMenuBar menuBar = new JMenuBar();
 		frmBluetext.setJMenuBar(menuBar);
 
@@ -101,6 +102,14 @@ public class Conversation {
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
 		});
 		mnFile.add(mnu_new_conversation);
+
+		JMenuItem mnu_logout = new JMenuItem("Log Out");
+		mnu_logout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TaskBar.logout();
+			}
+		});
+		mnFile.add(mnu_logout);
 
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
