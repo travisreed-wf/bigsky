@@ -109,19 +109,7 @@ public class Conversation {
 		JMenuItem mntmEditContact = new JMenuItem("Edit Contact");
 		mntmEditContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String selectedValue = (String)Global.list.getSelectedValue();
-				if (selectedValue != null){
-					int i = findContactInListModel(selectedValue);
-					if (i != returnsNull){
-						Contact selectedContactCon = Global.contactAList.get(i);
-						EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
-						editCon.getFrmEditContact().setVisible(true);
-					}
-					else System.out.println("Error in Edit Contact");
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "Please select a contact to edit.");
-				}
+				editContactAction();
 				
 			}
 		});
@@ -217,6 +205,21 @@ public class Conversation {
 		panel.add(btn_select_contact);
 		
 		importContactsFromFile();
+	}
+	private void editContactAction(){
+		String selectedValue = (String)Global.list.getSelectedValue();
+		if (selectedValue != null){
+			int i = findContactInListModel(selectedValue);
+			if (i != returnsNull){
+				Contact selectedContactCon = Global.contactAList.get(i);
+				EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
+				editCon.getFrmEditContact().setVisible(true);
+			}
+			else System.out.println("Error in Edit Contact");
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "Please select a contact to edit.");
+		}
 	}
 
 	private void openNewContactWindow(){
@@ -335,31 +338,5 @@ public class Conversation {
 		}
 		sortListModel();
 	}
-}
-
-class PopUpDemo extends JPopupMenu {
-    JMenuItem anItem;
-    public PopUpDemo(){
-        anItem = new JMenuItem("Click Me!");
-        add(anItem);
-    }
-}
-
-class PopClickListener extends MouseAdapter {
-    public void mousePressed(MouseEvent e){
-        if (e.isPopupTrigger())
-            doPop(e);
-    }
-
-    public void mouseReleased(MouseEvent e){
-        if (e.isPopupTrigger())
-            doPop(e);
-    }
-
-    private void doPop(MouseEvent e){
-        PopUpDemo menu = new PopUpDemo();
-        Global.list.setSelectedIndex(Global.list.locationToIndex(e.getPoint()));
-        menu.show(e.getComponent(), e.getX(), e.getY());
-    }
 }
 
