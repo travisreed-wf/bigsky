@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import bigsky.Contact;
@@ -17,7 +18,7 @@ public class PopUp extends JPopupMenu {
     JMenuItem startConvo;
     public PopUp(){
         editContact = new JMenuItem("Edit Contact");
-        startConvo = new JMenuItem("OpenConversation");
+        startConvo = new JMenuItem("Open Conversation");
         
         editContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -33,10 +34,16 @@ public class PopUp extends JPopupMenu {
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "Please select a contact to edit.");
-				}
-				
+				}	
+			}
+        });
+		startConvo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel panel_2 = new JPanel();
+				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
 			}
 		});
+			
         add(editContact);
         add(startConvo);
     }

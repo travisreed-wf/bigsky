@@ -156,11 +156,8 @@ public class Conversation {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				String selectedContact = (String)Global.list.getSelectedValue();
-				if (selectedContact.equals("Create Contact ")) {
+				if (selectedContact.contains("Create Contact")) {
 					openNewContactWindow();
-				}
-				else {
-					//TODO start new convo
 				}
 			}
 		});
@@ -339,4 +336,6 @@ public class Conversation {
 		sortListModel();
 	}
 }
+
+
 
