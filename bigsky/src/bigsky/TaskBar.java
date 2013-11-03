@@ -191,10 +191,10 @@ public static MessageHost messageHost = null;
 		String compare = "1";
 
 		try {
-			prop.load(new FileInputStream("userPreferences.properties"));
+			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("File not found2");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -207,6 +207,23 @@ public static MessageHost messageHost = null;
 		return false;
 	}
 
+    public static String lastLoggedIn(){
+		
+		Properties prop = new Properties();
+
+		try {
+			prop.load(new FileInputStream("system.properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return (String) prop.get("lastLoggedIn");
+
+	}
 
 
 }

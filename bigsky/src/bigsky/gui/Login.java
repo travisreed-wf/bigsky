@@ -18,6 +18,7 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class Login extends JFrame {
 	private JLabel wrongInfo;
 	public static MessageHost messageHost = null;
 	private JRadioButton saveInfo;
+	private boolean hit = false;
 
 	/**
 	 * Launch the application.
@@ -141,7 +143,15 @@ public class Login extends JFrame {
 						if(messageHost==null){   
 				   	   		messageHost = new MessageHost();
 				   	   		messageHost.start();
-				        }								
+				        }			
+						LoginInfo();
+						systemPrefs();
+						if(hit){
+							saveInfo();
+						}
+						LoadScreen test = new LoadScreen();
+						test.setVisible(true);
+						
 					}
 					else{
 						System.out.println("FAIL");
@@ -174,7 +184,7 @@ public class Login extends JFrame {
 				saveInfo.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 		            	  
-		            	saveInfo();
+		            	hit = true;
 		            }
 		        });	
 
@@ -246,18 +256,15 @@ public class Login extends JFrame {
 		
 	}
 	
-	public void saveInfo(){
+	public void LoginInfo(){
 		
 		Properties prop = new Properties();
-		
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
-		prop.setProperty("save", "1");
-		
+		prop.setProperty("save", "0");
 		
 		try {
-			prop.store(new FileOutputStream("userPreferences.properties"),null);
-			
+			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -266,7 +273,56 @@ public class Login extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+		
 	}
 	
+	
+	public void saveInfo(){
+		
+		Properties prop = new Properties();
+
+		try {
+			prop.load(new FileInputStream(getUsername() +".properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		prop.setProperty("save", "1");
+	
+		try {
+			prop.store(new FileOutputStream(getUsername() +".properties"),null);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		
+	}
+	
+	public void systemPrefs(){
+		
+		Properties prop = new Properties();
+		prop.setProperty("lastLoggedIn", getUsername());
+		
+		try {
+			prop.store(new FileOutputStream("system.properties"),null);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+	}
 	
 }
