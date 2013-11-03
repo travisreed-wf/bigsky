@@ -1,11 +1,13 @@
 package bigsky.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -66,57 +68,65 @@ public class Login extends JFrame {
 	public Login() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
 		setResizable(false);
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds((width/2)-325, (height/2)-200, 650, 400);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		setContentPane(contentPane);
 		
+        JLabel image = new JLabel();
+        contentPane = (JPanel) getContentPane();
+       // contentPane.setLayout(new BorderLayout());
+        setSize(new Dimension(576, 320));
+        ImageIcon icon = new ImageIcon(this.getClass().getResource(
+                "Login_Image.png"));
+        image.setIcon(icon);       
+        contentPane.add(image, java.awt.BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+
 		textField = new JTextField();
+		textField.setForeground(Color.WHITE);
 		textField.setBackground(Color.GRAY);
-		textField.setBounds(239, 97, 165, 28);
-		contentPane.add(textField);
+		textField.setBounds(220, 130, 165, 28);
+		image.add(textField);
 		
 		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(239, 149, 165, 28);
-		contentPane.add(passwordField_1);
+		passwordField_1.setForeground(Color.WHITE);
+		passwordField_1.setBackground(Color.GRAY);
+		passwordField_1.setBounds(220, 180, 165, 28);
+		image.add(passwordField_1);
 		
 		JLabel lblPhoneNumber = new JLabel("Phone Number");
-		lblPhoneNumber.setBounds(131, 103, 98, 16);
-		contentPane.add(lblPhoneNumber);
+		lblPhoneNumber.setForeground(Color.WHITE);
+		lblPhoneNumber.setBounds(131, 135, 98, 16);
+		image.add(lblPhoneNumber);
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(134, 155, 98, 16);
-		contentPane.add(lblPassword);
+		lblPassword.setBounds(134, 185, 98, 16);
+		lblPassword.setForeground(Color.WHITE);
+		image.add(lblPassword);
 		
 		JButton login = new JButton("Login");
-		login.setBounds(204, 258, 90, 29);
-		contentPane.add(login);
+		login.setBounds(200, 258, 90, 29);
+		image.add(login);
 		
 		JButton register = new JButton("Register");
-		register.setBounds(319, 258, 90, 29);
-		contentPane.add(register);
+		register.setBounds(315, 258, 90, 29);
+		image.add(register);
 		
 		wrongInfo = new JLabel("Wrong username or password");
 		wrongInfo.setForeground(Color.RED);
 		wrongInfo.setBounds(236, 233, 215, 14);
-		contentPane.add(wrongInfo);
+		image.add(wrongInfo);
 		wrongInfo.setVisible(false);
 		
 		promptRegister = new JLabel("Would you like to register");
 		promptRegister.setForeground(Color.RED);
 		promptRegister.setBounds(259, 233, 192, 14);
-		contentPane.add(promptRegister);
+		image.add(promptRegister);
 		promptRegister.setVisible(false);
 		
 		saveInfo = new JRadioButton("Save Username/Password");
 		saveInfo.setBackground(Color.WHITE);
-		saveInfo.setBounds(239, 203, 212, 23);
-		contentPane.add(saveInfo);
+		saveInfo.setForeground(Color.WHITE);
+		saveInfo.setBounds(220, 213, 212, 23);
+		image.add(saveInfo);
 		saveInfo.setOpaque(false);
 
 		
@@ -131,9 +141,7 @@ public class Login extends JFrame {
 						if(messageHost==null){   
 				   	   		messageHost = new MessageHost();
 				   	   		messageHost.start();
-				        }
-						//Conversation convo = new Conversation();
-		            	//convo.getFrmBluetext().setVisible(true);						
+				        }								
 					}
 					else{
 						System.out.println("FAIL");
