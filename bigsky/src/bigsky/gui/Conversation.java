@@ -142,46 +142,6 @@ public class Conversation {
 		scrollPane.setBounds(16, 41, 188, 346);
 		panel.add(scrollPane);
 
-		//TODO this will need to be removed once we actually have data
-		for (int i=0;i<Global.contactList.length;i++){
-			Global.contactList[i] = new Contact("", "", "", "");
-		}
-		Contact firstContact = new Contact("Create Contact", "", "", "");
-		Global.contactList[499] = firstContact;
-
-		try
-		{
-			BufferedReader br = new BufferedReader(new FileReader("contact.txt"));
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				String[] splitline = sCurrentLine.split(",");
-				String first = splitline[0];
-				String last = splitline[1];
-				String phone = splitline[2];
-				String secondPhone = "";
-				try {
-					secondPhone = splitline[3];
-				}
-				catch (ArrayIndexOutOfBoundsException a){
-					//This just means the contact doesn't have a second phone number
-				}
-				Global.contactList[Global.nextContactNumber] = new Contact(first, last, phone, secondPhone);
-				Global.nextContactNumber++;
-			}
-			br.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-
-		}
-		Global.nextContactNumber += 4;
-
-		for (int i=0;i<Global.contactList.length;i++){
-			addContactToListModel(i);
-		}
-		sortListModel();
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -231,14 +191,6 @@ public class Conversation {
 				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
 			}
 		});
-		btn_select_contact.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//TODO start new conversation
-				String selectedContact = (String)list.getSelectedValue();
-
-			}
-		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
 
@@ -249,7 +201,7 @@ public class Conversation {
 				String selectedValue = (String)list.getSelectedValue();
 				int i = findContactInListModel(selectedValue);
 				if (i != returnsNull){
-					Contact selectedContactCon = Global.contactList[i];
+					Contact selectedContactCon = Global.contactAList.get(i);
 					EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
 					editCon.getFrmEditContact().setVisible(true);
 				}
@@ -259,6 +211,8 @@ public class Conversation {
 		});
 		editContact.setBounds(150, 538, 117, 29);
 		panel.add(editContact);
+		
+		importContactsFromFile();
 	}
 
 	private void openNewContactWindow(){
@@ -268,49 +222,56 @@ public class Conversation {
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
-			for (int i = 0; i < Global.contactList.length-1; i++){
-				if (Global.contactList[i].getFirstName().toLowerCase().contains(searchTerm.toLowerCase())) {
-						addContactToListModel(i);
+			for (int i = 0; i < Global.contactAList.size()-1; i++){
+				Contact con = Global.contactAList.get(i);
+				String first = con.getFirstName();
+				String last = con.getLastName();
+				if (first.toLowerCase().contains(searchTerm.toLowerCase())) {
+						addContactToListModel(first, last);
 				}
-				else if (Global.contactList[i].getLastName().toLowerCase().contains(searchTerm.toLowerCase())) {
-					addContactToListModel(i);
+				else if (last.toLowerCase().contains(searchTerm.toLowerCase())) {
+					addContactToListModel(first, last);
 				}
-				else if ((Global.contactList[i].getFirstName().toLowerCase() + " " + Global.contactList[i].getLastName().toLowerCase()).contains(searchTerm.toLowerCase())) {
-					addContactToListModel(i);
+				else if ((first.toLowerCase() + " " + last.toLowerCase()).contains(searchTerm.toLowerCase())) {
+					addContactToListModel(first, last);
 				}
 			}
 		}
 		else {
-			for (int i = 0; i < Global.contactList.length-1; i++){
-				addContactToListModel(i);
+			for (int i = 0; i < Global.contactAList.size()-1; i++){
+				Contact con = Global.contactAList.get(i);
+				String firstName = con.getFirstName();
+				String lastName = con.getLastName();
+				addContactToListModel(firstName, lastName);
 				sortListModel();
 			}
 		}
 		if (Global.listModel.size() < 12){
-			Global.listModel.addElement(Global.contactList[499].getFirstName());
+			Global.listModel.addElement("Create Contact");
 		}
 	}
 	
-	private void addContactToListModel(int i){
-		if (!Global.contactList[i].getFirstName().equals("")){
-			String newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+	private void addContactToListModel(String firstName, String lastName){
+		if (!firstName.equals("")){
+			String newEntry = firstName + " " + lastName;
 			Global.listModel.addElement(newEntry);
 		}
-		else if (!Global.contactList[i].getLastName().equals("")){
-			String newEntry = Global.contactList[i].getLastName();
+		else if (lastName.equals("")){
+			String newEntry = lastName;
 			Global.listModel.addElement(newEntry);
 		}
 	}
 	
 	private int findContactInListModel(String selectedValue){
-		for (int i=0;i<Global.contactList.length-1;i++){
-			if (Global.contactList[i].getFirstName().equals(selectedValue)){
+		for (int i=0;i<Global.contactAList.size();i++){
+			Contact con = Global.contactAList.get(i);
+			if (con.getFirstName().equals(selectedValue)){
 				return i;
 			}
-			else if (Global.contactList[i].getLastName().equals(selectedValue)){
+			else if (con.getLastName().equals(selectedValue)){
 				return i;
 			}
-			else if ((Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName()).equals(selectedValue)){
+			else if ((con.getFirstName() + " " + con.getLastName()).equals(selectedValue)){
 				return i;
 			}
 		}
@@ -318,7 +279,6 @@ public class Conversation {
 	}
 
 	public JFrame getFrmBluetext() {
-		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
 	
@@ -332,6 +292,44 @@ public class Conversation {
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
+	}
+	
+	private void importContactsFromFile(){
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader("contact.txt"));
+			String sCurrentLine;
+			while ((sCurrentLine = br.readLine()) != null) {
+				String[] splitline = sCurrentLine.split(",");
+				String first = splitline[0];
+				String last = splitline[1];
+				String phone = splitline[2];
+				String secondPhone = "";
+				try {
+					secondPhone = splitline[3];
+				}
+				catch (ArrayIndexOutOfBoundsException a){
+					//This just means the contact doesn't have a second phone number
+				}
+				Global.contactAList.add(new Contact(first, last, phone, secondPhone));
+			}
+			br.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+
+		}
+		Contact firstContact = new Contact("Create Contact", "", "", "");
+		Global.contactAList.add(firstContact);
+		for (int i=0;i<Global.contactAList.size();i++){
+			Contact con = Global.contactAList.get(i);
+			String first = con.getFirstName();
+			String last = con.getLastName();
+			addContactToListModel(first, last);
+		}
+		sortListModel();
 	}
 }
 

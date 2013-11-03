@@ -101,41 +101,16 @@ public class NewContact {
 				String secondPhone = txtSecondPhone.getText();
 				Contact contactToAdd = validateContact(first, last, phone, secondPhone);
 				if (contactToAdd != null){
-					if (Global.nextContactNumber < Global.totalAllowableContacts){
-						//TODO remove previous listElement
-						Global.contactList[Global.nextContactNumber] = contactToAdd;
-						if (addContactToListModel(Global.nextContactNumber)){
-							String newLine = System.getProperty("line.separator");
-							String data = first + "," + last + "," + phone + "," + secondPhone + newLine;
-							 
-				    		File file =new File("contact.txt");
-				 
-				    		try {
-				    			//if file doesnt exists, then create it
-					    		if(!file.exists()){
-									file.createNewFile();
-					    		}
-					 
-					    		//true = append file
-					    		FileWriter fileWritter = new FileWriter(file.getName(),true);
-					    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-					    	    bufferWritter.write(data);
-					    	    bufferWritter.close();
-				    		}
-				    		catch (IOException ie){
-				    			
-				    		}
-				    		
-							Global.nextContactNumber++;
-							frmNewContact.setVisible(false);
-						}	
-					}
-					else {
-						//TODO
-					}
+					Global.contactAList.add(contactToAdd);
+					addContactToListModel(first, last);
 					
-				}
+					String newLine = System.getProperty("line.separator");
+					String data = first + "," + last + "," + phone + "," + secondPhone + newLine;
+		    		addContactToFile(data);
+		    		
+					frmNewContact.setVisible(false);
 					
+				}	
 			}
 		});
 		btnSubmit.setBounds(189, 230, 117, 29);
@@ -191,32 +166,33 @@ public class NewContact {
 				return null;
 			}
 		}
+		for (int i = 0; i<Global.contactAList.size();i++){
+			Contact con = Global.contactAList.get(i);
+			if (con.getFirstName().equals(firstName)){
+				if (con.getLastName().equals(lastName)){
+					JOptionPane.showMessageDialog(null, "This name already exists. Please choose a new name");
+					return null;
+				}
+			}
+		}
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 	
-	private boolean addContactToListModel(int i){
+	private boolean addContactToListModel(String firstName, String lastName){
 		String newEntry;
-		if (!Global.contactList[i].getFirstName().equals("")){
-			if (!Global.contactList[i].getLastName().equals("")){
-				newEntry = Global.contactList[i].getFirstName() + " " + Global.contactList[i].getLastName();
+		if (!firstName.equals("")){
+			if (!lastName.equals("")){
+				newEntry = firstName + " " + lastName;
 			}
 			else {
-				newEntry = Global.contactList[i].getFirstName();
+				newEntry = firstName;
 			}
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
-			if (Global.listModel.get(j).equals(newEntry)){
-				JOptionPane.showMessageDialog(null, "This Name already exists. Please Alter Name");
-				Global.contactList[i] = new Contact("", "", "", "");
-				return false;
-			}
-			else {
-				Global.listModel.add(j, newEntry);
-				return true;
-			}
+			Global.listModel.add(j, newEntry);
 		}
-		else if (!Global.contactList[i].getLastName().equals("")){
-			newEntry = Global.contactList[i].getLastName();
+		else if (!lastName.equals("")){
+			newEntry = lastName;
 			int j = Global.listModel.size()/2;
 			j = getNewPositionBasedOnStringComparision(j, newEntry);
 			Global.listModel.add(j, newEntry);
@@ -224,6 +200,27 @@ public class NewContact {
 		}
 		return false;
 	}
+	
+	private void addContactToFile(String data){
+		File file =new File("contact.txt");
+		 
+		try {
+			//if file doesnt exists, then create it
+    		if(!file.exists()){
+				file.createNewFile();
+    		}
+ 
+    		//true = append file
+    		FileWriter fileWritter = new FileWriter(file.getName(),true);
+    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+    	    bufferWritter.write(data);
+    	    bufferWritter.close();
+		}
+		catch (IOException ie){
+			
+		}
+	}
+	
 	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
 		String testEntry = newEntry.toLowerCase();
 		String listEntry = (String)Global.listModel.get(j);
