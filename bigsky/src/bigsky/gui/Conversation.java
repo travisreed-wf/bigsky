@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -21,23 +22,23 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
-import java.awt.Toolkit;
 
 import bigsky.Contact;
 import bigsky.Global;
-import java.awt.Toolkit;
 
 public class Conversation {
 
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
-	private JList list = new JList(Global.listModel);
+	
 	private final int returnsNull = 99999;
 
 	/**
@@ -95,7 +96,7 @@ public class Conversation {
 		mnu_new_conversation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
+				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
 			}
 		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
@@ -104,6 +105,27 @@ public class Conversation {
 
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
+		
+		JMenuItem mntmEditContact = new JMenuItem("Edit Contact");
+		mntmEditContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String selectedValue = (String)Global.list.getSelectedValue();
+				if (selectedValue != null){
+					int i = findContactInListModel(selectedValue);
+					if (i != returnsNull){
+						Contact selectedContactCon = Global.contactAList.get(i);
+						EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
+						editCon.getFrmEditContact().setVisible(true);
+					}
+					else System.out.println("Error in Edit Contact");
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Please select a contact to edit.");
+				}
+				
+			}
+		});
+		mnEdit.add(mntmEditContact);
 
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
@@ -141,11 +163,11 @@ public class Conversation {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(16, 41, 188, 346);
 		panel.add(scrollPane);
-
-		list.addMouseListener(new MouseAdapter() {
+		Global.list.addMouseListener(new PopClickListener());
+		Global.list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String selectedContact = (String)list.getSelectedValue();
+				String selectedContact = (String)Global.list.getSelectedValue();
 				if (selectedContact.equals("Create Contact ")) {
 					openNewContactWindow();
 				}
@@ -155,8 +177,8 @@ public class Conversation {
 			}
 		});
 
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(list);
+		Global.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(Global.list);
 
 
 		Global.conversationPane.setBounds(226, 0, 490, 35);
@@ -188,29 +210,11 @@ public class Conversation {
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)list.getSelectedValue(), null, panel_2, null);
+				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
-
-
-		JButton editContact = new JButton("EditContact");
-		editContact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String selectedValue = (String)list.getSelectedValue();
-				int i = findContactInListModel(selectedValue);
-				if (i != returnsNull){
-					Contact selectedContactCon = Global.contactAList.get(i);
-					EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
-					editCon.getFrmEditContact().setVisible(true);
-				}
-				else System.out.println("Error in Edit Contact");
-					
-			}
-		});
-		editContact.setBounds(150, 538, 117, 29);
-		panel.add(editContact);
 		
 		importContactsFromFile();
 	}
@@ -331,5 +335,31 @@ public class Conversation {
 		}
 		sortListModel();
 	}
+}
+
+class PopUpDemo extends JPopupMenu {
+    JMenuItem anItem;
+    public PopUpDemo(){
+        anItem = new JMenuItem("Click Me!");
+        add(anItem);
+    }
+}
+
+class PopClickListener extends MouseAdapter {
+    public void mousePressed(MouseEvent e){
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    public void mouseReleased(MouseEvent e){
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    private void doPop(MouseEvent e){
+        PopUpDemo menu = new PopUpDemo();
+        Global.list.setSelectedIndex(Global.list.locationToIndex(e.getPoint()));
+        menu.show(e.getComponent(), e.getX(), e.getY());
+    }
 }
 
