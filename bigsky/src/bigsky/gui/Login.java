@@ -129,8 +129,8 @@ public class Login extends JFrame {
 						dispose();
 						TaskBar.putIconInSystemTray();
 						if(messageHost==null){   
-				   	   		messageHost = new MessageHost();
-				   	   		messageHost.start();
+//				   	   		messageHost = new MessageHost();
+//				   	   		messageHost.start();
 				        }
 						//Conversation convo = new Conversation();
 		            	//convo.getFrmBluetext().setVisible(true);						

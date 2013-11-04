@@ -11,6 +11,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -23,6 +24,7 @@ import bigsky.Contact;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.messaging.*;
+
 import java.awt.Toolkit;
 
 public class SmallChat  {
@@ -31,7 +33,7 @@ public class SmallChat  {
 	public static final JTextField textField = new JTextField();
 	private JButton btnName;
 	private JButton btnNewButton;
-
+	private ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
 	
 	
 	private JButton send;
@@ -40,7 +42,9 @@ public class SmallChat  {
 
 	
 	private int offset = 0;
-	private static int textCount = -1;
+	private int textCount = -1;
+	private static int windowNum = 0;
+	private int winNum = 0;
 	
 	private Contact me;
 	private Contact you;
@@ -78,8 +82,8 @@ public class SmallChat  {
 		
 		this.me = me;
 		this.you = you;
-		
-		
+		winNum = windowNum;
+		windowNum++;
 	}
 
 	/**
@@ -162,7 +166,7 @@ public class SmallChat  {
 				sent = new TextMessage(me, you, textField.getText());
 
 				try {
-								
+					TaskBar.sendingTextArray.add(sent);			
 					updateConv(sent);
 					
 				} catch (BadLocationException e1) {
@@ -184,11 +188,11 @@ public class SmallChat  {
 			textPane.getDocument().insertString(offset, text.getContent(), null);
 			offset+=text.getContent().length();
 			textCount++;
-			TaskBar.myTextHistory.add(text);
+			myTextHistory.add(text);
 			
 			try {
-				MessageHost.ps2.writeObject(text);
-				MessageHost.ps2.flush();
+				TaskBar.messageHost.ps2.writeObject(text);
+				TaskBar.messageHost.ps2.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -213,16 +217,26 @@ public class SmallChat  {
 		return you;
 	}
 	
-	public void recievedText(TextMessage text) throws BadLocationException{
+	public void receivedText(TextMessage text) throws BadLocationException{
 		updateConv(text);
 	}
 
-	public static int getMyTextCount(){
+	public int getMyTextCount(){
 		return textCount;
+	}
+	
+	public ArrayList<TextMessage> getMyHistory(){
+		return myTextHistory;
+	}
+	
+	public int getChatNumber(){
+		return winNum;
 	}
 	
 	public JFrame getFrmBluetext() {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
+	
+	
 }
