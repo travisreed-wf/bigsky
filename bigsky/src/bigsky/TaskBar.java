@@ -156,6 +156,12 @@ public static TextMessageManager textManager = null;
             	logout();
             }
         });
+        
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	logout();
+            }
+        });
 
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
