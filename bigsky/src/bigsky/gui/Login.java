@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 
 import bigsky.TaskBar;
+import bigsky.TextMessageManager;
 import bigsky.messaging.*;
 
 public class Login extends JFrame {
@@ -143,6 +144,8 @@ public class Login extends JFrame {
 						if(messageHost==null){   
 				   	   		messageHost = new MessageHost();
 				   	   		messageHost.start();
+				   	   		TaskBar.textManager = new TextMessageManager();
+				   	   		TaskBar.textManager.start();
 				        }			
 						LoginInfo();
 						systemPrefs();

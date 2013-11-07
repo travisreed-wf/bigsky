@@ -145,6 +145,7 @@ public static TextMessageManager textManager = null;
 
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	System.out.println("small chat windows: " +  smallChatWindows.size());
             	for(int i = 0; i < smallChatWindows.size(); i++){
             		smallChatWindows.get(i).getFrmBluetext().setVisible(true);
             	}
@@ -196,11 +197,11 @@ public static TextMessageManager textManager = null;
         }
     }
 
-    protected static SmallChat createSmallChat(Contact me, Contact you){
-    	SmallChat smallChat = new SmallChat(me,you);
-    	smallChat.getFrmBluetext().setVisible(false);
-    	return smallChat;
-    }
+//    protected static SmallChat createSmallChat(Contact me, Contact you){
+//    	SmallChat smallChat = new SmallChat(me,you);
+//    	smallChat.getFrmBluetext().setVisible(false);
+//    	return smallChat;
+//    }
 
     public static boolean savedInfo(){
 

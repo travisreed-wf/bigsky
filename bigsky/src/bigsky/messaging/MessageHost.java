@@ -6,6 +6,7 @@ import java.io.*;
 import bigsky.Contact;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import bigsky.TextMessageManager;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
 import bigsky.gui.SmallChat;
@@ -36,14 +37,16 @@ class ClientConn implements Runnable {
 				else if(streamObject instanceof TextMessage)
 				{
 					TextMessage txtMessage = (TextMessage) streamObject;
+					txtMessage.setReceiver(new Contact("Jonathan", "Mielke", "6185204620", ""));
 					System.out.println("Client: " + txtMessage.getContent());
-					
-					if(txtMessage.getSender() == null){
-						txtMessage.setSender(TaskBar.you);
-						txtMessage.setReceiver(TaskBar.me);
-					}
+
+					System.out.println("TEXT ADDED TO ARRAY");
 					
 					TaskBar.myTextArray.add(txtMessage);
+					
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else{
 					System.out.println("Unknown object sent through stream");
@@ -58,7 +61,7 @@ class ClientConn implements Runnable {
 public class MessageHost extends Thread{
 	
 	public ClientConn conn = null;
-	public ObjectOutputStream ps2;
+	public ObjectOutputStream ps2 = null;
 	
 	public void run(){
 		
@@ -75,19 +78,8 @@ public class MessageHost extends Thread{
 			load.dispose();
 			Conversation convo = new Conversation();
 			convo.getFrmBluetext().setVisible(true);
-			BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 
-			while (true) {
-				
-//				String textFromSmallChat = new String();
-//				if(textFromSmallChat == null ||  textFromSmallChat.equalsIgnoreCase("quit")){
-//					return;
-//				}
-//				TextMessage textMsg = new TextMessage(TaskBar.me, TaskBar.you, textFromSmallChat);
-//				ps2.writeObject(textMsg);
-//				ps2.flush();
-			}
 		} catch(Exception e){
 			
 		}
@@ -100,6 +92,16 @@ public class MessageHost extends Thread{
 					
 				}
 
+		}
+	}
+	
+	public synchronized void sendObject(Object o)
+	{
+		try{
+			ps2.writeObject(o);
+			ps2.flush();
+		} catch(Exception e){
+			System.out.println("Got exception in MessageHost.sendObject(): " + e.getMessage());
 		}
 	}
 }

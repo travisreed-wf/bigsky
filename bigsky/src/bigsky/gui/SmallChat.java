@@ -184,18 +184,14 @@ public class SmallChat  {
 	protected void updateConv(TextMessage text) throws BadLocationException{
 	
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
-			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n");
-			textPane.getDocument().insertString(offset, text.getContent(), null);
-			offset+=text.getContent().length();
+			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			textCount++;
 			myTextHistory.add(text);
 			
-			try {
-				TaskBar.messageHost.ps2.writeObject(text);
-				TaskBar.messageHost.ps2.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			you.setSecondPhone("");
+			text.setReceiver(you);
+			TaskBar.messageHost.sendObject(text);
 			
 			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
 		}
@@ -237,6 +233,8 @@ public class SmallChat  {
 		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
+	
+	
 	
 	
 }
