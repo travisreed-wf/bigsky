@@ -24,6 +24,7 @@ class ClientConn implements Runnable {
 	}
 
 	public void run() {
+		Contact user = new Contact("Jonathan", "Mielke", "6185204620", "");
 		ObjectInputStream br = null;
 		try {
 			br = new ObjectInputStream(client.getInputStream());
@@ -37,7 +38,7 @@ class ClientConn implements Runnable {
 				else if(streamObject instanceof TextMessage)
 				{
 					TextMessage txtMessage = (TextMessage) streamObject;
-					txtMessage.setReceiver(new Contact("Jonathan", "Mielke", "6185204620", ""));
+					txtMessage.setReceiver(user);
 					System.out.println("Client: " + txtMessage.getContent());
 
 					System.out.println("TEXT ADDED TO ARRAY");

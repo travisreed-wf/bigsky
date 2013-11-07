@@ -31,6 +31,7 @@ public class TextMessageManager extends Thread{
 									TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
 								} catch (BadLocationException e) {
 									e.printStackTrace();
+									System.out.println("Updating a small chat conversation -FAILED");
 								}
 								TaskBar.myTextArray.remove(0);
 								matchR = true;
@@ -44,6 +45,7 @@ public class TextMessageManager extends Thread{
 								System.out.println("small chat window created!");
 							} catch (BadLocationException e) {
 								e.printStackTrace();
+								System.out.println("Small chat window creation -FAILED");
 							}
 							TaskBar.myTextArray.remove(0);
 						}
@@ -52,6 +54,7 @@ public class TextMessageManager extends Thread{
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			System.out.println("Synchronized method block -FAILED");
 		}
 	}		
 
