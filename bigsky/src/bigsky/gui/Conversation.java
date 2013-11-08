@@ -430,7 +430,7 @@ public class Conversation {
 		}
 		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
 		scanner.close();
-		System.out.println(receiver.getFirstName() + " " + receiver.getLastName() + " " + receiver.getPhoneNumber());
+		//System.out.println(receiver.getFirstName() + " " + receiver.getLastName() + " " + receiver.getPhoneNumber());
 		return receiver;
 	}
 }
