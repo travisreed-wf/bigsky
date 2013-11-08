@@ -420,7 +420,7 @@ public class Conversation {
 			last = scanner.next();
 		}
 		for(int i = 0; i < Global.contactAList.size(); i++){
-			if(Global.contactAList.get(i).getFirstName() == first && Global.contactAList.get(i).getLastName() == last){
+			if(Global.contactAList.get(i).getFirstName().equals(first) && Global.contactAList.get(i).getLastName().equals(last)){
 				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
 				if(!Global.contactAList.get(i).getSecondPhone().equals(null)){
 					secondPhone = Global.contactAList.get(i).getSecondPhone();
@@ -430,6 +430,7 @@ public class Conversation {
 		}
 		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
 		scanner.close();
+		System.out.println(receiver.getFirstName() + " " + receiver.getLastName() + " " + receiver.getPhoneNumber());
 		return receiver;
 	}
 }
