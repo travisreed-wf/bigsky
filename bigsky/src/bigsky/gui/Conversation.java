@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -111,6 +112,7 @@ public class Conversation {
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
 				createTab();
 			}
 		});
@@ -252,7 +254,7 @@ public class Conversation {
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
 				createTab();
 			}
 		});
@@ -405,6 +407,30 @@ public class Conversation {
 		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
 		
 		
+	}
+	
+	public static Contact getConvReceiver(String name){
+		String first;
+		String last = null;
+		String phoneNumber = null;
+		String secondPhone = null;
+		Scanner scanner = new Scanner(name);
+		first = scanner.next();
+		if(scanner.hasNext()){
+			last = scanner.next();
+		}
+		for(int i = 0; i < Global.contactAList.size(); i++){
+			if(Global.contactAList.get(i).getFirstName() == first && Global.contactAList.get(i).getLastName() == last){
+				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
+				if(!Global.contactAList.get(i).getSecondPhone().equals(null)){
+					secondPhone = Global.contactAList.get(i).getSecondPhone();
+				}
+				break;
+			}
+		}
+		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
+		scanner.close();
+		return receiver;
 	}
 }
 
