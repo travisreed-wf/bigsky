@@ -52,6 +52,10 @@ public class Conversation {
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
 	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
+	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
+	private static ArrayList<Integer> offset = new ArrayList<Integer>();
+//	private int offset = 0;
+	private int textCount = 0;
 	
 	
 	
@@ -112,8 +116,7 @@ public class Conversation {
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
-				createTab();
+				startNewConv();
 			}
 		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
@@ -227,8 +230,10 @@ public class Conversation {
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
+	            	TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
 	            	try {
-						textPanes.get(Global.conversationPane.getSelectedIndex()).getDocument().insertString(0, txtrEnterMessageHere.getText(), null);
+	            		System.out.println(text.getReceiver().getFirstName());
+						updateConv(text);
 					} catch (BadLocationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -254,8 +259,9 @@ public class Conversation {
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
-				createTab();
+
+				startNewConv();
+				
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
@@ -397,21 +403,20 @@ public class Conversation {
 	}
 	
 	
-	public static void createTab(){
+	public static void createTab(Contact contact){
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
 		textPanes.add(textPane);
 		JScrollPane scroll = new JScrollPane(textPane);
 		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
-		
-		
+		offset.add(new Integer(0));
 	}
 	
 	public static Contact getConvReceiver(String name){
 		String first;
-		String last = null;
+		String last = "";
 		String phoneNumber = null;
 		String secondPhone = null;
 		Scanner scanner = new Scanner(name);
@@ -433,6 +438,48 @@ public class Conversation {
 		//System.out.println(receiver.getFirstName() + " " + receiver.getLastName() + " " + receiver.getPhoneNumber());
 		return receiver;
 	}
+	
+	public static void startNewConv(){
+		boolean match = false;
+		System.out.println(getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber());
+		for(int i = 0; i < currentConvs.size(); i++){
+			if(getConvReceiver((String)Global.list.getSelectedValue()).getFirstName().equals(currentConvs.get(i).getFirstName()) &&
+					getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
+				match = true;
+			}
+		}
+		if(!match){
+			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
+			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
+		}
+	}
+	
+	protected void updateConv(TextMessage text) throws BadLocationException{
+		int temp = offset.get(Global.conversationPane.getSelectedIndex());
+		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
+			System.out.println(Global.conversationPane.getTitleAt(Global.conversationPane.getSelectedIndex()));
+			textPanes.get(Global.conversationPane.getSelectedIndex()).getDocument().insertString(offset.get(Global.conversationPane.getSelectedIndex()), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			offset.set(Global.conversationPane.getSelectedIndex(), temp);
+			textCount++;
+			
+
+//			TaskBar.messageHost.sendObject(text);
+			
+			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
+		}
+		
+			
+//		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
+//			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n");
+//			textPane.getDocument().insertString(offset, text.getContent(), null);
+//			offset+=text.getContent().length();
+//		}
+	}
+	
+	
+	
+
 }
 
 

@@ -42,7 +42,7 @@ public class PopUp extends JPopupMenu {
         });
 		startConvo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Conversation.createTab();
+				Conversation.startNewConv();
 			}
 		});
 			
