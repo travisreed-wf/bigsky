@@ -31,15 +31,22 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
 
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
+import bigsky.TextMessage;
 
 import java.awt.Toolkit;
 
 public class Conversation {
-
+	
+	//added variables from Jon
+	private final JTextArea txtrEnterMessageHere = new JTextArea();
+	
+	
+	
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	
@@ -195,11 +202,42 @@ public class Conversation {
 		JButton btnSend = new JButton("Send");
 		btnSend.setBounds(599, 493, 117, 29);
 		panel.add(btnSend);
-
-		JTextArea txtrEnterMessageHere = new JTextArea();
+	
+		
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+		
+		txtrEnterMessageHere.addKeyListener(new KeyAdapter() 
+	    {
+	        public void keyPressed(KeyEvent evt)
+	        {
+	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+	            {
+	                System.out.println("Pressed");
+	                txtrEnterMessageHere.setText("");
+	            }
+	        }
+	    });
+		
+		txtrEnterMessageHere.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				txtrEnterMessageHere.setText("");
+			}
+		});
+		
+		btnSend.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//sent = new TextMessage(me, you, textField.getText());
+
+				//TaskBar.sendingTextArray.add(sent);			
+
+				txtrEnterMessageHere.setText("");
+			}
+		});
 
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
