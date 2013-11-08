@@ -6,7 +6,6 @@ import java.io.*;
 import bigsky.Contact;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.TextMessageManager;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
 import bigsky.gui.SmallChat;

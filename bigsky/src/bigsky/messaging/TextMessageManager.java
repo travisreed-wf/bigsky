@@ -1,4 +1,4 @@
-package bigsky;
+package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
 

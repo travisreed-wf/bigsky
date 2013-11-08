@@ -19,7 +19,7 @@ import javax.swing.text.BadLocationException;
 
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
-import bigsky.TextMessageManager;
+import bigsky.messaging.TextMessageManager;
 
 
 
