@@ -9,7 +9,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -40,7 +46,7 @@ public static MessageHost messageHost = null;
 public static TextMessageManager textManager = null;	
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, SQLException {
         try {
         	UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
         } catch (UnsupportedLookAndFeelException ex) {
@@ -57,6 +63,7 @@ public static TextMessageManager textManager = null;
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	TaskBar.putIconInSystemTray();
+        	automaticIP();
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
@@ -281,6 +288,15 @@ public static TextMessageManager textManager = null;
 		}		
     }
 
+    public static void automaticIP() throws ClassNotFoundException, SQLException, UnknownHostException{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		Statement stmt = con.createStatement();
+		String iP =InetAddress.getLocalHost().getHostAddress();	
+		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + lastLoggedIn() + "';");
+
+    }
+    
 }
 
 class Queue<T>{
