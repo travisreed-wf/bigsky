@@ -165,10 +165,8 @@ public class SmallChat  {
 				
 				sent = new TextMessage(me, you, textField.getText());
 
-				try {
-					TaskBar.sendingTextArray.add(sent);			
+				try {			
 					updateConv(sent);
-					
 				} catch (BadLocationException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

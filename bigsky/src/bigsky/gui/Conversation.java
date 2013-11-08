@@ -1,10 +1,13 @@
 package bigsky.gui;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -29,6 +33,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
@@ -44,6 +49,7 @@ public class Conversation {
 	
 	//added variables from Jon
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
+	public ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	
 	
 	
@@ -183,16 +189,20 @@ public class Conversation {
 		scrollPane.setViewportView(Global.list);
 
 
-		Global.conversationPane.setBounds(226, 0, 490, 35);
-		panel.add(Global.conversationPane);
+		
 
-		JPanel panel_1 = new JPanel();
-		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
+//		JPanel panel_1 = new JPanel();
+//		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
 
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		conversationPanel.setBounds(226, 25, 490, 385);
+		
+		Global.conversationPane.setBounds(226, 0, 490, 35);
+		conversationPanel.add(Global.conversationPane);
+	
 		panel.add(conversationPanel);
+		conversationPanel.setLayout(new CardLayout(0, 0));
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -215,9 +225,16 @@ public class Conversation {
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
+	            	try {
+						textPanes.get(Global.conversationPane.getSelectedIndex()).getDocument().insertString(0, txtrEnterMessageHere.getText(), null);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 	            	//sent = new TextMessage(me, you, textField.getText());
 
 					//TaskBar.sendingTextArray.add(sent);
+	            	
 	            	txtrEnterMessageHere.setText(null);
 	            }
 	        }
@@ -235,8 +252,14 @@ public class Conversation {
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+				int i = 0;
+				JTextPane textPane = new JTextPane();
+				textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+				textPane.setEditable(false);
+				textPanes.add(textPane);
+				JScrollPane scroll = new JScrollPane(textPane);
+				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
+				i++;
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);

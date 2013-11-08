@@ -29,7 +29,6 @@ public class TaskBar{
 
 public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
 public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
-public static ArrayList<TextMessage> sendingTextArray = new ArrayList<TextMessage>();
 public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
 public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
 public static Contact me = new Contact("me", "me","me","");
