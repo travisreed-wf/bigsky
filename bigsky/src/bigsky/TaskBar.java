@@ -1,6 +1,7 @@
 package bigsky;
 
 import java.awt.*;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +19,7 @@ import javax.swing.text.BadLocationException;
 
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
-import bigsky.*;
+import bigsky.TextMessageManager;
 
 
 
@@ -27,15 +28,16 @@ public class TaskBar{
 
 
 public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
-public static ArrayList<TextMessage> textHistory = new ArrayList<TextMessage>();
-public static ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> sendingTextArray = new ArrayList<TextMessage>();
 public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
-public static SmallChat smallChatWindow = null;
+public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
 public static Contact me = new Contact("me", "me","me","");
 public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
+public static TextMessageManager textManager = null;	
 
 
     public static void main(String[] args) {
@@ -51,14 +53,15 @@ public static MessageHost messageHost = null;
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-
-        smallChatWindow = createSmallChat(me,you);
+        
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	TaskBar.putIconInSystemTray();
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
+	   	   		textManager = new TextMessageManager();
+	   	   		textManager.start();
 	        }
         }
 
@@ -69,14 +72,15 @@ public static MessageHost messageHost = null;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
-
+            	//TaskBar.trayIcon.displayMessage("SUP","sup",MessageType.INFO);
             }
         });
     }
 
-    public void startTaskBar(){
-    	initialize();
-    }
+//I dont think this method is ever used
+//    public void startTaskBar(){
+//    	initialize();
+//    }
 
     private static void initialize() {
         if (!SystemTray.isSupported()) {
@@ -141,8 +145,16 @@ public static MessageHost messageHost = null;
 
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-            	smallChatWindow.getFrmBluetext().setVisible(true);
+            	System.out.println("small chat windows: " +  smallChatWindows.size());
+            	for(int i = 0; i < smallChatWindows.size(); i++){
+            		smallChatWindows.get(i).getFrmBluetext().setVisible(true);
+            	}
+            }
+        });
+        
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	logout();
             }
         });
         
@@ -185,11 +197,11 @@ public static MessageHost messageHost = null;
         }
     }
 
-    protected static SmallChat createSmallChat(Contact me, Contact you){
-    	SmallChat smallChat = new SmallChat(me,you);
-    	smallChat.getFrmBluetext().setVisible(false);
-    	return smallChat;
-    }
+//    protected static SmallChat createSmallChat(Contact me, Contact you){
+//    	SmallChat smallChat = new SmallChat(me,you);
+//    	smallChat.getFrmBluetext().setVisible(false);
+//    	return smallChat;
+//    }
 
     public static boolean savedInfo(){
 
