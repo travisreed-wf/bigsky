@@ -49,7 +49,8 @@ public class Conversation {
 	
 	//added variables from Jon
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
-	public ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
+	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
+	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	
 	
 	
@@ -110,8 +111,7 @@ public class Conversation {
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+				createTab();
 			}
 		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
@@ -252,14 +252,8 @@ public class Conversation {
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int i = 0;
-				JTextPane textPane = new JTextPane();
-				textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
-				textPane.setEditable(false);
-				textPanes.add(textPane);
-				JScrollPane scroll = new JScrollPane(textPane);
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
-				i++;
+				
+				createTab();
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
@@ -398,6 +392,19 @@ public class Conversation {
 			addContactToListModel(first, last);
 		}
 		sortListModel();
+	}
+	
+	
+	public static void createTab(){
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+		textPane.setEditable(false);
+		textPanes.add(textPane);
+		JScrollPane scroll = new JScrollPane(textPane);
+		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
+		
+		
 	}
 }
 
