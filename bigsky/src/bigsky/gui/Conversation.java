@@ -207,17 +207,21 @@ public class Conversation {
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+	
 		
-		txtrEnterMessageHere.addKeyListener(new KeyAdapter() 
+		txtrEnterMessageHere.addKeyListener(new KeyAdapter()
 	    {
-	        public void keyPressed(KeyEvent evt)
+	        public void keyReleased(KeyEvent evt)
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
-	                System.out.println("Pressed");
-	                txtrEnterMessageHere.setText("");
+	            	//sent = new TextMessage(me, you, textField.getText());
+
+					//TaskBar.sendingTextArray.add(sent);
+	            	txtrEnterMessageHere.setText(null);
 	            }
 	        }
+
 	    });
 		
 		txtrEnterMessageHere.addMouseListener(new MouseAdapter() {
@@ -227,17 +231,6 @@ public class Conversation {
 			}
 		});
 		
-		btnSend.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				//sent = new TextMessage(me, you, textField.getText());
-
-				//TaskBar.sendingTextArray.add(sent);			
-
-				txtrEnterMessageHere.setText("");
-			}
-		});
 
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
