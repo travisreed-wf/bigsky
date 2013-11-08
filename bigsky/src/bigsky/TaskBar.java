@@ -54,6 +54,7 @@ public static TextMessageManager textManager = null;
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
         
+        
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	TaskBar.putIconInSystemTray();
