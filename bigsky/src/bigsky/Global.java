@@ -12,4 +12,10 @@ public class Global {
 	public static DefaultListModel listModel = new DefaultListModel();
 	public static JTabbedPane conversationPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 	public static JList list = new JList(listModel);
+	public final static String ON = "ON";
+	public final static String OFF = "OFF";
+	public final static String ONLINE = "ONLINE";
+	public final static String BUSY = "BUSY";
+	public final static String AWAY = "AWAY";
+	public final static String OFFLINE = "OFFLINE";
 }

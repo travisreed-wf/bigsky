@@ -34,6 +34,7 @@ import java.util.Properties;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessageManager;
 import bigsky.messaging.*;
@@ -149,7 +150,7 @@ public class Login extends JFrame {
 						LoginInfo();
 						systemPrefs();
 						if(hit){
-							saveInfo();
+							saveInProp(getUsername(), "save", "1");
 						}
 					}
 					else{
@@ -261,6 +262,8 @@ public class Login extends JFrame {
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
 		prop.setProperty("save", "0");
+		prop.setProperty("status",Global.ONLINE);
+		prop.setProperty("notification",Global.ON);
 		
 		try {
 			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
@@ -276,12 +279,12 @@ public class Login extends JFrame {
 	}
 	
 	
-	public void saveInfo(){
+	public void saveInProp(String user, String property, String value){
 		
 		Properties prop = new Properties();
 
 		try {
-			prop.load(new FileInputStream(getUsername() +".properties"));
+			prop.load(new FileInputStream(user +".properties"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("File not found1");
@@ -290,10 +293,10 @@ public class Login extends JFrame {
 			e.printStackTrace();
 		}
 		
-		prop.setProperty("save", "1");
+		prop.setProperty(property, value);
 	
 		try {
-			prop.store(new FileOutputStream(getUsername() +".properties"),null);
+			prop.store(new FileOutputStream(user+".properties"),null);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
