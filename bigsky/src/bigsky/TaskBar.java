@@ -38,7 +38,9 @@ private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
 public static TextMessageManager textManager = null;
 public static Conversation convo;
-
+public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
+public static boolean doNotSend = false;
 
     public static void main(String[] args) {
         try {

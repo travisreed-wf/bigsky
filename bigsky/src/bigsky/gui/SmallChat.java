@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 
 import bigsky.Contact;
+import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.messaging.*;
@@ -180,7 +181,8 @@ public class SmallChat  {
 	
 	
 	protected void updateConv(TextMessage text) throws BadLocationException{
-	
+		boolean check = false;
+		
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
@@ -188,16 +190,41 @@ public class SmallChat  {
 			myTextHistory.add(text);
 			you.setSecondPhone("");
 			text.setReceiver(you);
-			TaskBar.messageHost.sendObject(text);
 			
-			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
+			/*CODE UNDER REVIEW*/
+			if(!TaskBar.doNotSend){
+				TaskBar.outGoingInSmall.add(text);
+			}
+			
+			if(TaskBar.outGoingInSmall.size() != 0){
+				for(int i = 0; i < Conversation.currentConvs.size();i++){
+					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equals(Conversation.currentConvs.get(i).getPhoneNumber())){
+						TaskBar.doNotSend = true;
+						Conversation.updateConv(text);
+						TaskBar.outGoingInSmall.remove(0);
+						TaskBar.doNotSend = false;
+						check = true;
+					}
+				}
+				if(check == false){
+					TaskBar.doNotSend = true;
+					Conversation.updateConv(text);
+					TaskBar.outGoingInSmall.remove(0);
+					TaskBar.doNotSend = false;
+				}
+			}
+
+			if(!TaskBar.doNotSend){
+				TaskBar.messageHost.sendObject(text);
+			}
+			/*END CODE UNDER REVIEW*/
+
 		}
 		
 			
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
-			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n");
-			textPane.getDocument().insertString(offset, text.getContent(), null);
-			offset+=text.getContent().length();
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equals(you.getPhoneNumber())){
+			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 		}
 	}
 

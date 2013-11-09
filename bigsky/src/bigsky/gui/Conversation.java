@@ -454,17 +454,52 @@ public class Conversation {
 	}
 	
 	public static void updateConv(TextMessage text) throws BadLocationException{
-		int current = Global.conversationPane.getSelectedIndex();
-		int temp = offset.get(current);
+		
+		int current = 0;
+		int temp = 0;
 		Contact you = null;
 		boolean check1 = false;
 		boolean check2 = false;
+		boolean check3 = false;
+		if(Global.conversationPane.getTabCount()!=0){
+			current = Global.conversationPane.getSelectedIndex();
+			temp = offset.get(current);
+		}
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
 			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n").length();
 			offset.set(current, temp);
+			
+			/*CODE UNDER REVIEW*/
+			if(!TaskBar.doNotSend){
+				TaskBar.outGoingInConv.add(text);
+			}
+			
+			if(TaskBar.outGoingInSmall.size() != 0){
+				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
+					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+						TaskBar.doNotSend = true;
+						TaskBar.smallChatWindows.get(i).receivedText(text);
+						TaskBar.outGoingInConv.remove(0);
+						TaskBar.doNotSend = false;
+						check3 = true;
+					}
+				}
+				if(check3 = false){
+					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
+					TaskBar.doNotSend = true;
+					TaskBar.smallChatWindows.get(0).receivedText(text);
+					TaskBar.outGoingInConv.remove(0);
+					TaskBar.doNotSend = false;
+				}
+			}
 
-			TaskBar.messageHost.sendObject(text);
+			
+			if(!TaskBar.doNotSend){
+				TaskBar.messageHost.sendObject(text);
+			}
+			/*END CODE UNDER REVIEW*/
+			
 			check1 = true;
 		}
 		else{
