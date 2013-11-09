@@ -29,8 +29,8 @@ public class TextMessageManager extends Thread{
 						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
 							if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
 								try {
-									TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
 									Conversation.updateConv(TaskBar.myTextArray.get(0));
+									TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
 								} catch (BadLocationException e) {
 									e.printStackTrace();
 									System.out.println("Updating a small chat conversation -FAILED");

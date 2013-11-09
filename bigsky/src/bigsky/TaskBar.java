@@ -37,7 +37,7 @@ public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
 public static TextMessageManager textManager = null;
-public static final Conversation convo = new Conversation();
+public static Conversation convo;
 
 
     public static void main(String[] args) {
@@ -91,7 +91,7 @@ public static final Conversation convo = new Conversation();
 
 
         final PopupMenu menu = new PopupMenu();
-        convo.getFrmBluetext().setVisible(false);
+      
 
        // new TrayIcon(createImage("BlueText.gif", "tray icon"));
 
@@ -127,14 +127,9 @@ public static final Conversation convo = new Conversation();
 
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-
-
-
-    
+//            	Conversation convo = new Conversation();
+//            	Conversation.window.getFrmBluetext().setVisible(true);
             	convo.getFrmBluetext().setVisible(true);
-
-
 //                JOptionPane.showMessageDialog(null,
 //                        "This dialog box is run from the About menu item Something different");
 //

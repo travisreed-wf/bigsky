@@ -186,7 +186,6 @@ public class SmallChat  {
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			textCount++;
 			myTextHistory.add(text);
-			
 			you.setSecondPhone("");
 			text.setReceiver(you);
 			TaskBar.messageHost.sendObject(text);

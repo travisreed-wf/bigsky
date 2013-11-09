@@ -76,8 +76,8 @@ public class MessageHost extends Thread{
 			conn = new ClientConn(client);
 			System.out.println("request accepted!\nBeginning of chat:");
 			load.dispose();
-			Conversation convo = new Conversation();
-			convo.getFrmBluetext().setVisible(true);
+			TaskBar.convo = new Conversation();
+			TaskBar.convo.getFrmBluetext().setVisible(true);
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 
 		} catch(Exception e){

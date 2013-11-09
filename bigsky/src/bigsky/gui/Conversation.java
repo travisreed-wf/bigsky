@@ -54,7 +54,7 @@ public class Conversation {
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
 	private static ArrayList<Integer> offset = new ArrayList<Integer>();
-
+	//public static Conversation window = new Conversation();
 	
 	
 	
@@ -70,8 +70,8 @@ public class Conversation {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Conversation window = new Conversation();
-					window.frmBluetext.setVisible(true);
+					//Conversation window = new Conversation();
+					//window.frmBluetext.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -457,27 +457,33 @@ public class Conversation {
 		int current = Global.conversationPane.getSelectedIndex();
 		int temp = offset.get(current);
 		Contact you = null;
+		boolean check1 = false;
+		boolean check2 = false;
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
 			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n").length();
 			offset.set(current, temp);
 
 			TaskBar.messageHost.sendObject(text);
+			check1 = true;
 		}
 		else{
 			for(int i = 0; i < currentConvs.size();i++){
-				if(currentConvs.get(i).equals(text.getSender())){
+				if(currentConvs.get(i).getPhoneNumber().equals(text.getSender().getPhoneNumber())){
 					you = currentConvs.get(i);
+					check2 = true;
+					current = i;
 				}
 			}
 		}	
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
-			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n");
-			textPanes.get(current).getDocument().insertString(temp, text.getContent(), null);
-			temp+=text.getContent().length();
+		if(!text.getContent().trim().isEmpty() && check2){
+//			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n");
+			temp = offset.get(current);
+			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		}
-		else if(!text.getContent().trim().isEmpty() && you.equals(null)){
+		else if(!text.getContent().trim().isEmpty() && you == null && !check1){
 			JTextPane textPane = new JTextPane();
 			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 			textPane.setEditable(false);
@@ -485,7 +491,11 @@ public class Conversation {
 			JScrollPane scroll = new JScrollPane(textPane);
 			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
 			offset.add(new Integer(0));
+			temp = offset.get(current + 1);
 			currentConvs.add(text.getSender());
+			textPanes.get(current + 1).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			offset.set(current + 1, temp);
 		};
 	}
 
