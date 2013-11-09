@@ -208,6 +208,16 @@ public class SmallChat  {
 				}
 				if(check == false){
 					TaskBar.doNotSend = true;
+					
+					JTextPane textPane = new JTextPane();
+					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+					textPane.setEditable(false);
+					Conversation.textPanes.add(textPane);
+					JScrollPane scroll = new JScrollPane(textPane);
+					Global.conversationPane.addTab(text.getReceiver().getFirstName() + " " + text.getReceiver().getLastName(), null, scroll, null);
+					Conversation.offset.add(new Integer(0));
+					Conversation.currentConvs.add(text.getReceiver());
+					
 					Conversation.updateConv(text);
 					TaskBar.outGoingInSmall.remove(0);
 					TaskBar.doNotSend = false;

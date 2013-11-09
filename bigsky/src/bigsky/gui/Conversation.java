@@ -53,7 +53,7 @@ public class Conversation {
 	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
-	private static ArrayList<Integer> offset = new ArrayList<Integer>();
+	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 	//public static Conversation window = new Conversation();
 	
 	
