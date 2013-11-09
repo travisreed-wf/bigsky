@@ -225,7 +225,7 @@ public class Conversation {
 		
 		txtrEnterMessageHere.addKeyListener(new KeyAdapter()
 	    {
-	        public void keyReleased(KeyEvent evt)
+	        public void keyPressed(KeyEvent evt)
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
@@ -465,9 +465,9 @@ public class Conversation {
 			current = Global.conversationPane.getSelectedIndex();
 			temp = offset.get(current);
 		}
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
-			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n").length();
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
+			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 			
 			/*CODE UNDER REVIEW*/
@@ -475,17 +475,18 @@ public class Conversation {
 				TaskBar.outGoingInConv.add(text);
 			}
 			
-			if(TaskBar.outGoingInSmall.size() != 0){
+			if(TaskBar.outGoingInConv.size() != 0){
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
-					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
 						TaskBar.doNotSend = true;
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
 						check3 = true;
+						break;
 					}
 				}
-				if(check3 = false){
+				if(check3 == false){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
 					TaskBar.doNotSend = true;
 					TaskBar.smallChatWindows.get(0).receivedText(text);
@@ -504,7 +505,7 @@ public class Conversation {
 		}
 		else{
 			for(int i = 0; i < currentConvs.size();i++){
-				if(currentConvs.get(i).getPhoneNumber().equals(text.getSender().getPhoneNumber())){
+				if(currentConvs.get(i).getPhoneNumber().equalsIgnoreCase(text.getSender().getPhoneNumber())){
 					you = currentConvs.get(i);
 					check2 = true;
 					current = i;
@@ -526,13 +527,15 @@ public class Conversation {
 			JScrollPane scroll = new JScrollPane(textPane);
 			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
 			offset.add(new Integer(0));
-			temp = offset.get(current + 1);
+			temp = offset.get(current);
 			currentConvs.add(text.getSender());
-			textPanes.get(current + 1).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
-			offset.set(current + 1, temp);
+			offset.set(current, temp);
 		};
 	}
+	
+	
 
 }
 

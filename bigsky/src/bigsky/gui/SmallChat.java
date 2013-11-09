@@ -183,7 +183,7 @@ public class SmallChat  {
 	protected void updateConv(TextMessage text) throws BadLocationException{
 		boolean check = false;
 		
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			textCount++;
@@ -198,14 +198,16 @@ public class SmallChat  {
 			
 			if(TaskBar.outGoingInSmall.size() != 0){
 				for(int i = 0; i < Conversation.currentConvs.size();i++){
-					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equals(Conversation.currentConvs.get(i).getPhoneNumber())){
+					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equalsIgnoreCase(Conversation.currentConvs.get(i).getPhoneNumber())){
 						TaskBar.doNotSend = true;
 						Conversation.updateConv(text);
 						TaskBar.outGoingInSmall.remove(0);
 						TaskBar.doNotSend = false;
 						check = true;
+						break;
 					}
 				}
+				//for()
 				if(check == false){
 					TaskBar.doNotSend = true;
 					
