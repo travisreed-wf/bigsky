@@ -95,7 +95,7 @@ public class Conversation {
 		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
 		frmBluetext.setTitle("BlueText");
 		frmBluetext.setSize(new Dimension(800,650));
-		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmBluetext.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frmBluetext.setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -453,31 +453,41 @@ public class Conversation {
 		}
 	}
 	
-	protected void updateConv(TextMessage text) throws BadLocationException{
+	public static void updateConv(TextMessage text) throws BadLocationException{
 		int current = Global.conversationPane.getSelectedIndex();
 		int temp = offset.get(current);
-		
+		Contact you = null;
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
-			System.out.println(Global.conversationPane.getTitleAt(current));
 			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 
 			TaskBar.messageHost.sendObject(text);
-			
-			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
 		}
-		
-			
-//		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
-//			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n");
-//			textPane.getDocument().insertString(offset, text.getContent(), null);
-//			offset+=text.getContent().length();
-//		}
+		else{
+			for(int i = 0; i < currentConvs.size();i++){
+				if(currentConvs.get(i).equals(text.getSender())){
+					you = currentConvs.get(i);
+				}
+			}
+		}	
+		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
+			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n");
+			textPanes.get(current).getDocument().insertString(temp, text.getContent(), null);
+			temp+=text.getContent().length();
+			offset.set(current, temp);
+		}
+		else if(!text.getContent().trim().isEmpty() && you.equals(null)){
+			JTextPane textPane = new JTextPane();
+			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+			textPane.setEditable(false);
+			textPanes.add(textPane);
+			JScrollPane scroll = new JScrollPane(textPane);
+			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
+			offset.add(new Integer(0));
+			currentConvs.add(text.getSender());
+		};
 	}
-	
-	
-	
 
 }
 

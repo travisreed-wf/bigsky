@@ -36,7 +36,8 @@ public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
-public static TextMessageManager textManager = null;	
+public static TextMessageManager textManager = null;
+public static final Conversation convo = new Conversation();
 
 
     public static void main(String[] args) {
@@ -90,8 +91,7 @@ public static TextMessageManager textManager = null;
 
 
         final PopupMenu menu = new PopupMenu();
-
-
+        convo.getFrmBluetext().setVisible(false);
 
        // new TrayIcon(createImage("BlueText.gif", "tray icon"));
 
@@ -131,7 +131,7 @@ public static TextMessageManager textManager = null;
 
 
 
-            	Conversation convo = new Conversation();
+    
             	convo.getFrmBluetext().setVisible(true);
 
 
