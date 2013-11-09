@@ -54,8 +54,7 @@ public class Conversation {
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
 	private static ArrayList<Integer> offset = new ArrayList<Integer>();
-//	private int offset = 0;
-	private int textCount = 0;
+
 	
 	
 	
@@ -455,16 +454,16 @@ public class Conversation {
 	}
 	
 	protected void updateConv(TextMessage text) throws BadLocationException{
-		int temp = offset.get(Global.conversationPane.getSelectedIndex());
+		int current = Global.conversationPane.getSelectedIndex();
+		int temp = offset.get(current);
+		
 		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
-			System.out.println(Global.conversationPane.getTitleAt(Global.conversationPane.getSelectedIndex()));
-			textPanes.get(Global.conversationPane.getSelectedIndex()).getDocument().insertString(offset.get(Global.conversationPane.getSelectedIndex()), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
+			System.out.println(Global.conversationPane.getTitleAt(current));
+			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n", null);
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
-			offset.set(Global.conversationPane.getSelectedIndex(), temp);
-			textCount++;
-			
+			offset.set(current, temp);
 
-//			TaskBar.messageHost.sendObject(text);
+			TaskBar.messageHost.sendObject(text);
 			
 			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
 		}

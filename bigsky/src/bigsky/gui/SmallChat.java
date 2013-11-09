@@ -118,7 +118,7 @@ public class SmallChat  {
 		frmBluetext.getContentPane().add(scrollPane);
 		
 		textPane = new JTextPane();
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
 		scrollPane.setViewportView(textPane);
 
