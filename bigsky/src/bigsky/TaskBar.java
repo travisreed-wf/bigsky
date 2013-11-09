@@ -213,7 +213,7 @@ public static TextMessageManager textManager = null;
     public static boolean savedInfo(){
 
 		Properties prop = new Properties();
-		String compare = "1";
+		String compare = Global.ON;
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
@@ -226,6 +226,7 @@ public static TextMessageManager textManager = null;
 		}
 
 		if(compare.equals(prop.getProperty("save"))){
+			Global.username = lastLoggedIn();
 			return true;
 		}
 
@@ -274,7 +275,7 @@ public static TextMessageManager textManager = null;
 			e.printStackTrace();
 		}
 		
-		prop.setProperty("save", "0");
+		prop.setProperty("save", Global.OFF);
 	
 		try {
 			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);

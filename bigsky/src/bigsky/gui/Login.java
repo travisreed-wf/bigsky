@@ -150,7 +150,7 @@ public class Login extends JFrame {
 						LoginInfo();
 						systemPrefs();
 						if(hit){
-							saveInProp(getUsername(), "save", "1");
+							saveInProp(getUsername(), "save", Global.ON);
 						}
 					}
 					else{
@@ -199,10 +199,11 @@ public class Login extends JFrame {
 		return password;	
 	}
 	
-	private String getUsername(){
+	public String getUsername(){
 		String user = textField.getText();
 		//takes out all not  digits
 		user = user.replaceAll("\\D+","");
+		Global.username = user.trim();
 		return  user.trim();	
 	}
 	
@@ -261,9 +262,11 @@ public class Login extends JFrame {
 		Properties prop = new Properties();
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
-		prop.setProperty("save", "0");
-		prop.setProperty("status",Global.ONLINE);
-		prop.setProperty("notification",Global.ON);
+		prop.setProperty("save", Global.ON);
+		prop.setProperty(Global.ONLINE,Global.ON);
+		prop.setProperty(Global.AWAY, Global.OFF);
+		prop.setProperty(Global.BUSY, Global.OFF);
+		prop.setProperty(Global.NOTIFICATION,Global.ON);
 		
 		try {
 			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
@@ -279,7 +282,7 @@ public class Login extends JFrame {
 	}
 	
 	
-	public void saveInProp(String user, String property, String value){
+	public static void saveInProp(String user, String property, String value){
 		
 		Properties prop = new Properties();
 

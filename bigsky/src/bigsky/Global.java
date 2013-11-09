@@ -17,5 +17,6 @@ public class Global {
 	public final static String ONLINE = "ONLINE";
 	public final static String BUSY = "BUSY";
 	public final static String AWAY = "AWAY";
-	public final static String OFFLINE = "OFFLINE";
+	public final static String NOTIFICATION = "NOTIFICATION";
+	public static String username;
 }
