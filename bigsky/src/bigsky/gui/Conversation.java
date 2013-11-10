@@ -406,7 +406,7 @@ public class Conversation {
 		for(int i = 0; i < Global.contactAList.size(); i++){
 			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
 				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
-				if(!Global.contactAList.get(i).getSecondPhone().equals(null)){
+				if(Global.contactAList.get(i).getSecondPhone() != null){
 					secondPhone = Global.contactAList.get(i).getSecondPhone();
 				}
 				break;
