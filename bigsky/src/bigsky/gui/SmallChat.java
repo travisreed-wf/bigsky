@@ -10,7 +10,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -24,8 +23,6 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.messaging.*;
-
 import java.awt.Toolkit;
 
 public class SmallChat  {
@@ -124,22 +121,6 @@ public class SmallChat  {
 		scrollPane.setViewportView(textPane);
 
 		
-//		scrollPane.setViewportView(textArea);
-//		textArea.setBackground(Color.LIGHT_GRAY);
-//		textArea.setForeground(Color.BLUE);
-//		textArea.setFont(new Font("Courier New", Font.PLAIN, 10));
-//		textArea.setLineWrap(true);
-//		textArea.setTabSize(2);
-//		textArea.setWrapStyleWord(true);
-//		textArea.setEditable(false);
-		
-		
-//		try {
-//			tray.add(notification);
-//		} catch (AWTException e2) {
-//
-//		}
-		
 		
 		btnName = new JButton("Jonathan");
 		btnName.setOpaque(false);
@@ -169,8 +150,8 @@ public class SmallChat  {
 				try {			
 					updateConv(sent);
 				} catch (BadLocationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					System.out.println("updateConv in SmallChat - FAILED");
 				} 
 				textField.setText("");
 			}
@@ -191,7 +172,6 @@ public class SmallChat  {
 			you.setSecondPhone("");
 			text.setReceiver(you);
 			
-			/*CODE UNDER REVIEW*/
 			if(!TaskBar.doNotSend){
 				TaskBar.outGoingInSmall.add(text);
 			}
@@ -207,7 +187,6 @@ public class SmallChat  {
 						break;
 					}
 				}
-				//for()
 				if(check == false){
 					TaskBar.doNotSend = true;
 					
@@ -229,7 +208,6 @@ public class SmallChat  {
 			if(!TaskBar.doNotSend){
 				TaskBar.messageHost.sendObject(text);
 			}
-			/*END CODE UNDER REVIEW*/
 
 		}
 		
@@ -266,7 +244,6 @@ public class SmallChat  {
 	}
 	
 	public JFrame getFrmBluetext() {
-		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
 	

@@ -1,22 +1,17 @@
 package bigsky;
 
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
 import bigsky.messaging.TextMessageManager;

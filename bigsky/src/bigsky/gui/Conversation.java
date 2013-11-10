@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,13 +21,11 @@ import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -44,8 +39,6 @@ import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 
-import java.awt.Toolkit;
-
 public class Conversation {
 	
 	//added variables from Jon
@@ -54,7 +47,7 @@ public class Conversation {
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
-	//public static Conversation window = new Conversation();
+
 	
 	
 	
@@ -67,16 +60,7 @@ public class Conversation {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					//Conversation window = new Conversation();
-					//window.frmBluetext.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+
 	}
 
 	/**
@@ -234,13 +218,9 @@ public class Conversation {
 	            		System.out.println(text.getReceiver().getFirstName());
 						updateConv(text);
 					} catch (BadLocationException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						System.out.println("updateConv in Conversation - FAILED");
 					}
-	            	//sent = new TextMessage(me, you, textField.getText());
-
-					//TaskBar.sendingTextArray.add(sent);
-	            	
 	            	txtrEnterMessageHere.setText(null);
 	            }
 	        }
@@ -434,7 +414,6 @@ public class Conversation {
 		}
 		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
 		scanner.close();
-		//System.out.println(receiver.getFirstName() + " " + receiver.getLastName() + " " + receiver.getPhoneNumber());
 		return receiver;
 	}
 	
@@ -445,6 +424,7 @@ public class Conversation {
 			if(getConvReceiver((String)Global.list.getSelectedValue()).getFirstName().equals(currentConvs.get(i).getFirstName()) &&
 					getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
 				match = true;
+				break;
 			}
 		}
 		if(!match){
@@ -470,7 +450,6 @@ public class Conversation {
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 			
-			/*CODE UNDER REVIEW*/
 			if(!TaskBar.doNotSend){
 				TaskBar.outGoingInConv.add(text);
 			}
@@ -499,7 +478,6 @@ public class Conversation {
 			if(!TaskBar.doNotSend){
 				TaskBar.messageHost.sendObject(text);
 			}
-			/*END CODE UNDER REVIEW*/
 			
 			check1 = true;
 		}
@@ -509,11 +487,11 @@ public class Conversation {
 					you = currentConvs.get(i);
 					check2 = true;
 					current = i;
+					break;
 				}
 			}
 		}	
 		if(!text.getContent().trim().isEmpty() && check2){
-//			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n");
 			temp = offset.get(current);
 			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
