@@ -394,7 +394,7 @@ public class Conversation {
 	}
 	
 	public static Contact getConvReceiver(String name){
-		String first;
+		String first = "";
 		String last = "";
 		String phoneNumber = null;
 		String secondPhone = null;
@@ -404,7 +404,7 @@ public class Conversation {
 			last = scanner.next();
 		}
 		for(int i = 0; i < Global.contactAList.size(); i++){
-			if(Global.contactAList.get(i).getFirstName().equals(first) && Global.contactAList.get(i).getLastName().equals(last)){
+			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
 				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
 				if(!Global.contactAList.get(i).getSecondPhone().equals(null)){
 					secondPhone = Global.contactAList.get(i).getSecondPhone();
