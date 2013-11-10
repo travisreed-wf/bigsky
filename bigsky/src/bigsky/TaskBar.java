@@ -70,15 +70,11 @@ public static boolean doNotSend = false;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
-            	//TaskBar.trayIcon.displayMessage("SUP","sup",MessageType.INFO);
+ 
             }
         });
     }
 
-//I dont think this method is ever used
-//    public void startTaskBar(){
-//    	initialize();
-//    }
 
     private static void initialize() {
         if (!SystemTray.isSupported()) {
@@ -88,9 +84,6 @@ public static boolean doNotSend = false;
 
 
         final PopupMenu menu = new PopupMenu();
-      
-
-       // new TrayIcon(createImage("BlueText.gif", "tray icon"));
 
 
 
@@ -124,8 +117,6 @@ public static boolean doNotSend = false;
 
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//            	Conversation convo = new Conversation();
-//            	Conversation.window.getFrmBluetext().setVisible(true);
             	convo.getFrmBluetext().setVisible(true);
 //                JOptionPane.showMessageDialog(null,
 //                        "This dialog box is run from the About menu item Something different");
