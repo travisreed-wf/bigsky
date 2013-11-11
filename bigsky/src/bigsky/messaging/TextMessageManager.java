@@ -2,7 +2,9 @@ package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 import bigsky.Contact;
@@ -60,11 +62,30 @@ public class TextMessageManager extends Thread{
 					// Handle incoming Contacts
 					while(!TaskBar.incomingContactQueue.isEmpty()){
 						Contact ct = TaskBar.incomingContactQueue.remove();
+						if (ct.getLastName() == null){
+							ct.setLastName("");
+						}
+						String first_name = ct.getFirstName();
+						String last_name = ct.getLastName();
+						String perm_last = ct.getLastName();
+						//This loop is designed to remove duplicated names
+						int j = 1;
+						for (int i = 0; i<Global.contactAList.size();i++){
+							Contact con = Global.contactAList.get(i);
+							if (con.getFirstName().equals(first_name)){
+								if (con.getLastName().equals(last_name)){
+									last_name = perm_last + " (" + Integer.toString(j) + ")";
+									j++;
+									ct.setLastName(last_name);
+									i = 0; //set i back to 0 in case there is someone who already uses (1) we may need to use (1) (1)
+								}
+							}
+						}
+							
 						addContactToListModel(ct.getFirstName(), ct.getLastName());
 						Global.contactAList.add(ct);
-						ArrayList<Contact> contactList = Global.contactAList;
-						System.out.println(ct.getFirstName());
 					}
+					sortListModel();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -81,6 +102,18 @@ public class TextMessageManager extends Thread{
 		else if (lastName.equals("")){
 			String newEntry = lastName;
 			Global.listModel.addElement(newEntry);
+		}
+	}
+	
+	private void sortListModel(){
+		String[] tempList = new String[Global.listModel.size()];
+		for (int i=0; i<Global.listModel.size(); i++) {
+			tempList[i] = (String)Global.listModel.get(i);
+		}
+		Global.listModel.removeAllElements();
+		Arrays.sort(tempList);
+		for (int i=0; i<tempList.length;i++){
+			Global.listModel.addElement(tempList[i]);
 		}
 	}
 
