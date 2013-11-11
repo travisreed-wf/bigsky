@@ -35,8 +35,10 @@ class ClientConn implements Runnable {
 				if(streamObject instanceof Contact)
 				{
 					Contact ct = (Contact) streamObject;
-					addContactToListModel(ct.getFirstName(), ct.getLastName());
-					Global.contactAList.add(ct);
+					TaskBar.incomingContactQueue.add(ct);
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else if(streamObject instanceof TextMessage)
 				{
@@ -60,16 +62,6 @@ class ClientConn implements Runnable {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " inside ClientConn.run()");
-		}
-	}
-	private void addContactToListModel(String firstName, String lastName){
-		if (!firstName.equals("")){
-			String newEntry = firstName + " " + lastName;
-			Global.listModel.addElement(newEntry);
-		}
-		else if (lastName.equals("")){
-			String newEntry = lastName;
-			Global.listModel.addElement(newEntry);
 		}
 	}
 }

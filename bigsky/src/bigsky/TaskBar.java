@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -38,6 +39,7 @@ public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
 public static TextMessageManager textManager = null;	
+public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
 
 
     public static void main(String[] args) {

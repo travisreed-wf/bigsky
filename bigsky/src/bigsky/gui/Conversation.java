@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -211,7 +212,8 @@ public class Conversation {
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
 		
-		importContactsFromFile();
+		ArrayList<Contact> contactList = Global.contactAList;
+		//importContactsFromFile();
 	}
 	private void editContactAction(){
 		String selectedValue = (String)Global.list.getSelectedValue();

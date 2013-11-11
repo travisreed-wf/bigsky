@@ -1,6 +1,7 @@
 package bigsky;
 
 import java.awt.TrayIcon.MessageType;
+import java.util.ArrayList;
 
 import javax.swing.text.BadLocationException;
 
@@ -50,13 +51,33 @@ public class TextMessageManager extends Thread{
 							TaskBar.myTextArray.remove(0);
 						}
 					}
+					
+					// Handle incoming Contacts
+					while(!TaskBar.incomingContactQueue.isEmpty()){
+						Contact ct = TaskBar.incomingContactQueue.remove();
+						addContactToListModel(ct.getFirstName(), ct.getLastName());
+						Global.contactAList.add(ct);
+						ArrayList<Contact> contactList = Global.contactAList;
+						System.out.println(ct.getFirstName());
+					}
 				}
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			System.out.println("Synchronized method block -FAILED");
 		}
+	
 	}		
+	private void addContactToListModel(String firstName, String lastName){
+		if (!firstName.equals("")){
+			String newEntry = firstName + " " + lastName;
+			Global.listModel.addElement(newEntry);
+		}
+		else if (lastName.equals("")){
+			String newEntry = lastName;
+			Global.listModel.addElement(newEntry);
+		}
+	}
 
 	
 }
