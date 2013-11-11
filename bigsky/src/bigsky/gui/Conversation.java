@@ -468,7 +468,9 @@ public class Conversation {
 				if(check3 == false){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
 					TaskBar.doNotSend = true;
-					TaskBar.smallChatWindows.get(0).receivedText(text);
+					
+					TaskBar.smallChatWindows.get(current).receivedText(text);
+					
 					TaskBar.outGoingInConv.remove(0);
 					TaskBar.doNotSend = false;
 				}
@@ -505,6 +507,7 @@ public class Conversation {
 			JScrollPane scroll = new JScrollPane(textPane);
 			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
 			offset.add(new Integer(0));
+			current = offset.size() - 1;
 			temp = offset.get(current);
 			currentConvs.add(text.getSender());
 			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
