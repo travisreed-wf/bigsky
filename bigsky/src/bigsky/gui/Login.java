@@ -262,7 +262,7 @@ public class Login extends JFrame {
 		Properties prop = new Properties();
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
-		prop.setProperty("save", Global.ON);
+		prop.setProperty("save", Global.OFF);
 		prop.setProperty(Global.ONLINE,Global.ON);
 		prop.setProperty(Global.AWAY, Global.OFF);
 		prop.setProperty(Global.BUSY, Global.OFF);
