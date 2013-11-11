@@ -11,6 +11,7 @@ import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
+import bigsky.Global;
 
 class ClientConn implements Runnable {
 	
@@ -34,7 +35,8 @@ class ClientConn implements Runnable {
 				if(streamObject instanceof Contact)
 				{
 					Contact ct = (Contact) streamObject;
-					// TODO Travis will add code here to update listmodel
+					addContactToListModel(ct.getFirstName(), ct.getLastName());
+					Global.contactAList.add(ct);
 				}
 				else if(streamObject instanceof TextMessage)
 				{
@@ -58,6 +60,16 @@ class ClientConn implements Runnable {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " inside ClientConn.run()");
+		}
+	}
+	private void addContactToListModel(String firstName, String lastName){
+		if (!firstName.equals("")){
+			String newEntry = firstName + " " + lastName;
+			Global.listModel.addElement(newEntry);
+		}
+		else if (lastName.equals("")){
+			String newEntry = lastName;
+			Global.listModel.addElement(newEntry);
 		}
 	}
 }
