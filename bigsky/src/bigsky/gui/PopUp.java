@@ -5,9 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-
 import bigsky.Contact;
 import bigsky.Global;
 
@@ -39,8 +37,7 @@ public class PopUp extends JPopupMenu {
         });
 		startConvo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+				Conversation.startNewConv();
 			}
 		});
 			
