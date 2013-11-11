@@ -1,10 +1,10 @@
 package bigsky.gui;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,31 +15,42 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
 
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
-
-import java.awt.Toolkit;
+import bigsky.TextMessage;
 
 public class Conversation {
+	
+	//added variables from Jon
+	private final JTextArea txtrEnterMessageHere = new JTextArea();
+	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
+	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
+	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
+	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 
+	
+	
+	
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	
@@ -49,16 +60,7 @@ public class Conversation {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Conversation window = new Conversation();
-					window.frmBluetext.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class Conversation {
 		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
 		frmBluetext.setTitle("BlueText");
 		frmBluetext.setSize(new Dimension(800,650));
-		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmBluetext.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frmBluetext.setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -97,8 +99,7 @@ public class Conversation {
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+				startNewConv();
 			}
 		});
 		mnu_new_conversation.addMouseListener(new MouseAdapter() {
@@ -176,16 +177,20 @@ public class Conversation {
 		scrollPane.setViewportView(Global.list);
 
 
-		Global.conversationPane.setBounds(226, 0, 490, 35);
-		panel.add(Global.conversationPane);
+		
 
-		JPanel panel_1 = new JPanel();
-		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
+//		JPanel panel_1 = new JPanel();
+//		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
 
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		conversationPanel.setBounds(226, 25, 490, 385);
+		
+		Global.conversationPane.setBounds(226, 0, 490, 35);
+		conversationPanel.add(Global.conversationPane);
+	
 		panel.add(conversationPanel);
+		conversationPanel.setLayout(new CardLayout(0, 0));
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -195,17 +200,47 @@ public class Conversation {
 		JButton btnSend = new JButton("Send");
 		btnSend.setBounds(599, 493, 117, 29);
 		panel.add(btnSend);
-
-		JTextArea txtrEnterMessageHere = new JTextArea();
+	
+		
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+	
+		
+		txtrEnterMessageHere.addKeyListener(new KeyAdapter()
+	    {
+	        public void keyPressed(KeyEvent evt)
+	        {
+	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+	            {
+	            	TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+	            	try {
+	            		System.out.println(text.getReceiver().getFirstName());
+						updateConv(text);
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+						System.out.println("updateConv in Conversation - FAILED");
+					}
+	            	txtrEnterMessageHere.setText(null);
+	            }
+	        }
+
+	    });
+		
+		txtrEnterMessageHere.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				txtrEnterMessageHere.setText("");
+			}
+		});
+		
 
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+
+				startNewConv();
+				
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
@@ -345,6 +380,141 @@ public class Conversation {
 		}
 		sortListModel();
 	}
+	
+	
+	public static void createTab(Contact contact){
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+		textPane.setEditable(false);
+		textPanes.add(textPane);
+		JScrollPane scroll = new JScrollPane(textPane);
+		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
+		offset.add(new Integer(0));
+	}
+	
+	public static Contact getConvReceiver(String name){
+		String first = "";
+		String last = "";
+		String phoneNumber = null;
+		String secondPhone = null;
+		Scanner scanner = new Scanner(name);
+		first = scanner.next();
+		if(scanner.hasNext()){
+			last = scanner.next();
+		}
+		for(int i = 0; i < Global.contactAList.size(); i++){
+			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
+				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
+				if(Global.contactAList.get(i).getSecondPhone() != null){
+					secondPhone = Global.contactAList.get(i).getSecondPhone();
+				}
+				break;
+			}
+		}
+		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
+		scanner.close();
+		return receiver;
+	}
+	
+	public static void startNewConv(){
+		boolean match = false;
+		System.out.println(getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber());
+		for(int i = 0; i < currentConvs.size(); i++){
+			if(getConvReceiver((String)Global.list.getSelectedValue()).getFirstName().equals(currentConvs.get(i).getFirstName()) &&
+					getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
+				match = true;
+				break;
+			}
+		}
+		if(!match){
+			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
+			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
+		}
+	}
+	
+	public static void updateConv(TextMessage text) throws BadLocationException{
+		
+		int current = 0;
+		int temp = 0;
+		Contact you = null;
+		boolean check1 = false;
+		boolean check2 = false;
+		boolean check3 = false;
+		if(Global.conversationPane.getTabCount()!=0){
+			current = Global.conversationPane.getSelectedIndex();
+			temp = offset.get(current);
+		}
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
+			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			offset.set(current, temp);
+			
+			if(!TaskBar.doNotSend){
+				TaskBar.outGoingInConv.add(text);
+			}
+			
+			if(TaskBar.outGoingInConv.size() != 0){
+				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
+					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+						TaskBar.doNotSend = true;
+						TaskBar.smallChatWindows.get(i).receivedText(text);
+						TaskBar.outGoingInConv.remove(0);
+						TaskBar.doNotSend = false;
+						check3 = true;
+						break;
+					}
+				}
+				if(check3 == false){
+					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
+					TaskBar.doNotSend = true;
+					TaskBar.smallChatWindows.get(0).receivedText(text);
+					TaskBar.outGoingInConv.remove(0);
+					TaskBar.doNotSend = false;
+				}
+			}
+
+			
+			if(!TaskBar.doNotSend){
+				TaskBar.messageHost.sendObject(text);
+			}
+			
+			check1 = true;
+		}
+		else{
+			for(int i = 0; i < currentConvs.size();i++){
+				if(currentConvs.get(i).getPhoneNumber().equalsIgnoreCase(text.getSender().getPhoneNumber())){
+					you = currentConvs.get(i);
+					check2 = true;
+					current = i;
+					break;
+				}
+			}
+		}	
+		if(!text.getContent().trim().isEmpty() && check2){
+			temp = offset.get(current);
+			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			offset.set(current, temp);
+		}
+		else if(!text.getContent().trim().isEmpty() && you == null && !check1){
+			JTextPane textPane = new JTextPane();
+			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+			textPane.setEditable(false);
+			textPanes.add(textPane);
+			JScrollPane scroll = new JScrollPane(textPane);
+			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
+			offset.add(new Integer(0));
+			temp = offset.get(current);
+			currentConvs.add(text.getSender());
+			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			offset.set(current, temp);
+		};
+	}
+	
+	
+
 }
 
 

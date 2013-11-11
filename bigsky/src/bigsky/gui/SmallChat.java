@@ -10,7 +10,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -21,10 +20,9 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 
 import bigsky.Contact;
+import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.messaging.*;
-
 import java.awt.Toolkit;
 
 public class SmallChat  {
@@ -118,26 +116,10 @@ public class SmallChat  {
 		frmBluetext.getContentPane().add(scrollPane);
 		
 		textPane = new JTextPane();
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 10));
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
 		scrollPane.setViewportView(textPane);
 
-		
-//		scrollPane.setViewportView(textArea);
-//		textArea.setBackground(Color.LIGHT_GRAY);
-//		textArea.setForeground(Color.BLUE);
-//		textArea.setFont(new Font("Courier New", Font.PLAIN, 10));
-//		textArea.setLineWrap(true);
-//		textArea.setTabSize(2);
-//		textArea.setWrapStyleWord(true);
-//		textArea.setEditable(false);
-		
-		
-//		try {
-//			tray.add(notification);
-//		} catch (AWTException e2) {
-//
-//		}
 		
 		
 		btnName = new JButton("Jonathan");
@@ -165,13 +147,11 @@ public class SmallChat  {
 				
 				sent = new TextMessage(me, you, textField.getText());
 
-				try {
-					TaskBar.sendingTextArray.add(sent);			
+				try {			
 					updateConv(sent);
-					
 				} catch (BadLocationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					System.out.println("updateConv in SmallChat - FAILED");
 				} 
 				textField.setText("");
 			}
@@ -182,25 +162,59 @@ public class SmallChat  {
 	
 	
 	protected void updateConv(TextMessage text) throws BadLocationException{
-	
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(me)){
+		boolean check = false;
+		
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			textCount++;
 			myTextHistory.add(text);
-			
 			you.setSecondPhone("");
 			text.setReceiver(you);
-			TaskBar.messageHost.sendObject(text);
 			
-			//notification.displayMessage("Message", "MESSAGE", TrayIcon.MessageType.NONE);
+			if(!TaskBar.doNotSend){
+				TaskBar.outGoingInSmall.add(text);
+			}
+			
+			if(TaskBar.outGoingInSmall.size() != 0){
+				for(int i = 0; i < Conversation.currentConvs.size();i++){
+					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equalsIgnoreCase(Conversation.currentConvs.get(i).getPhoneNumber())){
+						TaskBar.doNotSend = true;
+						Conversation.updateConv(text);
+						TaskBar.outGoingInSmall.remove(0);
+						TaskBar.doNotSend = false;
+						check = true;
+						break;
+					}
+				}
+				if(check == false){
+					TaskBar.doNotSend = true;
+					
+					JTextPane textPane = new JTextPane();
+					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+					textPane.setEditable(false);
+					Conversation.textPanes.add(textPane);
+					JScrollPane scroll = new JScrollPane(textPane);
+					Global.conversationPane.addTab(text.getReceiver().getFirstName() + " " + text.getReceiver().getLastName(), null, scroll, null);
+					Conversation.offset.add(new Integer(0));
+					Conversation.currentConvs.add(text.getReceiver());
+					
+					Conversation.updateConv(text);
+					TaskBar.outGoingInSmall.remove(0);
+					TaskBar.doNotSend = false;
+				}
+			}
+
+			if(!TaskBar.doNotSend){
+				TaskBar.messageHost.sendObject(text);
+			}
+
 		}
 		
 			
-		if(!text.getContent().trim().isEmpty() && text.getSender().equals(you)){
-			text.setContent(text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n");
-			textPane.getDocument().insertString(offset, text.getContent(), null);
-			offset+=text.getContent().length();
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equals(you.getPhoneNumber())){
+			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 		}
 	}
 
@@ -230,7 +244,6 @@ public class SmallChat  {
 	}
 	
 	public JFrame getFrmBluetext() {
-		// TODO Auto-generated method stub
 		return frmBluetext;
 	}
 	

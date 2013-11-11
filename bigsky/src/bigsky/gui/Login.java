@@ -35,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 
 import bigsky.TaskBar;
-import bigsky.TextMessageManager;
 import bigsky.messaging.*;
 
 public class Login extends JFrame {
