@@ -82,8 +82,8 @@ public class MessageHost extends Thread{
 			Socket client = socket.accept();
 			conn = new ClientConn(client);
 			load.dispose();
-			Conversation convo = new Conversation();
-			convo.getFrmBluetext().setVisible(true);
+			TaskBar.convo = new Conversation();
+			TaskBar.convo.getFrmBluetext().setVisible(true);
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 			
 			// This is an example usage of sending a BlueTextRequest

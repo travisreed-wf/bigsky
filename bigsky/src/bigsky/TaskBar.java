@@ -1,14 +1,11 @@
 package bigsky;
 
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,11 +13,9 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
-import bigsky.TextMessageManager;
+import bigsky.messaging.TextMessageManager;
 
 
 
@@ -30,7 +25,6 @@ public class TaskBar{
 
 public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
 public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
-public static ArrayList<TextMessage> sendingTextArray = new ArrayList<TextMessage>();
 public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
 public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
 public static Contact me = new Contact("me", "me","me","");
@@ -38,9 +32,12 @@ public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
-public static TextMessageManager textManager = null;	
 public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
-
+public static TextMessageManager textManager = null;
+public static Conversation convo;
+public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
+public static boolean doNotSend = false;
 
     public static void main(String[] args) {
         try {
@@ -55,6 +52,7 @@ public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new Concurre
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
+        
         
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
@@ -74,15 +72,11 @@ public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new Concurre
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
-            	//TaskBar.trayIcon.displayMessage("SUP","sup",MessageType.INFO);
+ 
             }
         });
     }
 
-//I dont think this method is ever used
-//    public void startTaskBar(){
-//    	initialize();
-//    }
 
     private static void initialize() {
         if (!SystemTray.isSupported()) {
@@ -92,10 +86,6 @@ public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new Concurre
 
 
         final PopupMenu menu = new PopupMenu();
-
-
-
-       // new TrayIcon(createImage("BlueText.gif", "tray icon"));
 
 
 
@@ -129,14 +119,7 @@ public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new Concurre
 
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-
-
-
-            	Conversation convo = new Conversation();
             	convo.getFrmBluetext().setVisible(true);
-
-
 //                JOptionPane.showMessageDialog(null,
 //                        "This dialog box is run from the About menu item Something different");
 //
