@@ -97,11 +97,11 @@ public class Login extends JFrame {
 		
 		JLabel lblPhoneNumber = new JLabel("Phone Number");
 		lblPhoneNumber.setForeground(Color.WHITE);
-		lblPhoneNumber.setBounds(131, 135, 98, 16);
+		lblPhoneNumber.setBounds(126, 135, 98, 16);
 		image.add(lblPhoneNumber);
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(134, 185, 98, 16);
+		lblPassword.setBounds(126, 185, 98, 16);
 		lblPassword.setForeground(Color.WHITE);
 		image.add(lblPassword);
 		
