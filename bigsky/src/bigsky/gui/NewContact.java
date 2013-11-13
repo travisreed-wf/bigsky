@@ -48,13 +48,11 @@ public class NewContact {
 		frmNewContact = new JFrame();
 		frmNewContact.setTitle("New Contact");
 		frmNewContact.setIconImage(Toolkit.getDefaultToolkit().getImage(NewContact.class.getResource("/bigsky/BlueText.gif")));
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		frmNewContact.setBounds((width/2)-177, (height/2)-150, 355, 301);
+		frmNewContact.setSize(355, 301);
 		frmNewContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewContact.getContentPane().setLayout(null);
 		frmNewContact.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmNewContact.setLocationRelativeTo(null);
 		
 		lblFirstName = new JLabel("First Name:");
 		lblFirstName.setBounds(33, 35, 86, 16);

@@ -2,22 +2,26 @@ package bigsky;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
-import bigsky.*;
+import bigsky.messaging.TextMessageManager;
 
 
 
@@ -26,18 +30,21 @@ public class TaskBar{
 
 
 public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
-public static ArrayList<TextMessage> textHistory = new ArrayList<TextMessage>();
-public static ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
 public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
-public static SmallChat smallChatWindow = null;
+public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
 public static Contact me = new Contact("me", "me","me","");
 public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
+public static TextMessageManager textManager = null;
+public static Conversation convo;
+public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
+public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
+public static boolean doNotSend = false;
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, SQLException {
         try {
         	UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
         } catch (UnsupportedLookAndFeelException ex) {
@@ -50,17 +57,17 @@ public static MessageHost messageHost = null;
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-
-        smallChatWindow = createSmallChat(me,you);
+        
+        
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
-        	Conversation convo = new Conversation();
-        	convo.getFrmBluetext().setVisible(true);
-
         	TaskBar.putIconInSystemTray();
+        	automaticIP();
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
+	   	   		textManager = new TextMessageManager();
+	   	   		textManager.start();
 	        }
         }
 
@@ -71,14 +78,11 @@ public static MessageHost messageHost = null;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
             	initialize();
-
+ 
             }
         });
     }
 
-    public void startTaskBar(){
-    	initialize();
-    }
 
     private static void initialize() {
         if (!SystemTray.isSupported()) {
@@ -91,10 +95,6 @@ public static MessageHost messageHost = null;
 
 
 
-       // new TrayIcon(createImage("BlueText.gif", "tray icon"));
-
-
-
 
         //shows full image in taskbar
         trayIcon.setImageAutoSize(true);
@@ -102,11 +102,13 @@ public static MessageHost messageHost = null;
         //  menu items
         MenuItem conversation = new MenuItem("Open BlueText");
         MenuItem smallChat = new MenuItem("Side Chat");
+        MenuItem logout = new MenuItem("Log out");
         MenuItem exitItem = new MenuItem("Exit");
 
         //Adding  menu items
         menu.add(conversation);
         menu.add(smallChat);
+        menu.add(logout);
         menu.add(exitItem);
         trayIcon.setPopupMenu(menu);
 
@@ -123,14 +125,7 @@ public static MessageHost messageHost = null;
 
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-
-
-
-            	Conversation convo = new Conversation();
             	convo.getFrmBluetext().setVisible(true);
-
-
 //                JOptionPane.showMessageDialog(null,
 //                        "This dialog box is run from the About menu item Something different");
 //
@@ -141,8 +136,22 @@ public static MessageHost messageHost = null;
 
         smallChat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-            	smallChatWindow.getFrmBluetext().setVisible(true);
+            	System.out.println("small chat windows: " +  smallChatWindows.size());
+            	for(int i = 0; i < smallChatWindows.size(); i++){
+            		smallChatWindows.get(i).getFrmBluetext().setVisible(true);
+            	}
+            }
+        });
+        
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	logout();
+            }
+        });
+        
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	logout();
             }
         });
 
@@ -179,36 +188,100 @@ public static MessageHost messageHost = null;
         }
     }
 
-    protected static SmallChat createSmallChat(Contact me, Contact you){
-    	SmallChat smallChat = new SmallChat(me,you);
-    	smallChat.getFrmBluetext().setVisible(false);
-    	return smallChat;
-    }
+//    protected static SmallChat createSmallChat(Contact me, Contact you){
+//    	SmallChat smallChat = new SmallChat(me,you);
+//    	smallChat.getFrmBluetext().setVisible(false);
+//    	return smallChat;
+//    }
 
     public static boolean savedInfo(){
 
 		Properties prop = new Properties();
-		String compare = "1";
+		String compare = Global.ON;
 
 		try {
-			prop.load(new FileInputStream("userPreferences.properties"));
+			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("File not found2");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		if(compare.equals(prop.getProperty("save"))){
+			Global.username = lastLoggedIn();
 			return true;
 		}
 
 		return false;
 	}
 
+    public static String lastLoggedIn(){
+		
+		Properties prop = new Properties();
 
+		try {
+			prop.load(new FileInputStream("system.properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return (String) prop.get("lastLoggedIn");
 
+	}
+
+    public static void logout(){
+    	
+    	Frame j = new Frame();
+    	Frame[] frames = j.getFrames();
+    	System.out.println(frames.length);
+    	for(int i = 0; i < frames.length; i ++){
+    		frames[i].dispose();
+    	}
+    	
+    	tray.remove(trayIcon);
+    	Login log = new Login();
+    	log.setVisible(true);
+		Properties prop = new Properties();
+
+		try {
+			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		prop.setProperty("save", Global.OFF);
+	
+		try {
+			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+    }
+
+    public static void automaticIP() throws ClassNotFoundException, SQLException, UnknownHostException{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		Statement stmt = con.createStatement();
+		String iP =InetAddress.getLocalHost().getHostAddress();	
+		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + lastLoggedIn() + "';");
+
+    }
+    
 }
 
 class Queue<T>{
