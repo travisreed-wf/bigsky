@@ -11,6 +11,7 @@ import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
+import bigsky.Global;
 
 class ClientConn implements Runnable {
 	
@@ -34,7 +35,10 @@ class ClientConn implements Runnable {
 				if(streamObject instanceof Contact)
 				{
 					Contact ct = (Contact) streamObject;
-					// TODO Travis will add code here to update listmodel
+					TaskBar.incomingContactQueue.add(ct);
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else if(streamObject instanceof TextMessage)
 				{

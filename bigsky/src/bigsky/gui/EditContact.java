@@ -32,6 +32,8 @@ public class EditContact {
 	private Contact contactToEdit;
 	private int contactArrayNumber;
 	private String oldName;
+	private String oldFirstName;
+	private String oldLastName;
 
 	/**
 	 * Create the application.
@@ -40,6 +42,8 @@ public class EditContact {
 		contactToEdit = contact;
 		contactArrayNumber = contactNumber;
 		oldName = selectedValue;
+		oldFirstName = contact.getFirstName();
+		oldLastName = contact.getLastName();
 		initialize();
 	}
 
@@ -166,15 +170,19 @@ public class EditContact {
 				return null;
 			}
 		}
-		for (int i = 0; i<Global.contactAList.size();i++){
-			Contact con = Global.contactAList.get(i);
-			if (con.getFirstName().equals(firstName)){
-				if (con.getLastName().equals(lastName)){
-					JOptionPane.showMessageDialog(null, "This name already exists. Please choose a new name");
-					return null;
+		if (!(oldFirstName.equals(firstName) && oldLastName.equals(lastName))){
+			//check for duplicate naming
+			for (int i = 0; i<Global.contactAList.size();i++){
+				Contact con = Global.contactAList.get(i);
+				if (con.getFirstName().equals(firstName)){
+					if (con.getLastName().equals(lastName)){
+						JOptionPane.showMessageDialog(null, "This name already exists. Please choose a new name");
+						return null;
+					}
 				}
 			}
 		}
+		
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 	

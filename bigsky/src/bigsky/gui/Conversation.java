@@ -65,6 +65,7 @@ public class Conversation {
 
 	/**
 	 * Create the application.
+	 * @wbp.parser.entryPoint
 	 */
 	public Conversation() {
 		initialize();
@@ -198,6 +199,19 @@ public class Conversation {
 		panel.add(panel_3);
 
 		JButton btnSend = new JButton("Send");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+            	try {
+            		System.out.println(text.getReceiver().getFirstName());
+					updateConv(text);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+					System.out.println("updateConv in Conversation - FAILED");
+				}
+			}
+		});
 		btnSend.setBounds(599, 493, 117, 29);
 		panel.add(btnSend);
 	
@@ -221,7 +235,7 @@ public class Conversation {
 						e.printStackTrace();
 						System.out.println("updateConv in Conversation - FAILED");
 					}
-	            	txtrEnterMessageHere.setText(null);
+	            	txtrEnterMessageHere.setText("");
 	            }
 	        }
 
@@ -246,7 +260,6 @@ public class Conversation {
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
 		
-		importContactsFromFile();
 	}
 	private void editContactAction(){
 		String selectedValue = (String)Global.list.getSelectedValue();
@@ -341,44 +354,6 @@ public class Conversation {
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
-	}
-	
-	private void importContactsFromFile(){
-		try
-		{
-			BufferedReader br = new BufferedReader(new FileReader("contact.txt"));
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				String[] splitline = sCurrentLine.split(",");
-				String first = splitline[0];
-				String last = splitline[1];
-				String phone = splitline[2];
-				String secondPhone = "";
-				try {
-					secondPhone = splitline[3];
-				}
-				catch (ArrayIndexOutOfBoundsException a){
-					//This just means the contact doesn't have a second phone number
-				}
-				Global.contactAList.add(new Contact(first, last, phone, secondPhone));
-			}
-			br.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-
-		}
-		Contact firstContact = new Contact("Create Contact", "", "", "");
-		Global.contactAList.add(firstContact);
-		for (int i=0;i<Global.contactAList.size();i++){
-			Contact con = Global.contactAList.get(i);
-			String first = con.getFirstName();
-			String last = con.getLastName();
-			addContactToListModel(first, last);
-		}
-		sortListModel();
 	}
 	
 	

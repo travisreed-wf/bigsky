@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.*;
 import bigsky.gui.*;
@@ -31,6 +32,7 @@ public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
 public static final TrayIcon trayIcon = createTrayIconImage();
 private static final SystemTray tray = SystemTray.getSystemTray();
 public static MessageHost messageHost = null;
+public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
 public static TextMessageManager textManager = null;
 public static Conversation convo;
 public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
