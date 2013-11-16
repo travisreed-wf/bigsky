@@ -101,10 +101,6 @@ public class NewContact {
 				if (contactToAdd != null){
 					Global.contactAList.add(contactToAdd);
 					addContactToListModel(first, last);
-					
-					String newLine = System.getProperty("line.separator");
-					String data = first + "," + last + "," + phone + "," + secondPhone + newLine;
-		    		addContactToFile(data);
 		    		
 					frmNewContact.setVisible(false);
 					
@@ -197,26 +193,6 @@ public class NewContact {
 			return true;
 		}
 		return false;
-	}
-	
-	private void addContactToFile(String data){
-		File file =new File("contact.txt");
-		 
-		try {
-			//if file doesnt exists, then create it
-    		if(!file.exists()){
-				file.createNewFile();
-    		}
- 
-    		//true = append file
-    		FileWriter fileWritter = new FileWriter(file.getName(),true);
-    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-    	    bufferWritter.write(data);
-    	    bufferWritter.close();
-		}
-		catch (IOException ie){
-			
-		}
 	}
 	
 	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
