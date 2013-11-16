@@ -57,7 +57,7 @@ class ClientConn implements Runnable {
 					System.out.println("Got " + history.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
 				}
 				else{
-					System.out.println("Unknown object sent through stream");
+					System.out.println("ERROR: Unknown object sent through stream");
 				}
 			}
 		} catch (Exception e) {
@@ -86,12 +86,8 @@ public class MessageHost extends Thread{
 			TaskBar.convo.getFrmBluetext().setVisible(true);
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 			
-			// This is an example usage of sending a BlueTextRequest
-			// This request asks for the chat history of Andy Guibert and
-			// will return a BlueTextResponse in the stream in about 500ms 
-			// sendObject(new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, new Contact("Andy", "Guibert", "15072542815", null)));
 		} catch(Exception e){
-			System.out.println("Caught exception while setting up MessageHost");
+			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
 		}
 		finally{
 			if(socket != null)

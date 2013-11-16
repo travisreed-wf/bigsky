@@ -1,16 +1,8 @@
 package bigsky.gui;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -172,9 +164,10 @@ public class NewContact {
 			}
 		}
 		Contact c = new Contact(firstName, lastName, phone, secondPhone);
+		
 		// Send the contact to the phone so it can be added to the phone's contact list
 		TaskBar.messageHost.sendObject(new BlueTextRequest(BlueTextRequest.REQUEST.SUBMIT_NEW_CONTACT, c));
-		System.out.println("sent contact to phone");
+		
 		return c;
 	}
 	

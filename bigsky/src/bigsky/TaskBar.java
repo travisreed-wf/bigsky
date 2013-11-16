@@ -3,9 +3,7 @@ package bigsky;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,43 +15,32 @@ import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
 import bigsky.messaging.TextMessageManager;
 
-
-
-
-public class TaskBar{
-
-
-public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
-public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
-public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
-public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
-public static Contact me = new Contact("me", "me","me","");
-public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
-public static final TrayIcon trayIcon = createTrayIconImage();
-private static final SystemTray tray = SystemTray.getSystemTray();
-public static MessageHost messageHost = null;
-public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
-public static TextMessageManager textManager = null;
-public static Conversation convo;
-public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
-public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
-public static boolean doNotSend = false;
+public class TaskBar
+{
+	public static Queue<TextMessage> myTextQueue = new Queue<TextMessage>();
+	public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
+	public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
+	public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
+	public static Contact me = new Contact("me", "me","me","");
+	public static Contact you = new Contact("Andy", "G",    "+1 5072542815", null);
+	public static final TrayIcon trayIcon = createTrayIconImage();
+	private static final SystemTray tray = SystemTray.getSystemTray();
+	public static MessageHost messageHost = null;
+	public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
+	public static TextMessageManager textManager = null;
+	public static Conversation convo;
+	public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
+	public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
+	public static boolean doNotSend = false;
 
     public static void main(String[] args) {
         try {
         	UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        } catch (InstantiationException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-        
-        
+                
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	TaskBar.putIconInSystemTray();
@@ -71,12 +58,10 @@ public static boolean doNotSend = false;
         }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	initialize();
- 
+            	initialize(); 
             }
         });
     }
-
 
     private static void initialize() {
         if (!SystemTray.isSupported()) {
@@ -84,11 +69,7 @@ public static boolean doNotSend = false;
             return;
         }
 
-
         final PopupMenu menu = new PopupMenu();
-
-
-
 
         //shows full image in taskbar
         trayIcon.setImageAutoSize(true);
@@ -106,25 +87,9 @@ public static boolean doNotSend = false;
         menu.add(exitItem);
         trayIcon.setPopupMenu(menu);
 
-
-
-
-//        trayIcon.addMouseListener(new MouseAdapter() {
-//            public void mouseReleased(MouseEvent e) {
-//                if (e.isPopupTrigger()) {
-//
-//                }
-//            }
-//        });
-
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	convo.getFrmBluetext().setVisible(true);
-//                JOptionPane.showMessageDialog(null,
-//                        "This dialog box is run from the About menu item Something different");
-//
-//                trayIcon.displayMessage("Sun TrayIcon Demo",
-//                        "This is an error message", TrayIcon.MessageType.ERROR);
             }
         });
 
@@ -163,14 +128,12 @@ public static boolean doNotSend = false;
         } catch (AWTException e) {
             System.out.println("TrayIcon could not be added.");
         }
-
     }
 
     //Obtain tray icon image
     protected static TrayIcon createTrayIconImage() {
        TrayIcon tray;
    	   URL imageURL = TaskBar.class.getResource("BlueText.gif");
-
        Image icon = new ImageIcon(imageURL, "tray icon").getImage();
 
         if (imageURL == null) {
@@ -182,12 +145,6 @@ public static boolean doNotSend = false;
         }
     }
 
-//    protected static SmallChat createSmallChat(Contact me, Contact you){
-//    	SmallChat smallChat = new SmallChat(me,you);
-//    	smallChat.getFrmBluetext().setVisible(false);
-//    	return smallChat;
-//    }
-
     public static boolean savedInfo(){
 
 		Properties prop = new Properties();
@@ -195,12 +152,8 @@ public static boolean doNotSend = false;
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File not found2");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("No previous login file located.");
 		}
 
 		if(compare.equals(prop.getProperty("save"))){
@@ -216,22 +169,18 @@ public static boolean doNotSend = false;
 
 		try {
 			prop.load(new FileInputStream("system.properties"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File not found1");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("No previous system properties located, using defaults.");
 		}
 		
 		return (String) prop.get("lastLoggedIn");
-
 	}
 
     public static void logout(){
     	
     	Frame j = new Frame();
-    	Frame[] frames = j.getFrames();
+    	@SuppressWarnings("static-access")
+		Frame[] frames = j.getFrames();
     	System.out.println(frames.length);
     	for(int i = 0; i < frames.length; i ++){
     		frames[i].dispose();
@@ -244,28 +193,14 @@ public static boolean doNotSend = false;
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File not found1");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {}
 		
 		prop.setProperty("save", "0");
 	
 		try {
-			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);			
+		} catch (Exception e) {}		
     }
-
 }
 
 class Queue<T>{
@@ -290,8 +225,4 @@ class Queue<T>{
 		else
 			return false;
 	}
-
-
 }
-
-
