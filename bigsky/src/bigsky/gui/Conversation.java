@@ -221,10 +221,14 @@ public class Conversation {
 						e.printStackTrace();
 						System.out.println("updateConv in Conversation - FAILED");
 					}
-	            	txtrEnterMessageHere.setText(null);
+	            	txtrEnterMessageHere.setText("");
 	            }
 	        }
-
+	        public void keyReleased(KeyEvent evt){
+	        	if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+	        		txtrEnterMessageHere.setText("");
+	        	}
+	        }
 	    });
 		
 		txtrEnterMessageHere.addMouseListener(new MouseAdapter() {
