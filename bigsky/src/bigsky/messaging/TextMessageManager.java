@@ -1,32 +1,24 @@
 package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
-
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.gui.Conversation;
 import bigsky.gui.SmallChat;
 
-public class TextMessageManager extends Thread{
-
-	public void run(){
+public class TextMessageManager extends Thread
+{
+	public void run()
+	{
 		boolean matchR = false;
-		
-
 
 		try {
 			synchronized(this){
 				while(true){
-					System.out.println("wait hit");
-					this.wait();
-					System.out.println("RESUMED");
-					
+					this.wait();					
 					
 					if(!TaskBar.myTextArray.isEmpty()){
 						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
@@ -115,7 +107,5 @@ public class TextMessageManager extends Thread{
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
-	}
-
-	
+	}	
 }

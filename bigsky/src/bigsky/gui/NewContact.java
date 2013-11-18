@@ -1,24 +1,18 @@
 package bigsky.gui;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import bigsky.BlueTextRequest;
 import bigsky.Contact;
 import bigsky.Global;
+import bigsky.TaskBar;
 
 public class NewContact {
 
@@ -169,7 +163,12 @@ public class NewContact {
 				}
 			}
 		}
-		return new Contact(firstName, lastName, phone, secondPhone);
+		Contact c = new Contact(firstName, lastName, phone, secondPhone);
+		
+		// Send the contact to the phone so it can be added to the phone's contact list
+		TaskBar.messageHost.sendObject(new BlueTextRequest(BlueTextRequest.REQUEST.SUBMIT_NEW_CONTACT, c));
+		
+		return c;
 	}
 	
 	private boolean addContactToListModel(String firstName, String lastName){
