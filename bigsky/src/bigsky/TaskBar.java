@@ -195,7 +195,7 @@ public class TaskBar
      * Brings to login screen
      * @throws Exception
      */
-    public static void logout() throws Exception {
+    public static void logout(){
     	
     	Frame j = new Frame();
     	@SuppressWarnings("static-access")
@@ -242,13 +242,18 @@ public class TaskBar
      * @throws SQLException
      * @throws UnknownHostException
      */
-    public static void automaticIP() throws ClassNotFoundException, SQLException, UnknownHostException{
-    	Class.forName("com.mysql.jdbc.Driver");
+    public static void automaticIP(){
+    	try {
+			Class.forName("com.mysql.jdbc.Driver");
+	
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
 		Statement stmt = con.createStatement();
 		String iP =InetAddress.getLocalHost().getHostAddress();	
 		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + lastLoggedIn() + "';");
-
+    	} catch (Exception e) {
+    		System.out.println("Automatic login fail\n" + e.getMessage());
+    	}
+		
     }
 }
 

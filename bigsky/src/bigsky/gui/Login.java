@@ -198,10 +198,9 @@ public class Login extends JFrame {
 	
 	
 	//returns row number of users database row
-	public boolean login() throws ClassNotFoundException, SQLException, UnknownHostException{
+	public boolean login(){
 		
-		
-		
+		try{
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
 		Statement stmt = con.createStatement();
@@ -242,6 +241,12 @@ public class Login extends JFrame {
 		
 		rs.close();		
 		con.close();
+		}
+		
+		catch(Exception e){
+			System.out.println("Login fail" + e.getMessage());
+		}
+		
 		return true;
 		
 	}
