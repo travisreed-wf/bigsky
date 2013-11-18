@@ -48,7 +48,7 @@ public class TaskBar
         UIManager.put("swing.boldMetal", Boolean.FALSE);
                 
         // Checks to see if the user setting is to save username and password
-        if(savedInfo()){
+        if(savedInfo(Global.save, Global.ON)){
         	TaskBar.putIconInSystemTray();
         	try {
 				automaticIP();
@@ -157,10 +157,9 @@ public class TaskBar
      * Determines if the user has told the system to save his/her information
      * @return true if user told system to save his/her information
      */
-    public static boolean savedInfo(){
+    public static boolean savedInfo(String property, String compare ){
 
 		Properties prop = new Properties();
-		String compare = Global.ON;
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
@@ -168,7 +167,7 @@ public class TaskBar
 			System.out.println("No previous login file located.");
 		}
 
-		if(compare.equals(prop.getProperty("save"))){
+		if(compare.equals(prop.getProperty(property))){
 			Global.username = lastLoggedIn();
 			return true;
 		}
@@ -214,27 +213,28 @@ public class TaskBar
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			System.out.println("loading file problem.");
+		}
 		
 		prop.setProperty("save", Global.OFF);
 	
 		try {
 			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
 			
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			System.out.println("storing file problem");
+
+		}
 		
     }
     /**
      * After logout this is called for the relogin screen to load 
-     * @throws UnknownHostException
-     * @throws ClassNotFoundException
-     * @throws SQLException
      */
-    public static void reLogin() throws UnknownHostException, ClassNotFoundException, SQLException{
+    public static void reLogin(){
     	
 		Login login = new Login();
        	login.setVisible(true);
-       	System.out.println("Got HEre");
     }
     /**
      * Puts IP address in sql database when user has automatic login

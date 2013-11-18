@@ -155,17 +155,7 @@ public class Login extends JFrame {
 					else{
 						System.out.println("FAIL");
 					}
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	      
+				} catch (Exception e1) {}			
             }
         });
 		
@@ -272,13 +262,9 @@ public class Login extends JFrame {
 		try {
 			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		} catch (Exception e) {
+			System.out.println("file load problem.");
+		}
 		
 	}
 	
@@ -294,12 +280,8 @@ public class Login extends JFrame {
 
 		try {
 			prop.load(new FileInputStream(user +".properties"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File not found1");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("File load problem.");
 		}
 		
 		prop.setProperty(property, value);
@@ -307,13 +289,9 @@ public class Login extends JFrame {
 		try {
 			prop.store(new FileOutputStream(user+".properties"),null);
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		} catch (Exception e) {
+			System.out.println("file store problem.");
+		}
 		
 		
 	}
@@ -328,13 +306,9 @@ public class Login extends JFrame {
 		try {
 			prop.store(new FileOutputStream("system.properties"),null);
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		} catch (Exception e) {
+			System.out.println("System store file problem");		
+		}
 		
 	}
 	

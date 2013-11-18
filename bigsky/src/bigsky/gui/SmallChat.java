@@ -281,13 +281,10 @@ public class SmallChat  {
 	
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File not found2");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			System.out.println("file load problem.");
+		}
+		
 			
 			if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
 				notificationON.setSelected(true);

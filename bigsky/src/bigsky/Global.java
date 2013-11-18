@@ -19,4 +19,5 @@ public class Global {
 	public final static String AWAY = "AWAY";
 	public final static String NOTIFICATION = "NOTIFICATION";
 	public static String username;
+	public final static String save = "save";
 }
