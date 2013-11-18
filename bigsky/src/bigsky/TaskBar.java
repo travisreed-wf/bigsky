@@ -4,7 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -44,6 +50,9 @@ public class TaskBar
         // Checks to see if the user setting is to save username and password
         if(savedInfo()){
         	TaskBar.putIconInSystemTray();
+        	try {
+				automaticIP();
+			} catch (Exception e) {}
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
@@ -104,13 +113,9 @@ public class TaskBar
         
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	logout();
-            }
-        });
-        
-        logout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	logout();
+            	try {
+					logout();
+				} catch (Exception e1) {}
             }
         });
 
@@ -121,7 +126,9 @@ public class TaskBar
             }
         });
     }
-
+    /**
+     * Puts the tray icon into the system tray
+     */
     public static void putIconInSystemTray(){
         try {
             tray.add(trayIcon);
@@ -129,8 +136,10 @@ public class TaskBar
             System.out.println("TrayIcon could not be added.");
         }
     }
-
-    //Obtain tray icon image
+    /**
+     * Obtain system tray icon
+     * @return tray icon
+     */
     protected static TrayIcon createTrayIconImage() {
        TrayIcon tray;
    	   URL imageURL = TaskBar.class.getResource("BlueText.gif");
@@ -144,11 +153,14 @@ public class TaskBar
             return tray;
         }
     }
-
+    /**
+     * Determines if the user has told the system to save his/her information
+     * @return true if user told system to save his/her information
+     */
     public static boolean savedInfo(){
 
 		Properties prop = new Properties();
-		String compare = "1";
+		String compare = Global.ON;
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
@@ -157,12 +169,16 @@ public class TaskBar
 		}
 
 		if(compare.equals(prop.getProperty("save"))){
+			Global.username = lastLoggedIn();
 			return true;
 		}
 
 		return false;
 	}
-
+    /**
+     * Method to load system properties to see which user was logged in last
+     * @return String lastloggedin
+     */
     public static String lastLoggedIn(){
 		
 		Properties prop = new Properties();
@@ -175,31 +191,64 @@ public class TaskBar
 		
 		return (String) prop.get("lastLoggedIn");
 	}
-
-    public static void logout(){
+    /**
+     * Logout of current session.Closes connection between phone and computer
+     * Brings to login screen
+     * @throws Exception
+     */
+    public static void logout() throws Exception {
     	
     	Frame j = new Frame();
     	@SuppressWarnings("static-access")
-		Frame[] frames = j.getFrames();
+    	Frame[] frames = j.getFrames();
     	System.out.println(frames.length);
     	for(int i = 0; i < frames.length; i ++){
     		frames[i].dispose();
     	}
     	
     	tray.remove(trayIcon);
-    	Login log = new Login();
-    	log.setVisible(true);
-		Properties prop = new Properties();
+    	messageHost.closeHost();
+    	messageHost = null;
+    	reLogin();
+    	Properties prop = new Properties();
 
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
 		} catch (Exception e) {}
 		
-		prop.setProperty("save", "0");
+		prop.setProperty("save", Global.OFF);
 	
 		try {
-			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);			
-		} catch (Exception e) {}		
+			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
+			
+		} catch (Exception e) {}
+		
+    }
+    /**
+     * After logout this is called for the relogin screen to load 
+     * @throws UnknownHostException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public static void reLogin() throws UnknownHostException, ClassNotFoundException, SQLException{
+    	
+		Login login = new Login();
+       	login.setVisible(true);
+       	System.out.println("Got HEre");
+    }
+    /**
+     * Puts IP address in sql database when user has automatic login
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws UnknownHostException
+     */
+    public static void automaticIP() throws ClassNotFoundException, SQLException, UnknownHostException{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		Statement stmt = con.createStatement();
+		String iP =InetAddress.getLocalHost().getHostAddress();	
+		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + lastLoggedIn() + "';");
+
     }
 }
 
