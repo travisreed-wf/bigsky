@@ -113,9 +113,7 @@ public class TaskBar
         
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	try {
 					logout();
-				} catch (Exception e1) {}
             }
         });
 
