@@ -114,7 +114,9 @@ public class Conversation {
 		JMenuItem mnu_logout = new JMenuItem("Log Out");
 		mnu_logout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TaskBar.logout();
+				try {
+					TaskBar.logout();
+				} catch (Exception e1) {}
 			}
 		});
 		mnFile.add(mnu_logout);
@@ -147,6 +149,22 @@ public class Conversation {
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
 		mnHelp.add(mntmAboutBluetext);
+		
+		if (Global.battery_remaining >= 85){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
+		}
+		else if (Global.battery_remaining >=60){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_075.png")));
+		}
+		else if (Global.battery_remaining >= 35){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_050.png")));
+		}
+		else {
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_025.png")));
+		}
+		String batteryString = Global.battery_remaining.toString() + "%";
+		Global.batteryIndicator.setText((batteryString));
+		menuBar.add(Global.batteryIndicator);
 
 		JPanel panel = new JPanel();
 		frmBluetext.getContentPane().add(panel);
@@ -282,11 +300,6 @@ public class Conversation {
 		btnImportContacts.setBackground(Color.WHITE);
 		btnImportContacts.setBounds(181, 7, 27, 29);
 		panel.add(btnImportContacts);
-		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
-		btnNewButton.setBounds(678, -15, 21, 44);
-		panel.add(btnNewButton);
 		
 	}
 	private void editContactAction(){

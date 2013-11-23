@@ -70,11 +70,12 @@ public class MessageHost extends Thread{
 	
 	public ClientConn conn = null;
 	private ObjectOutputStream ps2 = null;
+	private ServerSocket socket = null;
+
 	
 	public void run(){
 		
 		LoadScreen load = new LoadScreen();
-		ServerSocket socket = null;
 		try{
 			
 			socket = new ServerSocket(1300);
@@ -96,6 +97,20 @@ public class MessageHost extends Thread{
 					socket.close();
 				} catch (IOException e) {}
 			}
+		}
+	}
+	
+	public void closeHost(){
+		
+		if(ps2 != null){
+			try {
+				ps2.close();
+			} catch (IOException e) {}
+		}
+		if(socket !=null){
+			try {
+				socket.close();
+			} catch (IOException e) {}
 		}
 	}
 	
