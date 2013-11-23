@@ -72,7 +72,7 @@ public class TextMessageManager extends Thread
 										break;
 									}
 									//If the name already exists and there is room to add the second phone to the contact do it.
-									else if (!con.getSecondPhone().equals("")){
+									else if (con.getSecondPhone().equals("")){
 										con.setSecondPhone(ct.getPhoneNumber());
 										isUnique = false;
 										break;
@@ -89,7 +89,6 @@ public class TextMessageManager extends Thread
 							Global.contactAList.add(ct);
 						}
 					}
-					sortListModel();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -109,15 +108,4 @@ public class TextMessageManager extends Thread
 		}
 	}
 	
-	private void sortListModel(){
-		String[] tempList = new String[Global.listModel.size()];
-		for (int i=0; i<Global.listModel.size(); i++) {
-			tempList[i] = (String)Global.listModel.get(i);
-		}
-		Global.listModel.removeAllElements();
-		Arrays.sort(tempList);
-		for (int i=0; i<tempList.length;i++){
-			Global.listModel.addElement(tempList[i]);
-		}
-	}	
 }

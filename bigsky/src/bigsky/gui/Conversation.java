@@ -38,6 +38,9 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.ImageIcon;
 
 public class Conversation {
 	
@@ -155,7 +158,7 @@ public class Conversation {
 			}
 		});
 
-		txtSearch.setBounds(16, 6, 190, 29);
+		txtSearch.setBounds(16, 6, 163, 29);
 		panel.add(txtSearch);
 		txtSearch.setText("Search");
 		txtSearch.setColumns(10);
@@ -259,6 +262,17 @@ public class Conversation {
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
+		
+		JButton btnImportContacts = new JButton("");
+		btnImportContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				sortListModel();
+			}
+		});
+		btnImportContacts.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/user.png")));
+		btnImportContacts.setBackground(Color.WHITE);
+		btnImportContacts.setBounds(181, 7, 27, 29);
+		panel.add(btnImportContacts);
 		
 	}
 	private void editContactAction(){
@@ -487,9 +501,6 @@ public class Conversation {
 			offset.set(current, temp);
 		};
 	}
-	
-	
-
 }
 
 
