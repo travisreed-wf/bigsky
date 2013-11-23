@@ -110,7 +110,9 @@ public class Conversation {
 		JMenuItem mnu_logout = new JMenuItem("Log Out");
 		mnu_logout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TaskBar.logout();
+				try {
+					TaskBar.logout();
+				} catch (Exception e1) {}
 			}
 		});
 		mnFile.add(mnu_logout);
