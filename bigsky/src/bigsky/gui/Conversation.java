@@ -41,6 +41,7 @@ import bigsky.TextMessage;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JProgressBar;
 
 public class Conversation {
 	
@@ -132,6 +133,14 @@ public class Conversation {
 
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
+		
+		JMenuItem mntmImportContacts = new JMenuItem("Import Contacts");
+		mntmImportContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sortListModel();
+			}
+		});
+		mnView.add(mntmImportContacts);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -273,6 +282,11 @@ public class Conversation {
 		btnImportContacts.setBackground(Color.WHITE);
 		btnImportContacts.setBounds(181, 7, 27, 29);
 		panel.add(btnImportContacts);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
+		btnNewButton.setBounds(678, -15, 21, 44);
+		panel.add(btnNewButton);
 		
 	}
 	private void editContactAction(){

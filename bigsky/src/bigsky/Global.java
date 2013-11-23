@@ -12,4 +12,5 @@ public class Global {
 	public static DefaultListModel listModel = new DefaultListModel();
 	public static JTabbedPane conversationPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 	public static JList list = new JList(listModel);
+	public static Integer battery_remaining;
 }
