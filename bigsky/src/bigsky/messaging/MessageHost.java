@@ -54,6 +54,7 @@ class ClientConn implements Runnable {
 				{
 					BlueTextResponse response = (BlueTextResponse) streamObject;
 					Global.phoneTextHistory = response.getChatHistory();
+					Global.blueTextRqContact = response.getOriginalRequest().getContact();
 					System.out.println("Got " + Global.phoneTextHistory.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
 					synchronized(TaskBar.textManager){
 						TaskBar.textManager.notify();

@@ -29,13 +29,26 @@ public class TextMessageManager extends Thread
 					
 					//Adding chat history from phone
 					if(!Global.phoneTextHistory.isEmpty()){
+						int smallChatNum = 0;
 						int size = Global.phoneTextHistory.size();
+						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
+							if(Global.blueTextRqContact.getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+								smallChatNum = i;
+								break;
+							}
+						}
+						if(smallChatNum == 0){
+							TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), Global.blueTextRqContact));
+						}
+						
 						sendTexts = false;
+												
 						for(int i = 0; i < size;i++){
 							phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
 							System.out.println(phoneHLine);
 							try {
 								Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
+								TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
 							} catch (BadLocationException e) {
 								e.printStackTrace();
 								System.out.println("Updating in chat history -FAILED");

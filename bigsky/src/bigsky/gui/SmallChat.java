@@ -328,7 +328,7 @@ public class SmallChat  {
 				TaskBar.outGoingInSmall.add(text);
 			}
 			
-			if(TaskBar.outGoingInSmall.size() != 0){
+			if(TaskBar.outGoingInSmall.size() != 0 && TextMessageManager.sendTexts){
 				for(int i = 0; i < Conversation.currentConvs.size();i++){
 					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equalsIgnoreCase(Conversation.currentConvs.get(i).getPhoneNumber())){
 						TaskBar.doNotSend = true;
