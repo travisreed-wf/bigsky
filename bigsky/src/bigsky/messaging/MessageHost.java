@@ -53,8 +53,11 @@ class ClientConn implements Runnable {
 				else if(streamObject instanceof BlueTextResponse)
 				{
 					BlueTextResponse response = (BlueTextResponse) streamObject;
-					ArrayList<TextMessage> history = response.getChatHistory();
-					System.out.println("Got " + history.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
+					Global.phoneTextHistory = response.getChatHistory();
+					System.out.println("Got " + Global.phoneTextHistory.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else{
 					System.out.println("ERROR: Unknown object sent through stream");

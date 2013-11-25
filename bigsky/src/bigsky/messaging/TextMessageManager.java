@@ -1,8 +1,13 @@
 package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.Arrays;
+
+import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
+
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
@@ -11,15 +16,38 @@ import bigsky.gui.SmallChat;
 
 public class TextMessageManager extends Thread
 {
+	public static boolean sendTexts = true;
+	
 	public void run()
 	{
 		boolean matchR = false;
-
+		String phoneHLine;
 		try {
 			synchronized(this){
 				while(true){
 					this.wait();					
 					
+					//Adding chat history from phone
+					if(!Global.phoneTextHistory.isEmpty()){
+						int size = Global.phoneTextHistory.size();
+						sendTexts = false;
+						for(int i = 0; i < size;i++){
+							phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
+							System.out.println(phoneHLine);
+							try {
+								Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
+							} catch (BadLocationException e) {
+								e.printStackTrace();
+								System.out.println("Updating in chat history -FAILED");
+							}
+							
+							Global.phoneTextHistory.remove(Global.phoneTextHistory.size()-1);
+						}
+
+						sendTexts = true;
+					}
+					
+					//For updating conversations in small chat and main conversation
 					if(!TaskBar.myTextArray.isEmpty()){
 						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
 						matchR = false;

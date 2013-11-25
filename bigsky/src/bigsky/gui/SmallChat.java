@@ -16,6 +16,7 @@ import java.util.Properties;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -28,6 +29,8 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import bigsky.messaging.TextMessageManager;
+
 import java.awt.Toolkit;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,6 +48,7 @@ public class SmallChat  {
 	private JButton send;
 	private JScrollPane scrollPane;
 	private JTextPane textPane;
+	DefaultCaret caret;
 
 	
 	private int offset = 0;
@@ -132,14 +136,18 @@ public class SmallChat  {
 		frmBluetext.getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 24, 230, 264);
-		frmBluetext.getContentPane().add(scrollPane);
-		
 		textPane = new JTextPane();
+		caret = (DefaultCaret)textPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
+
+		
+		scrollPane = new JScrollPane(textPane);
+		scrollPane.setBounds(0, 24, 230, 264);
+		frmBluetext.getContentPane().add(scrollPane);
 		scrollPane.setViewportView(textPane);
+
 
 		//Beginning of Settings Menu Bar
 			menuBar = new JMenuBar();
@@ -331,15 +339,18 @@ public class SmallChat  {
 						break;
 					}
 				}
-				if(check == false){
+				if(check == false && TextMessageManager.sendTexts){
 					TaskBar.doNotSend = true;
 					
 					JTextPane textPane = new JTextPane();
+					DefaultCaret caret = (DefaultCaret)textPane.getCaret();
+					caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 					textPane.setEditable(false);
 					Conversation.textPanes.add(textPane);
 					JScrollPane scroll = new JScrollPane(textPane);
 					Global.conversationPane.addTab(text.getReceiver().getFirstName() + " " + text.getReceiver().getLastName(), null, scroll, null);
+					Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 					Conversation.offset.add(new Integer(0));
 					Conversation.currentConvs.add(text.getReceiver());
 					
@@ -349,7 +360,7 @@ public class SmallChat  {
 				}
 			}
 
-			if(!TaskBar.doNotSend){
+			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
 				TaskBar.messageHost.sendObject(text);
 			}
 
