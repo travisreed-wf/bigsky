@@ -149,21 +149,7 @@ public class Conversation {
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
 		mnHelp.add(mntmAboutBluetext);
-		
-		if (Global.battery_remaining >= 85){
-			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
-		}
-		else if (Global.battery_remaining >=60){
-			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_075.png")));
-		}
-		else if (Global.battery_remaining >= 35){
-			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_050.png")));
-		}
-		else {
-			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_025.png")));
-		}
-		String batteryString = Global.battery_remaining.toString() + "%";
-		Global.batteryIndicator.setText((batteryString));
+		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
 
 		JPanel panel = new JPanel();
@@ -291,6 +277,7 @@ public class Conversation {
 		panel.add(btn_select_contact);
 		
 		JButton btnImportContacts = new JButton("");
+		btnImportContacts.setToolTipText("Import Contacts.");
 		btnImportContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				sortListModel();
@@ -447,6 +434,24 @@ public class Conversation {
 			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
 			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
 		}
+	}
+	
+	public static void updateBatteryIndicator(int newPercentage){
+		if (newPercentage >= 85){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
+		}
+		else if (newPercentage >=60){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_075.png")));
+		}
+		else if (newPercentage >= 35){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_050.png")));
+		}
+		else {
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_025.png")));
+		}
+		Global.battery_remaining = newPercentage;
+		String batteryString = Global.battery_remaining.toString() + "%";
+		Global.batteryIndicator.setText((batteryString));
 	}
 	
 	public static void updateConv(TextMessage text) throws BadLocationException{
