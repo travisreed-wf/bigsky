@@ -58,26 +58,37 @@ public class TextMessageManager extends Thread
 							ct.setLastName("");
 						}
 						String first_name = ct.getFirstName();
-						String last_name = ct.getLastName();
 						String perm_last = ct.getLastName();
+						Boolean isUnique = true;
 						//This loop is designed to remove duplicated names
 						int j = 1;
 						for (int i = 0; i<Global.contactAList.size();i++){
 							Contact con = Global.contactAList.get(i);
 							if (con.getFirstName().equals(first_name)){
-								if (con.getLastName().equals(last_name)){
-									last_name = perm_last + " (" + Integer.toString(j) + ")";
+								if (con.getLastName().equals(ct.getLastName())){
+									//If the name already exists and the phone number is identical don't add it
+									if (con.getPhoneNumber().equals(ct.getPhoneNumber())){
+										isUnique = false;
+										break;
+									}
+									//If the name already exists and there is room to add the second phone to the contact do it.
+									else if (con.getSecondPhone().equals("")){
+										con.setSecondPhone(ct.getPhoneNumber());
+										isUnique = false;
+										break;
+									}
+									String last_name = perm_last + " (" + Integer.toString(j) + ")";
 									j++;
 									ct.setLastName(last_name);
-									i = 0; //set i back to 0 in case there is someone who already uses (1) we may need to use (1) (1)
+									i = 0; //set i back to 0 in case there is someone who already uses (1) we may need to use (2)
 								}
 							}
 						}
-							
-						addContactToListModel(ct.getFirstName(), ct.getLastName());
-						Global.contactAList.add(ct);
+						if (isUnique){
+							addContactToListModel(ct.getFirstName(), ct.getLastName());
+							Global.contactAList.add(ct);
+						}
 					}
-					sortListModel();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -97,15 +108,4 @@ public class TextMessageManager extends Thread
 		}
 	}
 	
-	private void sortListModel(){
-		String[] tempList = new String[Global.listModel.size()];
-		for (int i=0; i<Global.listModel.size(); i++) {
-			tempList[i] = (String)Global.listModel.get(i);
-		}
-		Global.listModel.removeAllElements();
-		Arrays.sort(tempList);
-		for (int i=0; i<tempList.length;i++){
-			Global.listModel.addElement(tempList[i]);
-		}
-	}	
 }
