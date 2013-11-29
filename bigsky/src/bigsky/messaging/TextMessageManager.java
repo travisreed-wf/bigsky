@@ -127,6 +127,9 @@ public class TextMessageManager extends Thread
 				System.out.println("Updating battery percentage to: " + resp.getBatteryLevel());
 				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
 			}
+			else{
+				System.out.println("WARNING: an unknown response was received from the phone.");
+			}
 		}
 	}
 	
