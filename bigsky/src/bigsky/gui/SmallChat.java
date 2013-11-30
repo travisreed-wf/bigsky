@@ -324,7 +324,7 @@ public class SmallChat  {
 			you.setSecondPhone("");
 			text.setReceiver(you);
 			
-			if(!TaskBar.doNotSend){
+			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
 				TaskBar.outGoingInSmall.add(text);
 			}
 			

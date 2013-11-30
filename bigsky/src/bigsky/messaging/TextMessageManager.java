@@ -45,7 +45,9 @@ public class TextMessageManager extends Thread
 												
 						for(int i = 0; i < size;i++){
 							phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
-							System.out.println(phoneHLine);
+							//System.out.println(phoneHLine);
+							//System.out.println(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getReceiver().getFirstName() + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName());
+							//System.out.println(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent());
 							try {
 								Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
 								TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
@@ -56,12 +58,13 @@ public class TextMessageManager extends Thread
 							
 							Global.phoneTextHistory.remove(Global.phoneTextHistory.size()-1);
 						}
-
+						//wait(5000);
 						sendTexts = true;
 					}
 					
 					//For updating conversations in small chat and main conversation
 					if(!TaskBar.myTextArray.isEmpty()){
+						System.out.println("hit manager sending");
 						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
 						matchR = false;
 						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
