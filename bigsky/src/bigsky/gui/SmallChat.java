@@ -10,6 +10,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -143,17 +144,17 @@ public class SmallChat  {
 		textField.setColumns(10);
 		
 		textPane = new JTextPane();
-		caret = (DefaultCaret)textPane.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
+		//textPane.setAutoscrolls(true);
 
 		
 		scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(0, 24, 230, 264);
 		frmBluetext.getContentPane().add(scrollPane);
 		scrollPane.setViewportView(textPane);
-
+		caret = (DefaultCaret)textPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		//Beginning of Settings Menu Bar
 			menuBar = new JMenuBar();
@@ -323,6 +324,7 @@ public class SmallChat  {
 		boolean check = false;
 		int temp = 0;
 		
+		
 		//checks if user is sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
@@ -355,8 +357,8 @@ public class SmallChat  {
 					TaskBar.doNotSend = true;
 					
 					JTextPane textPane = new JTextPane();
-					DefaultCaret caret = (DefaultCaret)textPane.getCaret();
-					caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+					DefaultCaret caretC = (DefaultCaret)textPane.getCaret();
+					caretC.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 					textPane.setEditable(false);
 					Conversation.textPanes.add(textPane);
@@ -383,6 +385,10 @@ public class SmallChat  {
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 		}
+		//attempt to scroll on creation
+		textPane.setAutoscrolls(true);
+		scrollPane.scrollRectToVisible(new Rectangle(0,textPane.getBounds(null).height,1,1));
+		
 	}
 
 	public Contact getLocalContact()

@@ -2,58 +2,99 @@ package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
 import java.util.Arrays;
+
 import javax.swing.text.BadLocationException;
 
+import bigsky.BlueTextRequest;
 import bigsky.BlueTextRequest.REQUEST;
 import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.gui.Conversation;
+import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
 
 public class TextMessageManager extends Thread
 {
+	public static boolean sendTexts = true;
+	
 	public void run()
 	{
 		boolean matchR = false;
-
+		String phoneHLine;
+		
 		try {
 			synchronized(this){
 				while(true){
-					this.wait();					
+					this.wait();	
+					
+					// Handle response objects
+					processResponseQueue();
+					
+					//Adding chat history from phone
+                    if(!Global.phoneTextHistory.isEmpty()){
+                            int smallChatNum = 0;
+                            int size = Global.phoneTextHistory.size();
+                            for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
+                                    if(Global.blueTextRqContact.getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+                                            smallChatNum = i;
+                                            break;
+                                    }
+                            }
+                            if(smallChatNum == 0){
+                                    TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), Global.blueTextRqContact));
+                                    smallChatNum = TaskBar.smallChatWindows.size() - 1;
+                            }
+                            
+                            sendTexts = false;
+                                                                            
+                            for(int i = 0; i < size;i++){
+                                    phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
+                                    try {
+                                            Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
+                                            TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
+                                    } catch (BadLocationException e) {
+                                            e.printStackTrace();
+                                            System.out.println("Updating in chat history -FAILED");
+                                    }
+                                    
+                                    Global.phoneTextHistory.remove(Global.phoneTextHistory.size()-1);
+                            }
+                            //wait(5000);
+                            sendTexts = true;
+                    }
+					
 					
 					// Handle incoming text messages
-					if(!TaskBar.myTextArray.isEmpty()){
-						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
-						matchR = false;
-						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
-							if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
-								try {
-									Conversation.updateConv(TaskBar.myTextArray.get(0));
-									TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
-								} catch (BadLocationException e) {
-									e.printStackTrace();
-									System.out.println("Updating a small chat conversation -FAILED");
-								}
-								TaskBar.myTextArray.remove(0);
-								matchR = true;
-								break;
-							}
-						}
-						if(!matchR){
-							TaskBar.smallChatWindows.add(new SmallChat(TaskBar.myTextArray.get(0).getReceiver(), TaskBar.myTextArray.get(0).getSender()));
-							try {
-								Conversation.updateConv(TaskBar.myTextArray.get(0));
-								TaskBar.smallChatWindows.get(TaskBar.smallChatWindows.size()-1).receivedText(TaskBar.myTextArray.get(0));
-								System.out.println("small chat window created!");
-							} catch (BadLocationException e) {
-								e.printStackTrace();
-								System.out.println("Small chat window creation -FAILED");
-							}
-							TaskBar.myTextArray.remove(0);
-						}
-					}
+                    if(!TaskBar.myTextArray.isEmpty()){
+                        System.out.println("hit manager sending");
+                        Notification notify = new Notification(TaskBar.myTextArray.get(0));
+                        //TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
+                        matchR = false;
+                        for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
+                                if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+                                        try {
+                                                Conversation.updateConv(TaskBar.myTextArray.get(0));
+                                                TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
+                                        } catch (BadLocationException e) {
+                                                e.printStackTrace();
+                                                System.out.println("Updating a small chat conversation -FAILED");
+                                        }
+                                        TaskBar.myTextArray.remove(0);
+                                        matchR = true;
+                                        break;
+                                }
+                        }
+                        if(!matchR){
+                                
+                                Global.historyGatherText.add(TaskBar.myTextArray.get(0));
+                                BlueTextRequest rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, TaskBar.myTextArray.get(0).getSender());
+                                TaskBar.myTextArray.remove(0);
+                                TaskBar.messageHost.sendObject(rq);
+
+                        }
+                }
 					
 					// Handle incoming Contacts
 					while(!TaskBar.incomingContactQueue.isEmpty()){
@@ -94,8 +135,7 @@ public class TextMessageManager extends Thread
 						}
 					}
 					
-					// Handle response objects
-					processResponseQueue();
+
 				}
 			}
 		} catch (InterruptedException e) {
@@ -126,6 +166,14 @@ public class TextMessageManager extends Thread
 			{
 				System.out.println("Updating battery percentage to: " + resp.getBatteryLevel());
 				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
+			}
+			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
+				Global.phoneTextHistory = resp.getChatHistory();
+				if(!Global.historyGatherText.isEmpty()){
+					Global.phoneTextHistory.add(Global.historyGatherText.get(0));
+					Global.historyGatherText.remove(0);
+				}
+				 Global.blueTextRqContact = resp.getOriginalRequest().getContact();
 			}
 			else{
 				System.out.println("WARNING: an unknown response was received from the phone.");
