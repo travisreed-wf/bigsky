@@ -33,6 +33,7 @@ public class TaskBar
 	private static final SystemTray tray = SystemTray.getSystemTray();
 	public static MessageHost messageHost = null;
 	public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
+	public static ConcurrentLinkedQueue<BlueTextResponse> responseQueue = new ConcurrentLinkedQueue<BlueTextResponse>();
 	public static TextMessageManager textManager = null;
 	public static Conversation convo;
 	public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();

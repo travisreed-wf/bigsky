@@ -10,7 +10,8 @@ import java.util.Arrays;
 import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 
-import bigsky.BlueTextRequest;
+import bigsky.BlueTextRequest.REQUEST;
+import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
@@ -145,6 +146,9 @@ public class TextMessageManager extends Thread
 							Global.contactAList.add(ct);
 						}
 					}
+					
+					// Handle response objects
+					processResponseQueue();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -161,6 +165,24 @@ public class TextMessageManager extends Thread
 		else if (lastName.equals("")){
 			String newEntry = lastName;
 			Global.listModel.addElement(newEntry);
+		}
+	}
+	
+	private void processResponseQueue()
+	{
+		while(!TaskBar.responseQueue.isEmpty())
+		{
+			BlueTextResponse resp = TaskBar.responseQueue.remove();
+			REQUEST req = resp.getOriginalRequest().getRequest();
+			
+			if(REQUEST.BATTERY_PERCENTAGE == req)
+			{
+				System.out.println("Updating battery percentage to: " + resp.getBatteryLevel());
+				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
+			}
+			else{
+				System.out.println("WARNING: an unknown response was received from the phone.");
+			}
 		}
 	}
 	

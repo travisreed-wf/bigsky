@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 import bigsky.BlueTextRequest;
+import bigsky.BlueTextRequest.REQUEST;
 import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.TaskBar;
@@ -53,12 +54,7 @@ class ClientConn implements Runnable {
 				else if(streamObject instanceof BlueTextResponse)
 				{
 					BlueTextResponse response = (BlueTextResponse) streamObject;
-					Global.phoneTextHistory = response.getChatHistory();
-					if(!Global.historyGatherText.isEmpty()){
-						Global.phoneTextHistory.add(Global.historyGatherText.get(0));
-					}
-					Global.blueTextRqContact = response.getOriginalRequest().getContact();
-					System.out.println("Got " + Global.phoneTextHistory.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
+					TaskBar.responseQueue.add(response);
 					synchronized(TaskBar.textManager){
 						TaskBar.textManager.notify();
 					}
@@ -93,6 +89,9 @@ public class MessageHost extends Thread{
 			TaskBar.convo = new Conversation();
 			TaskBar.convo.getFrmBluetext().setVisible(true);
 			ps2 = new ObjectOutputStream(client.getOutputStream());
+			
+			// Send initial request for phone battery percentage
+			sendObject(new BlueTextRequest(REQUEST.BATTERY_PERCENTAGE, null));
 			
 		} catch(Exception e){
 			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
