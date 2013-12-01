@@ -43,8 +43,11 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import bigsky.messaging.TextMessageManager;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 
