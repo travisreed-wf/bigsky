@@ -43,7 +43,10 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.messaging.TextMessageManager;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JProgressBar;
 
 public class Conversation {
 	
@@ -139,12 +142,22 @@ public class Conversation {
 
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
+		
+		JMenuItem mntmImportContacts = new JMenuItem("Import Contacts");
+		mntmImportContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sortListModel();
+			}
+		});
+		mnView.add(mntmImportContacts);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
 		mnHelp.add(mntmAboutBluetext);
+		updateBatteryIndicator(Global.battery_remaining);
+		menuBar.add(Global.batteryIndicator);
 
 		JPanel panel = new JPanel();
 		frmBluetext.getContentPane().add(panel);
@@ -165,7 +178,7 @@ public class Conversation {
 			}
 		});
 
-		txtSearch.setBounds(16, 6, 190, 29);
+		txtSearch.setBounds(16, 6, 163, 29);
 		panel.add(txtSearch);
 		txtSearch.setText("Search");
 		txtSearch.setColumns(10);
@@ -275,6 +288,18 @@ public class Conversation {
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
 		panel.add(btn_select_contact);
+		
+		JButton btnImportContacts = new JButton("");
+		btnImportContacts.setToolTipText("Import Contacts.");
+		btnImportContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				sortListModel();
+			}
+		});
+		btnImportContacts.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/user.png")));
+		btnImportContacts.setBackground(Color.WHITE);
+		btnImportContacts.setBounds(181, 7, 27, 29);
+		panel.add(btnImportContacts);
 		
 	}
 	private void editContactAction(){
@@ -429,6 +454,24 @@ public class Conversation {
 		}
 	}
 	
+	public static void updateBatteryIndicator(int newPercentage){
+		if (newPercentage >= 85){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
+		}
+		else if (newPercentage >=60){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_075.png")));
+		}
+		else if (newPercentage >= 35){
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_050.png")));
+		}
+		else {
+			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_025.png")));
+		}
+		Global.battery_remaining = newPercentage;
+		String batteryString = Global.battery_remaining.toString() + "%";
+		Global.batteryIndicator.setText((batteryString));
+	}
+	
 	public static void updateConv(TextMessage text) throws BadLocationException{
 		
 		int current = 0;
@@ -519,9 +562,6 @@ public class Conversation {
 			offset.set(current, temp);
 		};
 	}
-	
-	
-
 }
 
 
