@@ -122,6 +122,7 @@ public class Notification {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("quickChatbtn");
 				TaskBar.smallChatWindows.get(winNum).getFrmBluetext().setVisible(true);
+				frame.dispose();
 			}
 		});
 		btnQuickChat.setBounds(0, 114, 125, 36);
@@ -133,6 +134,7 @@ public class Notification {
 				System.out.println("mainWindowbtn");
 				TaskBar.convo.getFrmBluetext().setVisible(true);
 				Global.conversationPane.setSelectedIndex(winNum);
+				frame.dispose();
 			}
 		});
 		btnMainWindow.setBounds(125, 114, 125, 36);
