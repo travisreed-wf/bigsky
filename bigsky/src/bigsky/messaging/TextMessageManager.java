@@ -31,7 +31,7 @@ public class TextMessageManager extends Thread
 		try {
 			synchronized(this){
 				while(true){
-					this.wait();					
+					this.wait();	
 					
 					//Adding chat history from phone
 					if(!Global.phoneTextHistory.isEmpty()){
@@ -64,11 +64,11 @@ public class TextMessageManager extends Thread
 						}
 						sendTexts = true;
 					}
+									
 					
-					//For updating conversations in small chat and main conversation
+					// Handle incoming text messages
 					if(!TaskBar.myTextArray.isEmpty()){
-						System.out.println("hit manager sending");
-						Notification notify = new Notification(TaskBar.myTextArray.get(0));
+						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
 						matchR = false;
 						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
 							if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
