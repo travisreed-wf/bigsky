@@ -8,6 +8,7 @@ import java.util.Arrays;
 import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 
+import bigsky.BlueTextRequest;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
@@ -83,16 +84,22 @@ public class TextMessageManager extends Thread
 							}
 						}
 						if(!matchR){
-							TaskBar.smallChatWindows.add(new SmallChat(TaskBar.myTextArray.get(0).getReceiver(), TaskBar.myTextArray.get(0).getSender()));
-							try {
-								Conversation.updateConv(TaskBar.myTextArray.get(0));
-								TaskBar.smallChatWindows.get(TaskBar.smallChatWindows.size()-1).receivedText(TaskBar.myTextArray.get(0));
-								System.out.println("small chat window created!");
-							} catch (BadLocationException e) {
-								e.printStackTrace();
-								System.out.println("Small chat window creation -FAILED");
-							}
+							
+							Global.historyGatherText.add(TaskBar.myTextArray.get(0));
+							BlueTextRequest rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, TaskBar.myTextArray.get(0).getSender());
 							TaskBar.myTextArray.remove(0);
+							TaskBar.messageHost.sendObject(rq);
+													
+//							TaskBar.smallChatWindows.add(new SmallChat(TaskBar.myTextArray.get(0).getReceiver(), TaskBar.myTextArray.get(0).getSender()));
+//							try {
+//								Conversation.updateConv(TaskBar.myTextArray.get(0));
+//								TaskBar.smallChatWindows.get(TaskBar.smallChatWindows.size()-1).receivedText(TaskBar.myTextArray.get(0));
+//								System.out.println("small chat window created!");
+//							} catch (BadLocationException e) {
+//								e.printStackTrace();
+//								System.out.println("Small chat window creation -FAILED");
+//							}
+//							TaskBar.myTextArray.remove(0);
 						}
 					}
 					

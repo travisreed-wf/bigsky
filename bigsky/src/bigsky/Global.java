@@ -22,4 +22,5 @@ public class Global {
 	public final static String save = "save";
 	public static ArrayList<TextMessage> phoneTextHistory = new ArrayList<TextMessage>();
 	public static Contact blueTextRqContact;
+	public static ArrayList<TextMessage> historyGatherText = new ArrayList<TextMessage>();
 }
