@@ -39,7 +39,7 @@ import java.io.IOException;
 public class SmallChat  {
 
 	private JFrame frmBluetext;
-	public static final JTextField textField = new JTextField();
+	public final JTextField textField = new JTextField();
 	private JButton btnName;
 	private JButton btnNewButton;
 	private ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
@@ -315,7 +315,9 @@ public class SmallChat  {
 	
 	protected void updateConv(TextMessage text) throws BadLocationException{
 		boolean check = false;
+		int temp = 0;
 		
+		//checks if user is sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
 			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
@@ -333,6 +335,10 @@ public class SmallChat  {
 					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equalsIgnoreCase(Conversation.currentConvs.get(i).getPhoneNumber())){
 						TaskBar.doNotSend = true;
 						Conversation.updateConv(text);
+						temp = Conversation.offset.get(i);
+						Conversation.textPanes.get(i).getDocument().insertString(Conversation.offset.get(i), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+						temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+						Conversation.offset.set(i, temp);
 						TaskBar.outGoingInSmall.remove(0);
 						TaskBar.doNotSend = false;
 						check = true;

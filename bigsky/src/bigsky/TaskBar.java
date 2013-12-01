@@ -106,6 +106,7 @@ public class TaskBar
             public void actionPerformed(ActionEvent e) {
             	System.out.println("small chat windows: " +  smallChatWindows.size());
             	for(int i = 0; i < smallChatWindows.size(); i++){
+            		System.out.println(smallChatWindows.get(i).getFromContact().getFirstName());
             		smallChatWindows.get(i).getFrmBluetext().setVisible(true);
             	}
             }

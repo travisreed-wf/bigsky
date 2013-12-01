@@ -443,9 +443,11 @@ public class Conversation {
 		}
 		//Checks if the user is the sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
-			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
-			offset.set(current, temp);
+			if(!TaskBar.doNotSend){
+				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+				offset.set(current, temp);
+			}
 			
 			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
 				TaskBar.outGoingInConv.add(text);
