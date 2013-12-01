@@ -29,7 +29,6 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class Notification {
 
