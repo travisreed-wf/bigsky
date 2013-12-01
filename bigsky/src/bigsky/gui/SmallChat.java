@@ -48,8 +48,8 @@ public class SmallChat  {
 	private JButton send;
 	private JScrollPane scrollPane;
 	private JTextPane textPane;
-	DefaultCaret caret;
-
+	private DefaultCaret caret;
+	private int winLocationY;
 	
 	private int offset = 0;
 	private int textCount = -1;
@@ -124,7 +124,13 @@ public class SmallChat  {
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
 		frmBluetext.setTitle("BlueText");
-		frmBluetext.setBounds(gd.getDisplayMode().getWidth() - 243, gd.getDisplayMode().getHeight() - 385, 236, 340);
+		if((gd.getDisplayMode().getHeight() - 385 * (winNum + 1)) > gd.getDisplayMode().getHeight()){
+			winLocationY = gd.getDisplayMode().getHeight();
+		}
+		else{
+			winLocationY = gd.getDisplayMode().getHeight() - 385 * (winNum + 1);
+		}
+		frmBluetext.setBounds(gd.getDisplayMode().getWidth() - 243, winLocationY, 236, 340);
 		frmBluetext.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmBluetext.getContentPane().setLayout(null);
 		

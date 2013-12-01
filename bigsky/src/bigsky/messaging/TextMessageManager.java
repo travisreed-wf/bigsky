@@ -1,6 +1,8 @@
 package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.util.Arrays;
@@ -13,6 +15,7 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.gui.Conversation;
+import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
 
 public class TextMessageManager extends Thread
@@ -67,7 +70,8 @@ public class TextMessageManager extends Thread
 					//For updating conversations in small chat and main conversation
 					if(!TaskBar.myTextArray.isEmpty()){
 						System.out.println("hit manager sending");
-						TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
+						Notification notify = new Notification(TaskBar.myTextArray.get(0));
+						//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
 						matchR = false;
 						for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
 							if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
@@ -159,5 +163,5 @@ public class TextMessageManager extends Thread
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
-	}	
+	}
 }
