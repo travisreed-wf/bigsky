@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -8,29 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
 import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
-
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-
 import java.awt.Font;
-
-
-
-
-
-
 import java.util.ArrayList;
-
-import javax.swing.JLabel;
-
 
 public class Notification {
 
@@ -86,32 +73,30 @@ public class Notification {
 		}
 		
 		frame.setVisible(true);
-		
-		
 		 
-		 timer1.addActionListener(new ActionListener() {
-			 @Override
-		     public void actionPerformed(ActionEvent e) {
-		        	
-				 if (fade < 0.0126F){
-					 timer1.stop();
-					 frame.dispose();
-					 totalWindows--;
-					 for(int i = windowNum - 1; i < openNotifications.size();i++){
-						 //System.out.println("Array Num: " + openNotifications.get(i).windowNum);
-						 openNotifications.get(i).windowNum--;
-					 }
+		timer1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (fade < 0.0126F){
+					timer1.stop();
+					frame.dispose();
+					totalWindows--;
+					for(int i = windowNum - 1; i < openNotifications.size();i++){
+						//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
+						openNotifications.get(i).windowNum--;
+					}
 					// System.out.println("Removed Window: " + (windowNum));
-					 openNotifications.remove(windowNum);
-		         }
-		         fade = fade - 0.0125F;
-		         frame.setOpacity(fade);
-		     }
-		 });
-		 timer1.setInitialDelay(3000);
-		 timer1.start();
-		 this.animate();
-		 openNotifications.add(this);
+					openNotifications.remove(windowNum);
+				}
+				fade = fade - 0.0125F;
+				frame.setOpacity(fade);
+			}
+		});
+		timer1.setInitialDelay(3000);
+		timer1.start();
+		this.animate();
+		openNotifications.add(this);
 	}
 
 	/**
@@ -124,8 +109,6 @@ public class Notification {
 				chatWinNum = i;
 			}
 		}
-		
-		
 		
 		frame = new JDialog();
 		frame.setName("New Message");
@@ -152,8 +135,6 @@ public class Notification {
 			public void actionPerformed(ActionEvent arg0) {
 //				Notification not = new Notification(new TextMessage(TaskBar.me,TaskBar.you,""));
 //				System.out.println("window Number: " + windowNum);
-				
-//				System.out.println("mainWindowbtn");
 				TaskBar.convo.getFrmBluetext().setVisible(true);
 				Global.conversationPane.setSelectedIndex(chatWinNum);
 				frame.dispose();
@@ -186,7 +167,6 @@ public class Notification {
 
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				
 			}
 		});
 	}
@@ -203,9 +183,6 @@ public class Notification {
 				 else if(windowNum != 0 && ((positionY + 5) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
 					 positionY = positionY + 5;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
-				 }
-				 else{
-					 
 				 }
 		     }
 		 });
