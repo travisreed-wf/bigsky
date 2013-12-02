@@ -27,6 +27,8 @@ import java.awt.Font;
 
 
 
+import java.util.ArrayList;
+
 import javax.swing.JLabel;
 
 
@@ -34,10 +36,16 @@ public class Notification {
 
 	private JDialog frame;
 	private TextMessage messager;
-	private int winNum;
+	private int chatWinNum;
 	private float fade = 1.0F;
-	private final Timer timer = new Timer(50, null);
-
+	private final Timer timer1 = new Timer(50, null);
+	private final Timer timer2 = new Timer(1, null);
+	private float positionY;
+	private static int totalWindows;
+	private int windowNum = 0;
+	private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	public static ArrayList<Notification> openNotifications = new ArrayList<Notification>();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -52,7 +60,6 @@ public class Notification {
 			public void run() {
 				try {
 					Notification window = new Notification(new TextMessage(TaskBar.me, TaskBar.you, "HEY STUPID"));
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,7 +72,11 @@ public class Notification {
 	 */
 	public Notification(TextMessage messager) {
 		this.messager = messager;
-		winNum = 0;
+		chatWinNum = 0;
+		
+		totalWindows++;
+		windowNum = totalWindows;
+		positionY = gd.getDisplayMode().getHeight();
 		
 		try {
 			initialize();
@@ -77,21 +88,30 @@ public class Notification {
 		frame.setVisible(true);
 		
 		
-		 float i = 0.0F;
-		 timer.addActionListener(new ActionListener() {
+		 
+		 timer1.addActionListener(new ActionListener() {
 			 @Override
 		     public void actionPerformed(ActionEvent e) {
 		        	
 				 if (fade < 0.0126F){
-					 timer.stop();
+					 timer1.stop();
 					 frame.dispose();
+					 totalWindows--;
+					 for(int i = windowNum - 1; i < openNotifications.size();i++){
+						 //System.out.println("Array Num: " + openNotifications.get(i).windowNum);
+						 openNotifications.get(i).windowNum--;
+					 }
+					// System.out.println("Removed Window: " + (windowNum));
+					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
 		         frame.setOpacity(fade);
 		     }
 		 });
-		 timer.setInitialDelay(3000);
-		 timer.start();
+		 timer1.setInitialDelay(3000);
+		 timer1.start();
+		 this.animate();
+		 openNotifications.add(this);
 	}
 
 	/**
@@ -101,16 +121,16 @@ public class Notification {
 	private void initialize() throws BadLocationException {
 		for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
 			if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
-				winNum = i;
+				chatWinNum = i;
 			}
 		}
 		
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		
 		
 		frame = new JDialog();
 		frame.setName("New Message");
 		frame.setResizable(false);
-		frame.setBounds(gd.getDisplayMode().getWidth() - 260, gd.getDisplayMode().getHeight() - 220, 257, 178);
+		frame.setBounds(gd.getDisplayMode().getWidth() - 260, gd.getDisplayMode().getHeight(), 257, 178);
 		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.getContentPane().setLayout(null);
@@ -119,8 +139,8 @@ public class Notification {
 		JButton btnQuickChat = new JButton("Quick Chat");
 		btnQuickChat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("quickChatbtn");
-				TaskBar.smallChatWindows.get(winNum).getFrmBluetext().setVisible(true);
+				//System.out.println("quickChatbtn");
+				TaskBar.smallChatWindows.get(chatWinNum).getFrmBluetext().setVisible(true);
 				frame.dispose();
 			}
 		});
@@ -130,9 +150,12 @@ public class Notification {
 		JButton btnMainWindow = new JButton("BlueText");
 		btnMainWindow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("mainWindowbtn");
+//				Notification not = new Notification(new TextMessage(TaskBar.me,TaskBar.you,""));
+//				System.out.println("window Number: " + windowNum);
+				
+//				System.out.println("mainWindowbtn");
 				TaskBar.convo.getFrmBluetext().setVisible(true);
-				Global.conversationPane.setSelectedIndex(winNum);
+				Global.conversationPane.setSelectedIndex(chatWinNum);
 				frame.dispose();
 			}
 		});
@@ -156,9 +179,9 @@ public class Notification {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
 				 frame.setOpacity(fade);
-				 timer.stop();
-				 timer.setInitialDelay(3000);
-				 timer.start();
+				 timer1.stop();
+				 timer1.setInitialDelay(3000);
+				 timer1.start();
 			 }
 
 			@Override
@@ -166,5 +189,26 @@ public class Notification {
 				
 			}
 		});
+	}
+	
+	private void animate(){
+		 timer2.addActionListener(new ActionListener() {
+			 @Override
+		     public void actionPerformed(ActionEvent e) {
+				 
+				 if ((positionY > ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
+					 positionY = positionY - 5;
+					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
+		         }
+				 else if(windowNum != 0 && ((positionY + 5) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
+					 positionY = positionY + 5;
+					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
+				 }
+				 else{
+					 
+				 }
+		     }
+		 });
+		 timer2.start();
 	}
 }
