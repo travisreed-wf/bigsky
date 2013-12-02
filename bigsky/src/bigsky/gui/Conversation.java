@@ -5,9 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -33,13 +36,18 @@ import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 
+import bigsky.BlueTextRequest;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+import bigsky.messaging.TextMessageManager;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 
@@ -54,7 +62,9 @@ public class Conversation {
 
 	
 	
-	
+
+	private static BlueTextRequest rq;
+
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	
@@ -226,6 +236,7 @@ public class Conversation {
 					e.printStackTrace();
 					System.out.println("updateConv in Conversation - FAILED");
 				}
+            	txtrEnterMessageHere.setText("");
 			}
 		});
 		btnSend.setBounds(599, 493, 117, 29);
@@ -252,9 +263,14 @@ public class Conversation {
 						System.out.println("updateConv in Conversation - FAILED");
 					}
 	            	txtrEnterMessageHere.setText("");
+	            	
 	            }
 	        }
-
+	        public void keyReleased(KeyEvent evt){
+	        	if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+	        		txtrEnterMessageHere.setText("");
+	        	}
+	        }
 	    });
 		
 		txtrEnterMessageHere.addMouseListener(new MouseAdapter() {
@@ -268,9 +284,9 @@ public class Conversation {
 		JButton btn_select_contact = new JButton("Start New Convo");
 		btn_select_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				startNewConv();
-				
+				if(!Global.list.isSelectionEmpty()){
+					startNewConv();
+				}
 			}
 		});
 		btn_select_contact.setBounds(16, 388, 186, 29);
@@ -386,13 +402,15 @@ public class Conversation {
 	
 	
 	public static void createTab(Contact contact){
-		
 		JTextPane textPane = new JTextPane();
+		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
 		textPanes.add(textPane);
 		JScrollPane scroll = new JScrollPane(textPane);
 		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
+		Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 		offset.add(new Integer(0));
 	}
 	
@@ -431,6 +449,9 @@ public class Conversation {
 			}
 		}
 		if(!match){
+			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, getConvReceiver((String)Global.list.getSelectedValue()));
+			TaskBar.messageHost.sendObject(rq);
+			
 			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
 			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
 		}
@@ -466,19 +487,24 @@ public class Conversation {
 			current = Global.conversationPane.getSelectedIndex();
 			temp = offset.get(current);
 		}
+		//Checks if the user is the sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
-			textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
-			offset.set(current, temp);
-			
 			if(!TaskBar.doNotSend){
+				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
+				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+				offset.set(current, temp);
+			}
+			
+			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
 				TaskBar.outGoingInConv.add(text);
 			}
 			
 			if(TaskBar.outGoingInConv.size() != 0){
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
-					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
 						TaskBar.doNotSend = true;
+						//System.out.println(text.getReceiver().getFirstName() + text.getSender().getFirstName());
+						System.out.println(text.getContent());
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
@@ -486,17 +512,19 @@ public class Conversation {
 						break;
 					}
 				}
-				if(check3 == false){
+				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
 					TaskBar.doNotSend = true;
-					TaskBar.smallChatWindows.get(0).receivedText(text);
+					
+					TaskBar.smallChatWindows.get(current).receivedText(text);
+					
 					TaskBar.outGoingInConv.remove(0);
 					TaskBar.doNotSend = false;
 				}
 			}
 
 			
-			if(!TaskBar.doNotSend){
+			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
 				TaskBar.messageHost.sendObject(text);
 			}
 			
@@ -520,12 +548,16 @@ public class Conversation {
 		}
 		else if(!text.getContent().trim().isEmpty() && you == null && !check1){
 			JTextPane textPane = new JTextPane();
+			DefaultCaret caret = (DefaultCaret)textPane.getCaret();
+			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 			textPane.setEditable(false);
 			textPanes.add(textPane);
 			JScrollPane scroll = new JScrollPane(textPane);
 			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
+			Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 			offset.add(new Integer(0));
+			current = offset.size() - 1;
 			temp = offset.get(current);
 			currentConvs.add(text.getSender());
 			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
