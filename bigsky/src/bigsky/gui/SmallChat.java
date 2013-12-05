@@ -22,6 +22,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
@@ -62,17 +63,17 @@ public class SmallChat  {
 	private TextMessage sent;
 	private JTextField textField_1;
 	private JMenu settings;
-	private JMenu status;
+	private JMenu messagePreview;
 	private JMenu notification;
 	private JMenu fontSize;
 	private JRadioButtonMenuItem notificationON;
 	private JRadioButtonMenuItem notificationOFF;
+	private JRadioButtonMenuItem messagePreviewON;
+	private JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup notiGroup;
 	private JMenuBar menuBar;
-	private JRadioButtonMenuItem online;
-	private JRadioButtonMenuItem away;
-	private JRadioButtonMenuItem busy;
-	private ButtonGroup statusGroup;
+	private ButtonGroup previewMessageGroup;
+    private JMenuItem defaultSettings;
 
 	//private TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
 	
@@ -157,55 +158,56 @@ public class SmallChat  {
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		//Beginning of Settings Menu Bar
-			menuBar = new JMenuBar();
-			menuBar.setBounds(169, 0, 60, 23);
-			frmBluetext.getContentPane().add(menuBar);
-			
-			settings = new JMenu("Settings");
-			menuBar.add(settings);
-			
-			//Notifications menu
-			notification = new JMenu("Notifications");
-			settings.add(notification);
-					
-			notificationON = new JRadioButtonMenuItem("On");
-			notificationOFF = new JRadioButtonMenuItem("Off");
-			
-			notification.add(notificationON);
-			notification.add(notificationOFF);
-			// Adding buttons to group so only 1 radio button can be selected at any times
-			notiGroup = new ButtonGroup();
-			notiGroup.add(notificationON);
-			notiGroup.add(notificationOFF);
-			
-			//Status Menu
-			status = new JMenu("Status");
-			settings.add(status);
+		menuBar = new JMenuBar();
+		menuBar.setBounds(169, 0, 60, 23);
+		frmBluetext.getContentPane().add(menuBar);
+		
+		settings = new JMenu("Settings");
+		menuBar.add(settings);
+		
+		//Notifications menu
+		notification = new JMenu("Notifications");
+		settings.add(notification);
 				
-			online = new JRadioButtonMenuItem("Online");
-			away = new JRadioButtonMenuItem("Away");
-			busy = new JRadioButtonMenuItem("Busy");
+		notificationON = new JRadioButtonMenuItem("On");
+		notificationOFF = new JRadioButtonMenuItem("Off");
+		
+		notification.add(notificationON);
+		notification.add(notificationOFF);
+		// Adding buttons to group so only 1 radio button can be selected at any times
+		notiGroup = new ButtonGroup();
+		notiGroup.add(notificationON);
+		notiGroup.add(notificationOFF);
+		
+		//preview message Menu
+		messagePreview = new JMenu("Preview Message");
+		settings.add(messagePreview);
 			
-			status.add(online);
-			status.add(away);
-			status.add(busy);
-					
-			//Adding buttons to group so that only 1 radio button can be selected at any time.
-			statusGroup = new ButtonGroup();
-			statusGroup.add(online);
-			statusGroup.add(away);
-			statusGroup.add(busy);
-			
-			//Choose font size of small chat				
-			fontSize = new JMenu("Font Size");
-			settings.add(fontSize);
-			
-			textField_1 = new JTextField();
-			fontSize.add(textField_1);
-			textField_1.setColumns(10);
-			
-			
-			checkButtons();
+		messagePreviewON = new JRadioButtonMenuItem("On");
+		messagePreviewOFF = new JRadioButtonMenuItem("Off");
+		
+		messagePreview.add(messagePreviewON);
+		messagePreview.add(messagePreviewOFF);
+				
+		//Adding buttons to group so that only 1 radio button can be selected at any time.
+		previewMessageGroup = new ButtonGroup();
+		previewMessageGroup.add(messagePreviewON);
+		previewMessageGroup.add(messagePreviewOFF);
+		
+		//Choose font size of small chat				
+		fontSize = new JMenu("Font Size");
+		settings.add(fontSize);
+		
+		textField_1 = new JTextField();
+		fontSize.add(textField_1);
+		textField_1.setColumns(10);
+		
+		//default settings
+		defaultSettings = new JMenuItem("Default Settings");
+		settings.add(defaultSettings);
+		
+		
+		checkButtons();
 		
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -232,55 +234,48 @@ public class SmallChat  {
 			}
 		});
 		//Notification setting
-				notificationOFF.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(notificationOFF.isSelected()){
-							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
-							notificationON.setSelected(false);
-						}						
-					}
-				});
-		//Status settings
-		online.addActionListener(new ActionListener() {
+		notificationOFF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(online.isSelected()){
-					Login.saveInProp(Global.username,Global.ONLINE, Global.ON);
-					Login.saveInProp(Global.username,Global.BUSY, Global.OFF);
-					Login.saveInProp(Global.username,Global.AWAY, Global.OFF);
-	
+				if(notificationOFF.isSelected()){
+					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
+					notificationON.setSelected(false);
+				}						
+			}
+		});
+		//MessagePreview setting
+		messagePreviewON.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(messagePreviewON.isSelected()){
+					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
+					messagePreviewOFF.setSelected(false);
 				}				
 			}
 		});
-		
-		away.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(away.isSelected()){
-					Login.saveInProp(Global.username,Global.AWAY, Global.ON);
-					Login.saveInProp(Global.username,Global.BUSY, Global.OFF);
-					Login.saveInProp(Global.username,Global.ONLINE, Global.OFF);
-				}
-				
-			}
-		});
-		
-		busy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(busy.isSelected()){
-					Login.saveInProp(Global.username,Global.BUSY, Global.ON);
-					Login.saveInProp(Global.username,Global.ONLINE, Global.OFF);
-					Login.saveInProp(Global.username,Global.AWAY, Global.OFF);
-				}
-				
-			}
-		});
+		//MessagePreview setting
+			messagePreviewOFF.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(messagePreviewOFF.isSelected()){
+							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
+							messagePreviewON.setSelected(false);
+						}						
+					}
+				});
 		
 		//Font Size setting
 		textField_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textField_1.getText().matches("[0-9]+")){
 					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+					Login.saveInProp(Global.username,Global.smallChatFontSize,textField_1.getText().toString());
 				}
 			}
+		});
+		
+		//Default Setting listener
+		defaultSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				defaultSettings();
+				}
 		});
 		
 
@@ -308,16 +303,31 @@ public class SmallChat  {
 				notificationOFF.setSelected(true);
 			}
 			
-			if(prop.getProperty(Global.ONLINE).equals(Global.ON)){
-				online.setSelected(true);
+			if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
+				messagePreviewON.setSelected(true);
 			}
-			else if(prop.getProperty(Global.AWAY).equals(Global.ON)){
-				away.setSelected(true);
-			}
-			else if(prop.getProperty(Global.BUSY).equals(Global.ON)){
-				busy.setSelected(true);
+			else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
+				messagePreviewOFF.setSelected(true);
 			}
 		}
+	
+	/**
+	 * Allows user to reset the settings of the specified window to that of manufacturers
+	 */
+	private void defaultSettings(){
+		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream(Global.username +".properties"));
+		} catch (Exception e) {
+			System.out.println("file load problem.");
+		}
+	
+		prop.setProperty("save", Global.OFF);
+		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
+		prop.setProperty(Global.NOTIFICATION,Global.ON);
+		prop.setProperty(Global.smallChatFontSize, "12");		
+	}
 	
 	
 	protected void updateConv(TextMessage text) throws BadLocationException{

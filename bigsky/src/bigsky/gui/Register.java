@@ -72,7 +72,7 @@ public class Register extends JFrame {
 		contentPane = new JPanel();
 
 		firstName = new JTextField();
-		firstName.setForeground(SystemColor.inactiveCaptionText);
+		firstName.setForeground(Color.WHITE);
 		firstName.setBounds(260, 69, 134, 28);
 		getContentPane().add(firstName);
 		firstName.setColumns(10);
@@ -86,7 +86,7 @@ public class Register extends JFrame {
 		getContentPane().add(lblLastName);
 		
 		lastName = new JTextField();
-		lastName.setForeground(SystemColor.inactiveCaptionText);
+		lastName.setForeground(Color.WHITE);
 		lastName.setColumns(10);
 		lastName.setBounds(260, 114, 134, 28);
 		getContentPane().add(lastName);
@@ -96,7 +96,7 @@ public class Register extends JFrame {
 		getContentPane().add(lblPrimaryPhoneNumber);
 		
 		primaryPhone = new JTextField();
-		primaryPhone.setForeground(SystemColor.inactiveCaptionText);
+		primaryPhone.setForeground(Color.WHITE);
 		primaryPhone.setColumns(10);
 		primaryPhone.setBounds(260, 21, 134, 28);
 		getContentPane().add(primaryPhone);
@@ -106,6 +106,7 @@ public class Register extends JFrame {
 		getContentPane().add(lblPassword);
 		
 		password = new JPasswordField();
+		password.setForeground(Color.WHITE);
 		password.setToolTipText("\n");
 		password.setBounds(260, 188, 134, 28);
 		getContentPane().add(password);

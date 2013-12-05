@@ -256,20 +256,29 @@ public class Login extends JFrame {
 	public void LoginInfo(){
 		
 		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream(getUsername() +".properties"));
+		}
+		
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+	
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
 		prop.setProperty("save", Global.OFF);
-		prop.setProperty(Global.ONLINE,Global.ON);
-		prop.setProperty(Global.AWAY, Global.OFF);
-		prop.setProperty(Global.BUSY, Global.OFF);
+		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
 		prop.setProperty(Global.NOTIFICATION,Global.ON);
+		prop.setProperty(Global.smallChatFontSize, "12");
+		prop.setProperty(Global.conversationFontSize, "12");
 		
 		try {
 			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
 			
-		} catch (Exception e) {
+		} catch (Exception e1) {
 			System.out.println("file load problem.");
 		}
+	}
 		
 	}
 	

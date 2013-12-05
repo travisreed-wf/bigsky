@@ -153,8 +153,8 @@ public class TaskBar
         }
     }
     /**
-     * Determines if the user has told the system to save his/her information
-     * @return true if user told system to save his/her information
+     *Compares the value of a compare with the saved value
+     * @return true if value of compare is the same as saved value
      */
     public static boolean savedInfo(String property, String compare ){
 
@@ -173,6 +173,24 @@ public class TaskBar
 
 		return false;
 	}
+    
+    /**
+    *
+    * @return the value of what is inside the property given
+    */
+   public static String savedInfo(String property){
+
+		Properties prop = new Properties();
+
+		try {
+			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
+		} catch (Exception e) {
+			System.out.println("No previous login file located.");
+		}
+
+		return prop.getProperty(property);
+	}
+    
     /**
      * Method to load system properties to see which user was logged in last
      * @return String lastloggedin

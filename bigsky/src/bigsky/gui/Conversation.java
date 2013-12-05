@@ -16,12 +16,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.Scanner;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -29,6 +32,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -59,6 +63,20 @@ public class Conversation {
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
 	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
+	private JTextField textField_1;
+	private JMenu settings;
+	private JMenu status;
+	private JMenu notification;
+	private JMenu fontSize;
+	private JRadioButtonMenuItem notificationON;
+	private JRadioButtonMenuItem notificationOFF;
+	private ButtonGroup notiGroup;
+	private JMenu messagePreview;
+	private JRadioButtonMenuItem messagePreviewON;
+	private JRadioButtonMenuItem messagePreviewOFF;
+	private ButtonGroup previewMessageGroup;
+	private static JTextPane textPane = new JTextPane();
+	private JMenuItem defaultSettings;
 
 	
 	
@@ -110,6 +128,105 @@ public class Conversation {
 			}
 		});
 		mnFile.add(mnu_new_contact);
+		
+		
+		//*****************Andrew's Additions*****************//
+				settings = new JMenu("Settings");
+				mnFile.add(settings);
+				
+				//Notifications menu
+				notification = new JMenu("Notifications");
+				settings.add(notification);
+						
+				notificationON = new JRadioButtonMenuItem("On");
+				notificationOFF = new JRadioButtonMenuItem("Off");
+				
+				notification.add(notificationON);
+				notification.add(notificationOFF);
+				// Adding buttons to group so only 1 radio button can be selected at any times
+				notiGroup = new ButtonGroup();
+				notiGroup.add(notificationON);
+				notiGroup.add(notificationOFF);
+				
+				//Status Menu
+				messagePreview = new JMenu("Preview Message");
+				settings.add(messagePreview);
+					
+				messagePreviewON = new JRadioButtonMenuItem("On");
+				messagePreviewOFF = new JRadioButtonMenuItem("Off");
+				
+				messagePreview.add(messagePreviewON);
+				messagePreview.add(messagePreviewOFF);
+						
+				//Adding buttons to group so that only 1 radio button can be selected at any time.
+				previewMessageGroup = new ButtonGroup();
+				previewMessageGroup.add(messagePreviewON);
+				previewMessageGroup.add(messagePreviewOFF);
+				
+				//Choose font size of conversation chat				
+				fontSize = new JMenu("Font Size");
+				settings.add(fontSize);
+				
+				textField_1 = new JTextField();
+				fontSize.add(textField_1);
+				textField_1.setColumns(10);
+				//default settings button
+				defaultSettings = new JMenuItem("Default Settings");
+				settings.add(defaultSettings);
+				
+				//Notification setting
+				notificationON.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(notificationON.isSelected()){
+							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
+							notificationOFF.setSelected(false);
+						}				
+					}
+				});
+				//Notification setting
+						notificationOFF.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								if(notificationOFF.isSelected()){
+									Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
+									notificationON.setSelected(false);
+								}						
+							}
+						});
+				//MessagePreview setting
+				messagePreviewON.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(messagePreviewON.isSelected()){
+							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
+							messagePreviewOFF.setSelected(false);
+						}				
+					}
+				});
+				//MessagePreview setting
+					messagePreviewOFF.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								if(messagePreviewOFF.isSelected()){
+									Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
+									messagePreviewON.setSelected(false);
+								}						
+							}
+						});
+				
+				//Font Size setting
+				textField_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if (textField_1.getText().matches("[0-9]+")){
+							textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+							Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
+						}
+					}
+				});
+				
+				checkButtons();
+				
+				//*****************************************************//
+		
+		
+		
 
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
@@ -201,6 +318,7 @@ public class Conversation {
 		});
 
 		Global.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		Global.list.setFont(new Font("Franklin Gothic Medium", Font.PLAIN,16));
 		scrollPane.setViewportView(Global.list);
 
 
@@ -246,6 +364,8 @@ public class Conversation {
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
 		panel.add(txtrEnterMessageHere);
+		txtrEnterMessageHere.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+
 	
 		
 		txtrEnterMessageHere.addKeyListener(new KeyAdapter()
@@ -402,10 +522,10 @@ public class Conversation {
 	
 	
 	public static void createTab(Contact contact){
-		JTextPane textPane = new JTextPane();
+		textPane = new JTextPane();
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 		textPane.setEditable(false);
 		textPanes.add(textPane);
 		JScrollPane scroll = new JScrollPane(textPane);
@@ -564,6 +684,54 @@ public class Conversation {
 			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		};
+	}
+	
+	/**
+	 * Checks(selects) the buttons that are set in the preference file
+	 */
+	private void checkButtons(){
+		Properties prop = new Properties();
+		String compare = Global.ON;
+		String s = Global.username;
+	
+		try {
+			prop.load(new FileInputStream(Global.username +".properties"));
+		} catch (Exception e) {
+			System.out.println("file load problem.");
+		}
+		
+			
+			if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
+				notificationON.setSelected(true);
+			}
+			else if(prop.getProperty(Global.NOTIFICATION).equals(Global.OFF)){
+				notificationOFF.setSelected(true);
+			}
+			
+			if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
+				messagePreviewON.setSelected(true);
+			}
+			else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
+				messagePreviewOFF.setSelected(true);
+			}
+		}
+	
+	/**
+	 * Allows user to reset the settings of the specified window to that of manufacturers
+	 */
+	private void defaultSettings(){
+		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream(Global.username +".properties"));
+		} catch (Exception e) {
+			System.out.println("file load problem.");
+		}
+	
+		prop.setProperty("save", Global.OFF);
+		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
+		prop.setProperty(Global.NOTIFICATION,Global.ON);
+		prop.setProperty(Global.conversationFontSize, "12");		
 	}
 }
 
