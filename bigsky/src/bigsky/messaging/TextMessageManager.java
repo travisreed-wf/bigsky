@@ -1,8 +1,18 @@
 package bigsky.messaging;
 
 import java.awt.TrayIcon.MessageType;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
+import java.util.Properties;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.text.BadLocationException;
 
 import bigsky.BlueTextRequest;
@@ -174,10 +184,48 @@ public class TextMessageManager extends Thread
 				}
 				 blueTextRqContact = resp.getOriginalRequest().getContact();
 			}
+			else if(REQUEST.CONTACT_PICTURE == req){
+				
+				Object imageResource = resp.getImageResource();
+				ImageIcon img = null;
+				if(imageResource instanceof String && ((String)imageResource).equalsIgnoreCase("NO_IMG")){
+					// TRAVIS TODO set a default picture
+					System.out.println("received NO_IMG from phone, will use default picture soon.");
+				}
+				else if(imageResource instanceof String){
+					// Get facebook username from properties file
+					try{
+						Properties prop = new Properties();
+						prop.load(new FileInputStream("config.properties"));
+						
+						String facebookName = (String)prop.get(resp.getOriginalRequest().getContact().getPhoneNumber());
+						
+						URL url = new URL("http://graph.facebook.com/" 
+								+ facebookName 
+								+ "/picture?type=square");
+			            img = new ImageIcon(ImageIO.read(url));
+					}catch(Exception e){
+						// If there was any error at all trying to get the facebook picture, then use default image
+		            	System.out.println("got exception getting facebook picture" + e.getMessage() + "\n Will be using default picture...");
+		            	img = null;
+		            }					
+				}
+				else if(imageResource instanceof byte[]){
+					// If a byte[] was returned by the phone, then the user
+					// actually has a contact picture
+					img = new ImageIcon((byte[]) imageResource);					
+				}				
+				
+				// TRAVIS TODO set picture to some element of the conversation window
+		        JFrame frame = new JFrame();
+		        frame.setSize(300, 300);
+		        JLabel label = new JLabel(img);
+		        frame.add(label);
+		        frame.setVisible(true);
+			}
 			else{
 				System.out.println("WARNING: an unknown response was received from the phone.");
 			}
 		}
-	}
-	
+	}	
 }
