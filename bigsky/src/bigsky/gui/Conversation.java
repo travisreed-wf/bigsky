@@ -44,6 +44,11 @@ import bigsky.TextMessage;
 import bigsky.messaging.TextMessageManager;
 import javax.swing.ImageIcon;
 
+/**
+ * The main window for our application
+ * @author Travis Reed, Jonathan Mielke, Andrew Hartman, Andrew Guibert
+ *
+ */
 public class Conversation {
 	
 	//added variables from Jon
@@ -66,9 +71,6 @@ public class Conversation {
 	private static JTextPane textPane = new JTextPane();
 	private JMenuItem defaultSettings;
 
-	
-	
-
 	private static BlueTextRequest rq;
 
 	private JFrame frmBluetext;
@@ -76,17 +78,7 @@ public class Conversation {
 	
 	private final int returnsNull = 99999;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
 
-	}
-
-	/**
-	 * Create the application.
-	 * @wbp.parser.entryPoint
-	 */
 	public Conversation() {
 		initialize();
 	}
@@ -415,6 +407,9 @@ public class Conversation {
 		panel.add(btnImportContacts);
 		
 	}
+	/**
+	 * Bring up the Edit Contact Page
+	 */
 	private void editContactAction(){
 		String selectedValue = (String)Global.list.getSelectedValue();
 		if (selectedValue != null){
@@ -431,10 +426,17 @@ public class Conversation {
 		}
 	}
 
+	/**
+	 * Bring up the New Contact Window
+	 */
 	private void openNewContactWindow(){
 		NewContact newCon = new NewContact();
 		newCon.getFrmNewContact().setVisible(true);
 	}
+	/**
+	 * Modify the list model to only display items that match the requirements of the searchTerm
+	 * @param searchTerm - The text entered into the search bar
+	 */
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
@@ -467,6 +469,11 @@ public class Conversation {
 		}
 	}
 	
+	/**
+	 * Adds a contact to the global list model
+	 * @param firstName - First name of contact to be added
+	 * @param lastName - Last name of contact to be added
+	 */
 	private void addContactToListModel(String firstName, String lastName){
 		if (!firstName.equals("")){
 			String newEntry = firstName + " " + lastName;
@@ -478,6 +485,11 @@ public class Conversation {
 		}
 	}
 	
+	/**
+	 * Finds a contact from the list Model and returns the position of that contact in the ArrayList
+	 * @param selectedValue - String of the contact name from the list model
+	 * @return the position of that contact in the ArrayList
+	 */
 	private static int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
@@ -491,6 +503,7 @@ public class Conversation {
 				return i;
 			}
 		}
+		//Contact was not found
 		return 99999;
 	}
 
@@ -498,6 +511,9 @@ public class Conversation {
 		return frmBluetext;
 	}
 	
+	/**
+	 * Sort List Model Alphabetically by last first name
+	 */
 	private void sortListModel(){
 		String[] tempList = new String[Global.listModel.size()];
 		for (int i=0; i<Global.listModel.size(); i++) {
@@ -510,7 +526,10 @@ public class Conversation {
 		}
 	}
 	
-	
+	/**
+	 * Create a conversation tab
+	 * @param contact - Contact on other end of conversation
+	 */
 	public static void createTab(Contact contact){
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -523,6 +542,9 @@ public class Conversation {
 		offset.add(new Integer(0));
 	}
 	
+	/**
+	 * Start a new conversation
+	 */
 	public static void startNewConv(){
 		boolean match = false;
 		String selectedValue = (String)Global.list.getSelectedValue();
@@ -545,6 +567,10 @@ public class Conversation {
 		}
 	}
 	
+	/**
+	 * Update image with Battery Indicator
+	 * @param newPercentage - Percentage of battery remaining. Passed from phone
+	 */
 	public static void updateBatteryIndicator(int newPercentage){
 		if (newPercentage >= 85){
 			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));

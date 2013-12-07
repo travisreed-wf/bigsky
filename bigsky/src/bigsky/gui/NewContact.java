@@ -14,6 +14,11 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 
+/**
+ * A New Contact Window - Creates a new contact
+ * @author Travis Reed
+ *
+ */
 public class NewContact {
 
 	private JFrame frmNewContact;

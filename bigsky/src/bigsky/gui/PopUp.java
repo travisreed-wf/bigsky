@@ -11,6 +11,11 @@ import javax.swing.JPopupMenu;
 import bigsky.Contact;
 import bigsky.Global;
 
+/**
+ * Popup that is displayed when you right click a contact name
+ * @author Travis Reed
+ *
+ */
 public class PopUp extends JPopupMenu {
 	private final int returnsNull = 99999;
 
@@ -46,6 +51,11 @@ public class PopUp extends JPopupMenu {
         add(editContact);
         add(startConvo);
     }
+    /**
+     * Finds a selected contact in the list model
+     * @param selectedValue - The name of the contact selected
+     * @return - the position of the contact in the array list
+     */
     private int findContactInListModel(String selectedValue){
     	ArrayList<Contact> contactList = Global.contactAList;
 		for (int i=0;i<Global.contactAList.size();i++){
