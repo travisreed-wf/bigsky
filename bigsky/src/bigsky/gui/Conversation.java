@@ -456,7 +456,7 @@ public class Conversation {
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
-			for (int i = 0; i < Global.contactAList.size()-1; i++){
+			for (int i = 0; i < Global.contactAList.size(); i++){
 				Contact con = Global.contactAList.get(i);
 				String first = con.getFirstName();
 				String last = con.getLastName();
