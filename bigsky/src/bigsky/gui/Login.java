@@ -34,6 +34,7 @@ import java.util.Properties;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.messaging.*;
@@ -153,9 +154,9 @@ public class Login extends JFrame {
 						}
 					}
 					else{
-						System.out.println("FAIL");
+						System.out.println("Login checks fail");
 					}
-				} catch (Exception e1) {}			
+				} catch (Exception e1) {System.out.println("Login checks fail");}			
             }
         });
 		
@@ -236,7 +237,8 @@ public class Login extends JFrame {
 			return false;
 		}
 
-		
+		TaskBar.me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
+
 		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + getUsername() + "';");
 		
 		rs.close();		
@@ -256,23 +258,62 @@ public class Login extends JFrame {
 	public void LoginInfo(){
 		
 		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream(getUsername() +".properties"));
+		}
+		
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+	
 		prop.setProperty("username", getUsername());
 		prop.setProperty("password", getPassword(passwordField_1));
 		prop.setProperty("save", Global.OFF);
-		prop.setProperty(Global.ONLINE,Global.ON);
-		prop.setProperty(Global.AWAY, Global.OFF);
-		prop.setProperty(Global.BUSY, Global.OFF);
+		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
 		prop.setProperty(Global.NOTIFICATION,Global.ON);
+		prop.setProperty(Global.smallChatFontSize, "12");
+		prop.setProperty(Global.conversationFontSize, "12");
 		
-		try {
-			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
-			
-		} catch (Exception e) {
-			System.out.println("file load problem.");
+			try {
+				prop.store(new FileOutputStream(getUsername() + ".properties"),null);
+				
+			} catch (Exception e1) {
+				System.out.println("file load problem.");
+			}
 		}
 		
 	}
-	
+	/*
+	 * Create Contact for phone
+	 * @return me contact
+	 */
+	 public static Contact setContactMe(){
+	    	Contact me = null;
+    	try{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		
+		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + Global.username + "'");
+    	
+		if(rs.next());{
+
+			me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
+		}
+		
+		rs.close();		
+		con.close();
+
+
+		
+		}
+		
+		catch(Exception e){
+			System.out.println("Login fail" + e.getMessage());
+		}
+		
+    	return me;
+    }
+
 	/**
 	 * Generic method to store items in users preference file
 	 * @param user
@@ -305,14 +346,19 @@ public class Login extends JFrame {
 	 */
 	public void systemPrefs(){
 		
-		Properties prop = new Properties();
-		prop.setProperty("lastLoggedIn", getUsername());
-		
+		Properties prop = new Properties();		
 		try {
-			prop.store(new FileOutputStream("system.properties"),null);
+			prop.load(new FileInputStream("system.properties"));
 			
 		} catch (Exception e) {
-			System.out.println("System store file problem");		
+			prop.setProperty("lastLoggedIn", getUsername());
+			try{
+				prop.store(new FileOutputStream("system.properties"), null);
+			}
+			catch(Exception e1){
+				System.out.println("System store file problem");				
+			}
+
 		}
 		
 	}
