@@ -317,11 +317,6 @@ public class Conversation {
 		scrollPane.setViewportView(Global.list);
 
 
-		
-
-//		JPanel panel_1 = new JPanel();
-//		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
-
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		conversationPanel.setBounds(226, 25, 490, 385);
@@ -483,7 +478,7 @@ public class Conversation {
 		}
 	}
 	
-	private int findContactInListModel(String selectedValue){
+	private static int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
 			if (con.getFirstName().equals(selectedValue)){
@@ -496,7 +491,7 @@ public class Conversation {
 				return i;
 			}
 		}
-		return returnsNull;
+		return 99999;
 	}
 
 	public JFrame getFrmBluetext() {
@@ -528,46 +523,49 @@ public class Conversation {
 		offset.add(new Integer(0));
 	}
 	
-	public static Contact getConvReceiver(String name){
-		String first = "";
-		String last = "";
-		String phoneNumber = null;
-		String secondPhone = null;
-		Scanner scanner = new Scanner(name);
-		first = scanner.next();
-		if(scanner.hasNext()){
-			last = scanner.next();
-		}
-		for(int i = 0; i < Global.contactAList.size(); i++){
-			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
-				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
-				if(Global.contactAList.get(i).getSecondPhone() != null){
-					secondPhone = Global.contactAList.get(i).getSecondPhone();
-				}
-				break;
-			}
-		}
-		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
-		scanner.close();
-		return receiver;
-	}
+//	public static Contact getConvReceiver(String name){
+//		String first = "";
+//		String last = "";
+//		String phoneNumber = null;
+//		String secondPhone = null;
+//		Scanner scanner = new Scanner(name);
+//		first = scanner.next();
+//		if(scanner.hasNext()){
+//			last = scanner.next();
+//		}
+//		for(int i = 0; i < Global.contactAList.size(); i++){
+//			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
+//				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
+//				if(Global.contactAList.get(i).getSecondPhone() != null){
+//					secondPhone = Global.contactAList.get(i).getSecondPhone();
+//				}
+//				break;
+//			}
+//		}
+//		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
+//		scanner.close();
+//		return receiver;
+//	}
 	
 	public static void startNewConv(){
 		boolean match = false;
-		System.out.println(getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber());
+		String selectedValue = (String)Global.list.getSelectedValue();
+		int j = findContactInListModel(selectedValue);
+		Contact selectedContactCon = Global.contactAList.get(j);
+		System.out.println(selectedContactCon.getPhoneNumber());
 		for(int i = 0; i < currentConvs.size(); i++){
-			if(getConvReceiver((String)Global.list.getSelectedValue()).getFirstName().equals(currentConvs.get(i).getFirstName()) &&
-					getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
+			if(selectedContactCon.getFirstName().equals(currentConvs.get(i).getFirstName()) &&
+					selectedContactCon.getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
 				match = true;
 				break;
 			}
 		}
 		if(!match){
-			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, getConvReceiver((String)Global.list.getSelectedValue()));
+			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, selectedContactCon);
 			TaskBar.messageHost.sendObject(rq);
 			
-			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
-			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
+			currentConvs.add(selectedContactCon);
+			createTab(selectedContactCon);
 		}
 	}
 	

@@ -17,7 +17,7 @@ public class Contact implements Serializable {
 		if (start_last_name == null){
 			start_last_name = "";
 		}
-		if (start_phone_number == null || start_phone_number.length() < 3){
+		if (start_phone_number == null){
 			throw new IllegalArgumentException();
 		}
 		if (start_second_phone == null){
