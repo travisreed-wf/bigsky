@@ -20,6 +20,12 @@ import bigsky.gui.Conversation;
 import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
 
+/**
+ * Separate thread that runs for processing most objects that are received 
+ * by the PC from the phone.  Also acts as an over-arching class for keeping
+ * the primary chat window and quick chat's synchronized.
+ * @author Andy Guibert, Jonathan Mielke
+ */
 public class TextMessageManager extends Thread
 {
 	public static boolean sendTexts = true;
@@ -159,6 +165,13 @@ public class TextMessageManager extends Thread
 		}
 	}
 	
+	/**
+	 * Looks at TaskBar.responseQueue which is an ArrayList of BlueTextResponses.
+	 * Currently supports the following response objects:
+	 * <LI>REQUEST.BATTERY_PERCENTAGE
+	 * <LI>REQUEST.CONTACT_CHAT_HISTORY
+	 * <LI>REQUEST.CONTACT_PICTURE
+	 */
 	private void processResponseQueue()
 	{
 		while(!TaskBar.responseQueue.isEmpty())

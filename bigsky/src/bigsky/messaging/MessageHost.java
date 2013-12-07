@@ -12,6 +12,18 @@ import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
 
+/**
+ * Thread that runs continuously for reading objects that have been transmitted
+ * by the phone. It is important that the while loop completes as quickly as
+ * possible when an object is received through the stream, and not much time is
+ * wasted processing the object. Best practice is to hand the object off to the
+ * TextMessageManager (which runs on a separate thread) and then notify the
+ * thread. Doing so transfers responsibility of processing the object to the
+ * other thread and frees up this thread so that it may continue and read in
+ * more objects right away.
+ * 
+ * @author Andy Guibert
+ */
 class ClientConn implements Runnable {
 	
 	
@@ -62,13 +74,21 @@ class ClientConn implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage() + " inside ClientConn.run()");
+			System.out.println("MessageHost's ClientConn is now closing");
 			if(TaskBar.messageHost != null)
 				TaskBar.messageHost.closeHost(true);
 		}
 	}
 }
 
+/**
+ * Thread that runs for managing the PC's communication with the the phone. This
+ * thread sets up the ClientConn thread and holds authority for closing
+ * communication channels and anything that is written to the phone using
+ * sendObject().
+ * 
+ * @author Andrew
+ */
 public class MessageHost extends Thread{
 	
 	public ClientConn conn = null;
@@ -100,6 +120,14 @@ public class MessageHost extends Thread{
 		}
 	}
 	
+	/**
+	 * Closes all communication channels between the PC and phone and prepares
+	 * BlueText for logging in again.
+	 * 
+	 * @param callLogout
+	 *            If the caller would like to call TaskBar.logout() after the
+	 *            method completes, taking the user back to the login screen.
+	 */
 	public void closeHost(boolean callLogout){
 		
 		if(alreadyCleaningUp)
@@ -137,6 +165,10 @@ public class MessageHost extends Thread{
 			TaskBar.logout();
 	}
 	
+	/**
+	 * Sends an object to the phone through the MessageHost's ObjectOutputStream.
+	 * @param o The object to be sent to the phone 
+	 */
 	public synchronized void sendObject(Object o)
 	{
 		try{
