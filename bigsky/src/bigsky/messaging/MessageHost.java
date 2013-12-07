@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.io.*;
 
 import bigsky.BlueTextRequest;
+import bigsky.BlueTextRequest.REQUEST;
 import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
+import bigsky.Global;
 
 class ClientConn implements Runnable {
 	
@@ -34,7 +36,10 @@ class ClientConn implements Runnable {
 				if(streamObject instanceof Contact)
 				{
 					Contact ct = (Contact) streamObject;
-					// TODO Travis will add code here to update listmodel
+					TaskBar.incomingContactQueue.add(ct);
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else if(streamObject instanceof TextMessage)
 				{
@@ -49,11 +54,13 @@ class ClientConn implements Runnable {
 				else if(streamObject instanceof BlueTextResponse)
 				{
 					BlueTextResponse response = (BlueTextResponse) streamObject;
-					ArrayList<TextMessage> history = response.getChatHistory();
-					System.out.println("Got " + history.size() + " messages from " + response.getOriginalRequest().getContact().getPhoneNumber());
+					TaskBar.responseQueue.add(response);
+					synchronized(TaskBar.textManager){
+						TaskBar.textManager.notify();
+					}
 				}
 				else{
-					System.out.println("Unknown object sent through stream");
+					System.out.println("ERROR: Unknown object sent through stream");
 				}
 			}
 		} catch (Exception e) {
@@ -66,11 +73,12 @@ public class MessageHost extends Thread{
 	
 	public ClientConn conn = null;
 	private ObjectOutputStream ps2 = null;
+	private ServerSocket socket = null;
+
 	
 	public void run(){
 		
 		LoadScreen load = new LoadScreen();
-		ServerSocket socket = null;
 		try{
 			
 			socket = new ServerSocket(1300);
@@ -78,16 +86,15 @@ public class MessageHost extends Thread{
 			Socket client = socket.accept();
 			conn = new ClientConn(client);
 			load.dispose();
-			Conversation convo = new Conversation();
-			convo.getFrmBluetext().setVisible(true);
+			TaskBar.convo = new Conversation();
+			TaskBar.convo.getFrmBluetext().setVisible(true);
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 			
-			// This is an example usage of sending a BlueTextRequest
-			// This request asks for the chat history of Andy Guibert and
-			// will return a BlueTextResponse in the stream in about 500ms 
-			// sendObject(new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, new Contact("Andy", "Guibert", "15072542815", null)));
+			// Send initial request for phone battery percentage
+			sendObject(new BlueTextRequest(REQUEST.BATTERY_PERCENTAGE, null));
+			
 		} catch(Exception e){
-			System.out.println("Caught exception while setting up MessageHost");
+			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
 		}
 		finally{
 			if(socket != null)
@@ -96,6 +103,20 @@ public class MessageHost extends Thread{
 					socket.close();
 				} catch (IOException e) {}
 			}
+		}
+	}
+	
+	public void closeHost(){
+		
+		if(ps2 != null){
+			try {
+				ps2.close();
+			} catch (IOException e) {}
+		}
+		if(socket !=null){
+			try {
+				socket.close();
+			} catch (IOException e) {}
 		}
 	}
 	

@@ -2,10 +2,10 @@ package bigsky.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import bigsky.Contact;
@@ -39,8 +39,7 @@ public class PopUp extends JPopupMenu {
         });
 		startConvo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel_2 = new JPanel();
-				Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, panel_2, null);
+				Conversation.startNewConv();
 			}
 		});
 			
@@ -48,6 +47,7 @@ public class PopUp extends JPopupMenu {
         add(startConvo);
     }
     private int findContactInListModel(String selectedValue){
+    	ArrayList<Contact> contactList = Global.contactAList;
 		for (int i=0;i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
 			if (con.getFirstName().equals(selectedValue)){
