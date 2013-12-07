@@ -162,6 +162,10 @@ public class NewContact {
 					return null;
 				}
 			}
+			if (con.getPhoneNumber().equals(phone)){
+				JOptionPane.showMessageDialog(null, "This phone number already exists on a different contact");
+				return null;
+			}
 		}
 		Contact c = new Contact(firstName, lastName, phone, secondPhone);
 		
