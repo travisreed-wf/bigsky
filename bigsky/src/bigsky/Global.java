@@ -17,12 +17,12 @@ public class Global {
 	public static Integer battery_remaining = 100;
 	public final static String ON = "ON";
 	public final static String OFF = "OFF";
-	public final static String ONLINE = "ONLINE";
-	public final static String BUSY = "BUSY";
-	public final static String AWAY = "AWAY";
+	public final static String MESSAGEPREVIEW = "MESSAGEPREVIEW";
 	public final static String NOTIFICATION = "NOTIFICATION";
 	public static String username;
 	public final static String save = "save";
 	public static ArrayList<TextMessage> phoneTextHistory = new ArrayList<TextMessage>();
 	public static ArrayList<TextMessage> historyGatherText = new ArrayList<TextMessage>();
+	public final static String smallChatFontSize = "SMALLCHATFONTSIZE";
+	public final static String conversationFontSize = "CONVERSATIONFONSIZE";
 }
