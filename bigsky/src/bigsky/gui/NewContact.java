@@ -162,8 +162,12 @@ public class NewContact {
 					return null;
 				}
 			}
-			if (con.getPhoneNumber().equals(phone)){
+			if (con.getPhoneNumber().equals(phone) || con.getSecondPhone().equals(phone)){
 				JOptionPane.showMessageDialog(null, "This phone number already exists on a different contact");
+				return null;
+			}
+			if (secondPhone != null && (con.getPhoneNumber().equals(secondPhone) || con.getSecondPhone().equals(secondPhone))){
+				JOptionPane.showMessageDialog(null, "This secondary phone number already exists on a different contact");
 				return null;
 			}
 		}
