@@ -149,15 +149,14 @@ public class Login extends JFrame {
 				        }			
 						LoginInfo();
 						systemPrefs();
-						TaskBar.me = setContactMe();
 						if(hit){
 							saveInProp(getUsername(), "save", Global.ON);
 						}
 					}
 					else{
-						System.out.println("FAIL20");
+						System.out.println("Login checks fail");
 					}
-				} catch (Exception e1) {}			
+				} catch (Exception e1) {System.out.println("Login checks fail");}			
             }
         });
 		
@@ -238,7 +237,8 @@ public class Login extends JFrame {
 			return false;
 		}
 
-		
+		TaskBar.me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
+
 		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + getUsername() + "';");
 		
 		rs.close();		
@@ -302,7 +302,7 @@ public class Login extends JFrame {
 		
 		rs.close();		
 		con.close();
-		System.out.println("ContactED WORKED");
+
 
 		
 		}
