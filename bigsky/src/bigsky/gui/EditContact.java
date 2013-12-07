@@ -117,6 +117,7 @@ public class EditContact {
 				
 			}
 		});
+		frame.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frame.getContentPane().add(btnSubmit);
 		

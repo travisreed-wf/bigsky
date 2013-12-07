@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -105,7 +104,7 @@ public class Notification {
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
-		         frame.setOpacity(fade);
+		         //frame.setOpacity(fade);
 		     }
 		 });
 		 timer1.setInitialDelay(3000);
@@ -178,7 +177,7 @@ public class Notification {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
-				 frame.setOpacity(fade);
+				 //frame.setOpacity(fade);
 				 timer1.stop();
 				 timer1.setInitialDelay(3000);
 				 timer1.start();

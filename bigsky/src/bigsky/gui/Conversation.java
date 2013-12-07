@@ -523,30 +523,6 @@ public class Conversation {
 		offset.add(new Integer(0));
 	}
 	
-//	public static Contact getConvReceiver(String name){
-//		String first = "";
-//		String last = "";
-//		String phoneNumber = null;
-//		String secondPhone = null;
-//		Scanner scanner = new Scanner(name);
-//		first = scanner.next();
-//		if(scanner.hasNext()){
-//			last = scanner.next();
-//		}
-//		for(int i = 0; i < Global.contactAList.size(); i++){
-//			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
-//				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
-//				if(Global.contactAList.get(i).getSecondPhone() != null){
-//					secondPhone = Global.contactAList.get(i).getSecondPhone();
-//				}
-//				break;
-//			}
-//		}
-//		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
-//		scanner.close();
-//		return receiver;
-//	}
-	
 	public static void startNewConv(){
 		boolean match = false;
 		String selectedValue = (String)Global.list.getSelectedValue();
