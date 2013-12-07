@@ -68,8 +68,10 @@ public class TextMessageManager extends Thread
 					// Handle incoming text messages
                     if(!TaskBar.myTextArray.isEmpty()){
                     	System.out.println("hit manager sending");
-                        Notification notify = new Notification(TaskBar.myTextArray.get(0));
-                        //TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
+						if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON)){
+							Notification notify = new Notification(TaskBar.myTextArray.get(0));
+						}
+							//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
                         matchR = false;
                         for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
                         	if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
