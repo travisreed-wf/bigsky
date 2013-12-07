@@ -76,7 +76,7 @@ public class Conversation {
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	
-	private final int returnsNull = 99999;
+	private final int returnsNull = -1;
 
 
 	public Conversation() {
@@ -504,7 +504,7 @@ public class Conversation {
 			}
 		}
 		//Contact was not found
-		return 99999;
+		return -1;
 	}
 
 	public JFrame getFrmBluetext() {
