@@ -62,7 +62,7 @@ public class Conversation {
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
 	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
-	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
+	private static Contact me = TaskBar.me;
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 	private JTextField textField_1;
 	private JMenu settings;
@@ -76,7 +76,6 @@ public class Conversation {
 	private  JRadioButtonMenuItem messagePreviewON;
 	private  JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
-	private static JTextPane textPane = new JTextPane();
 	private JMenuItem defaultSettings;
 
 	
@@ -216,7 +215,9 @@ public class Conversation {
 		textField_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textField_1.getText().matches("[0-9]+")){
-					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+					
+					
+					Global.conversationPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
 					Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
 				}
 			}
@@ -530,6 +531,7 @@ public class Conversation {
 	
 	
 	public static void createTab(Contact contact){
+		JTextPane textPane = new JTextPane();
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
@@ -746,7 +748,7 @@ public class Conversation {
 			
 		}
 		
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+		Global.conversationPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 
 	}
 }
