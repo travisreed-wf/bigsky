@@ -63,7 +63,8 @@ class ClientConn implements Runnable {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " inside ClientConn.run()");
-			TaskBar.logout();
+			if(TaskBar.messageHost != null)
+				TaskBar.messageHost.closeHost(true);
 		}
 	}
 }
@@ -73,7 +74,7 @@ public class MessageHost extends Thread{
 	public ClientConn conn = null;
 	private ObjectOutputStream ps2 = null;
 	private ServerSocket socket = null;
-
+	private boolean alreadyCleaningUp = false;
 	
 	public void run(){
 		
@@ -95,13 +96,16 @@ public class MessageHost extends Thread{
 		} catch(Exception e){
 			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
 			TaskBar.logout();
-		}
-		finally{
-			closeHost();
+			closeHost(true);
 		}
 	}
 	
-	public void closeHost(){
+	public void closeHost(boolean callLogout){
+		
+		if(alreadyCleaningUp)
+			return;
+		
+		alreadyCleaningUp = true;
 		
 		if(conn != null){
 			if(conn.client != null){
@@ -128,6 +132,9 @@ public class MessageHost extends Thread{
 		
 		TextMessageManager.yield();
 		TaskBar.textManager = null;
+		
+		if(callLogout)
+			TaskBar.logout();
 	}
 	
 	public synchronized void sendObject(Object o)
