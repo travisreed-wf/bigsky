@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,12 +69,12 @@ public class Conversation {
 	private JMenu status;
 	private JMenu notification;
 	private JMenu fontSize;
-	private JRadioButtonMenuItem notificationON;
-	private JRadioButtonMenuItem notificationOFF;
+	private  JRadioButtonMenuItem notificationON;
+	private  JRadioButtonMenuItem notificationOFF;
 	private ButtonGroup notiGroup;
 	private JMenu messagePreview;
-	private JRadioButtonMenuItem messagePreviewON;
-	private JRadioButtonMenuItem messagePreviewOFF;
+	private  JRadioButtonMenuItem messagePreviewON;
+	private  JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
 	private static JTextPane textPane = new JTextPane();
 	private JMenuItem defaultSettings;
@@ -131,96 +132,103 @@ public class Conversation {
 		
 		
 		//*****************Andrew's Additions*****************//
-				settings = new JMenu("Settings");
-				mnFile.add(settings);
+		settings = new JMenu("Settings");
+		mnFile.add(settings);
+		
+		//Notifications menu
+		notification = new JMenu("Notifications");
+		settings.add(notification);
 				
-				//Notifications menu
-				notification = new JMenu("Notifications");
-				settings.add(notification);
-						
-				notificationON = new JRadioButtonMenuItem("On");
-				notificationOFF = new JRadioButtonMenuItem("Off");
+		notificationON = new JRadioButtonMenuItem("On");
+		notificationOFF = new JRadioButtonMenuItem("Off");
+		
+		notification.add(notificationON);
+		notification.add(notificationOFF);
+		// Adding buttons to group so only 1 radio button can be selected at any times
+		notiGroup = new ButtonGroup();
+		notiGroup.add(notificationON);
+		notiGroup.add(notificationOFF);
+		
+		//Status Menu
+		messagePreview = new JMenu("Preview Message");
+		settings.add(messagePreview);
+			
+		messagePreviewON = new JRadioButtonMenuItem("On");
+		messagePreviewOFF = new JRadioButtonMenuItem("Off");
+		
+		messagePreview.add(messagePreviewON);
+		messagePreview.add(messagePreviewOFF);
 				
-				notification.add(notificationON);
-				notification.add(notificationOFF);
-				// Adding buttons to group so only 1 radio button can be selected at any times
-				notiGroup = new ButtonGroup();
-				notiGroup.add(notificationON);
-				notiGroup.add(notificationOFF);
-				
-				//Status Menu
-				messagePreview = new JMenu("Preview Message");
-				settings.add(messagePreview);
-					
-				messagePreviewON = new JRadioButtonMenuItem("On");
-				messagePreviewOFF = new JRadioButtonMenuItem("Off");
-				
-				messagePreview.add(messagePreviewON);
-				messagePreview.add(messagePreviewOFF);
-						
-				//Adding buttons to group so that only 1 radio button can be selected at any time.
-				previewMessageGroup = new ButtonGroup();
-				previewMessageGroup.add(messagePreviewON);
-				previewMessageGroup.add(messagePreviewOFF);
-				
-				//Choose font size of conversation chat				
-				fontSize = new JMenu("Font Size");
-				settings.add(fontSize);
-				
-				textField_1 = new JTextField();
-				fontSize.add(textField_1);
-				textField_1.setColumns(10);
-				//default settings button
-				defaultSettings = new JMenuItem("Default Settings");
-				settings.add(defaultSettings);
-				
-				//Notification setting
-				notificationON.addActionListener(new ActionListener() {
+		//Adding buttons to group so that only 1 radio button can be selected at any time.
+		previewMessageGroup = new ButtonGroup();
+		previewMessageGroup.add(messagePreviewON);
+		previewMessageGroup.add(messagePreviewOFF);
+		
+		//Choose font size of conversation chat				
+		fontSize = new JMenu("Font Size");
+		settings.add(fontSize);
+		
+		textField_1 = new JTextField();
+		fontSize.add(textField_1);
+		textField_1.setColumns(10);
+		//default settings button
+		defaultSettings = new JMenuItem("Default Settings");
+		settings.add(defaultSettings);
+		
+		//Notification setting
+		notificationON.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(notificationON.isSelected()){
+					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
+					notificationOFF.setSelected(false);
+				}				
+			}
+		});
+		//Notification setting
+				notificationOFF.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(notificationON.isSelected()){
-							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
-							notificationOFF.setSelected(false);
-						}				
+						if(notificationOFF.isSelected()){
+							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
+							notificationON.setSelected(false);
+						}						
 					}
 				});
-				//Notification setting
-						notificationOFF.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								if(notificationOFF.isSelected()){
-									Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
-									notificationON.setSelected(false);
-								}						
-							}
-						});
-				//MessagePreview setting
-				messagePreviewON.addActionListener(new ActionListener() {
+		//MessagePreview setting
+		messagePreviewON.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(messagePreviewON.isSelected()){
+					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
+					messagePreviewOFF.setSelected(false);
+				}				
+			}
+		});
+		//MessagePreview setting
+			messagePreviewOFF.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(messagePreviewON.isSelected()){
-							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
-							messagePreviewOFF.setSelected(false);
-						}				
+						if(messagePreviewOFF.isSelected()){
+							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
+							messagePreviewON.setSelected(false);
+						}						
 					}
 				});
-				//MessagePreview setting
-					messagePreviewOFF.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								if(messagePreviewOFF.isSelected()){
-									Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
-									messagePreviewON.setSelected(false);
-								}						
-							}
-						});
-				
-				//Font Size setting
-				textField_1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (textField_1.getText().matches("[0-9]+")){
-							textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
-							Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
-						}
-					}
-				});
-				
+		
+		//Font Size setting
+		textField_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (textField_1.getText().matches("[0-9]+")){
+					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+					Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
+				}
+			}
+		});
+		
+		//Default Setting listener
+		defaultSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				defaultSettings();
+				}
+		});
+		
 				checkButtons();
 				
 				//*****************************************************//
@@ -522,7 +530,6 @@ public class Conversation {
 	
 	
 	public static void createTab(Contact contact){
-		textPane = new JTextPane();
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
@@ -689,11 +696,8 @@ public class Conversation {
 	/**
 	 * Checks(selects) the buttons that are set in the preference file
 	 */
-	private void checkButtons(){
-		Properties prop = new Properties();
-		String compare = Global.ON;
-		String s = Global.username;
-	
+	private  void checkButtons(){
+		Properties prop = new Properties();	
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
 		} catch (Exception e) {
@@ -727,11 +731,23 @@ public class Conversation {
 		} catch (Exception e) {
 			System.out.println("file load problem.");
 		}
-	
+		
 		prop.setProperty("save", Global.OFF);
 		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
 		prop.setProperty(Global.NOTIFICATION,Global.ON);
-		prop.setProperty(Global.conversationFontSize, "12");		
+		prop.setProperty(Global.conversationFontSize, "12");	
+
+		
+		try{
+			prop.store(new FileOutputStream(Global.username + ".properties"), null);
+		}
+		catch(Exception e1){
+			System.out.println("Problem saving default settings in small chat");
+			
+		}
+		
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+
 	}
 }
 

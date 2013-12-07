@@ -34,6 +34,7 @@ import java.util.Properties;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.messaging.*;
@@ -148,12 +149,13 @@ public class Login extends JFrame {
 				        }			
 						LoginInfo();
 						systemPrefs();
+						TaskBar.me = setContactMe();
 						if(hit){
 							saveInProp(getUsername(), "save", Global.ON);
 						}
 					}
 					else{
-						System.out.println("FAIL");
+						System.out.println("FAIL20");
 					}
 				} catch (Exception e1) {}			
             }
@@ -272,16 +274,46 @@ public class Login extends JFrame {
 		prop.setProperty(Global.smallChatFontSize, "12");
 		prop.setProperty(Global.conversationFontSize, "12");
 		
-		try {
-			prop.store(new FileOutputStream(getUsername() + ".properties"),null);
-			
-		} catch (Exception e1) {
-			System.out.println("file load problem.");
+			try {
+				prop.store(new FileOutputStream(getUsername() + ".properties"),null);
+				
+			} catch (Exception e1) {
+				System.out.println("file load problem.");
+			}
 		}
-	}
 		
 	}
-	
+	/*
+	 * Create Contact for phone
+	 * @return me contact
+	 */
+	 public static Contact setContactMe(){
+	    	Contact me = null;
+    	try{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+		
+		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + Global.username + "'");
+    	
+		if(rs.next());{
+
+			me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
+		}
+		
+		rs.close();		
+		con.close();
+		System.out.println("ContactED WORKED");
+
+		
+		}
+		
+		catch(Exception e){
+			System.out.println("Login fail" + e.getMessage());
+		}
+		
+    	return me;
+    }
+
 	/**
 	 * Generic method to store items in users preference file
 	 * @param user
@@ -314,14 +346,19 @@ public class Login extends JFrame {
 	 */
 	public void systemPrefs(){
 		
-		Properties prop = new Properties();
-		prop.setProperty("lastLoggedIn", getUsername());
-		
+		Properties prop = new Properties();		
 		try {
-			prop.store(new FileOutputStream("system.properties"),null);
+			prop.load(new FileInputStream("system.properties"));
 			
 		} catch (Exception e) {
-			System.out.println("System store file problem");		
+			prop.setProperty("lastLoggedIn", getUsername());
+			try{
+				prop.store(new FileOutputStream("system.properties"), null);
+			}
+			catch(Exception e1){
+				System.out.println("System store file problem");				
+			}
+
 		}
 		
 	}

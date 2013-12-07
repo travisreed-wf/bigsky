@@ -13,7 +13,7 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Properties;
-
+import java.io.FileOutputStream;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
@@ -286,8 +286,6 @@ public class SmallChat  {
 	 */
 	private void checkButtons(){
 		Properties prop = new Properties();
-		String compare = Global.ON;
-		String s = Global.username;
 	
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
@@ -322,11 +320,21 @@ public class SmallChat  {
 		} catch (Exception e) {
 			System.out.println("file load problem.");
 		}
-	
+		
 		prop.setProperty("save", Global.OFF);
 		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
 		prop.setProperty(Global.NOTIFICATION,Global.ON);
-		prop.setProperty(Global.smallChatFontSize, "12");		
+		prop.setProperty(Global.smallChatFontSize, "12");	
+		
+		try{
+			prop.store(new FileOutputStream(Global.username + ".properties"), null);
+		}
+		catch(Exception e1){
+			System.out.println("Problem saving default settings in small chat");
+			
+		}
+		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+
 	}
 	
 	

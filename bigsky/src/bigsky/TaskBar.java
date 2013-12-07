@@ -27,7 +27,7 @@ public class TaskBar
 	public static ArrayList<TextMessage> myTextArray = new ArrayList<TextMessage>();
 	public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
 	public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
-	public static Contact me = new Contact("me", "me","me1","");
+	public static Contact me;
 	public static Contact you = new Contact("Andy", "G",    "+1 5072542815", "");
 	public static final TrayIcon trayIcon = createTrayIconImage();
 	private static final SystemTray tray = SystemTray.getSystemTray();
@@ -51,6 +51,7 @@ public class TaskBar
         // Checks to see if the user setting is to save username and password
         if(savedInfo(Global.save, Global.ON)){
         	TaskBar.putIconInSystemTray();
+        	me = Login.setContactMe();
         	try {
 				automaticIP();
 			} catch (Exception e) {}
@@ -170,7 +171,6 @@ public class TaskBar
 			Global.username = lastLoggedIn();
 			return true;
 		}
-
 		return false;
 	}
     
