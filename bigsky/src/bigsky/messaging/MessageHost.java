@@ -65,6 +65,7 @@ class ClientConn implements Runnable {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " inside ClientConn.run()");
+			TaskBar.logout();
 		}
 	}
 }
