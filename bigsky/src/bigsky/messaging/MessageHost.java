@@ -1,7 +1,6 @@
 package bigsky.messaging;
 
 import java.net.*;
-import java.util.ArrayList;
 import java.io.*;
 
 import bigsky.BlueTextRequest;
@@ -12,7 +11,6 @@ import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.LoadScreen;
-import bigsky.Global;
 
 class ClientConn implements Runnable {
 	
@@ -96,29 +94,40 @@ public class MessageHost extends Thread{
 			
 		} catch(Exception e){
 			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
+			TaskBar.logout();
 		}
 		finally{
-			if(socket != null)
-			{
-				try {
-					socket.close();
-				} catch (IOException e) {}
-			}
+			closeHost();
 		}
 	}
 	
 	public void closeHost(){
 		
+		if(conn != null){
+			if(conn.client != null){
+				try {
+					conn.client.close();
+				} catch (IOException e) {}
+				conn.client = null;
+			}
+			conn = null;
+		}
 		if(ps2 != null){
 			try {
 				ps2.close();
 			} catch (IOException e) {}
+			ps2 = null;
 		}
 		if(socket !=null){
 			try {
 				socket.close();
 			} catch (IOException e) {}
+			socket = null;
 		}
+		TaskBar.messageHost = null;
+		
+		TextMessageManager.yield();
+		TaskBar.textManager = null;
 	}
 	
 	public synchronized void sendObject(Object o)

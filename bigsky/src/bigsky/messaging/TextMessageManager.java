@@ -1,12 +1,7 @@
 package bigsky.messaging;
 
-import java.awt.TrayIcon.MessageType;
-import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
