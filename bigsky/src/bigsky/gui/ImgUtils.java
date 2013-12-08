@@ -1,5 +1,8 @@
 package bigsky.gui;
 
+/*
+ * Code Modified from http://stackoverflow.com/questions/12475503/how-to-change-the-size-of-an-image
+ */
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
