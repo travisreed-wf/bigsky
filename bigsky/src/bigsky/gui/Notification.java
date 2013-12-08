@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 import javax.swing.JButton;
@@ -84,7 +86,7 @@ public class Notification {
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
-		         //frame.setOpacity(fade);
+		         frame.setOpacity(fade);
 		     }
 		 });
 		 timer1.setInitialDelay(3000);
@@ -214,7 +216,7 @@ public class Notification {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
-				// frame.setOpacity(fade);
+				 frame.setOpacity(fade);
 				 timer1.stop();
 				 timer1.setInitialDelay(3000);
 				 timer1.start();
