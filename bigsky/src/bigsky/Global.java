@@ -1,8 +1,10 @@
 package bigsky;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -18,7 +20,7 @@ public class Global {
 	public static ArrayList<Contact> contactAList = new ArrayList<Contact>();
 	public static DefaultListModel listModel = new DefaultListModel();
 	public static JTabbedPane conversationPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-	public static JLabel lblNewLabel = new JLabel("");
+	public static JLabel contactThumbnail = new JLabel("");
 	public static JList list = new JList(listModel);
 	public static JMenuItem batteryIndicator = new JMenuItem();
 	public static  Integer battery_remaining = 100;
@@ -33,4 +35,7 @@ public class Global {
 	public static ArrayList<TextMessage> historyGatherText = new ArrayList<TextMessage>();
 	public final static String smallChatFontSize = "SMALLCHATFONTSIZE";
 	public final static String conversationFontSize = "CONVERSATIONFONSIZE";
+	public static String ACCESS_TOKEN = null;
+	public static HashMap<String, ImageIcon> contactTOimageIcon = new HashMap<String, ImageIcon>();
+	public static ImageIcon defaultContactImage = null;
 }

@@ -2,9 +2,11 @@ package bigsky.gui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,13 +15,19 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,6 +45,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 
@@ -237,7 +247,16 @@ public class Conversation {
 				} catch (Exception e1) {}
 			}
 		});
+		
+		JMenuItem mntmImportFromFacebook = new JMenuItem("Import from Facebook");
+		mnFile.add(mntmImportFromFacebook);
 		mnFile.add(mnu_logout);
+		mntmImportFromFacebook.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new PopUp_FacebookContacts();
+			}
+		});
 
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -301,31 +320,10 @@ public class Conversation {
 		Global.list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println("Here");
 				String selectedContact = (String)Global.list.getSelectedValue();
 				if (selectedContact.contains("Create Contact")) {
 					openNewContactWindow();
 				}
-				int i = findContactInListModel(selectedContact);
-				Contact con = Global.contactAList.get(i);
-				//Update Contact Image
-				String path;
-				if (con.getContactImageName() == null || con.getContactImageName().equals(Global.blankContactImage)) {
-					path = Global.blankContactImage;
-				}
-				else {
-					if (System.getProperty("os.name").indexOf("Mac") != -1){
-						path = "/BlueTextImages/";
-					}
-					else {
-						path = "c:/BlueTextImages/";
-					}
-					path += con.getContactImageName();
-				}
-				
-				System.out.println(path);
-				BufferedImage img = new ImgUtils().scaleImage(180,180, (path));
-				Global.lblNewLabel.setIcon(new ImageIcon(img));
 			}
 		});
 
@@ -336,7 +334,7 @@ public class Conversation {
 
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		conversationPanel.setBounds(226, 26, 490, 385);
+		conversationPanel.setBounds(212, 26, 504, 435);
 		
 		Global.conversationPane.setBounds(226, 0, 490, 35);
 		conversationPanel.add(Global.conversationPane);
@@ -359,12 +357,12 @@ public class Conversation {
             	txtrEnterMessageHere.setText("");
 			}
 		});
-		btnSend.setBounds(599, 493, 117, 29);
+		btnSend.setBounds(599, 536, 117, 29);
 		panel.add(btnSend);
 	
 		
 		txtrEnterMessageHere.setText("New Message...");
-		txtrEnterMessageHere.setBounds(226, 438, 490, 93);
+		txtrEnterMessageHere.setBounds(212, 472, 504, 93);
 		panel.add(txtrEnterMessageHere);
 		txtrEnterMessageHere.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 
@@ -423,14 +421,14 @@ public class Conversation {
 		});
 		btnImportContacts.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/user.png")));
 		btnImportContacts.setBackground(Color.WHITE);
-		btnImportContacts.setBounds(178, 16, 27, 29);
+		btnImportContacts.setBounds(175, 16, 27, 29);
 		panel.add(btnImportContacts);
-		System.out.println(System.getProperty("os.name"));
-		Global.lblNewLabel.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/android-logo2.jpg")));
-		Global.lblNewLabel.setBounds(14, 47, 188, 166);
-		panel.add(Global.lblNewLabel);
-		
+		Global.defaultContactImage = new ImageIcon(this.getClass().getResource("default-profile.jpg"));
+		Global.contactThumbnail.setIcon(Global.defaultContactImage);
+		Global.contactThumbnail.setBounds(17, 47, 188, 166);
+		panel.add(Global.contactThumbnail);
 	}
+
 	/**
 	 * Bring up the Edit Contact Page
 	 */
@@ -591,10 +589,63 @@ public class Conversation {
 			currentConvs.add(selectedContactCon);
 			createTab(selectedContactCon);
 			
+			setThumbnailPicture(selectedContactCon);	
+		}
+	}
+	
+	/**
+	 * Gets facebook id from properties file
+	 * @param c
+	 * @return
+	 */
+	private static String getFacebookID(Contact c){
+		String contactName = null;
+		try{
+			Properties prop = new Properties();
+			contactName = (c.getFirstName()+ '.' + c.getLastName()).replace(' ', '.').toLowerCase();
+			prop.load(new FileInputStream(Global.username + ".properties"));
+			
+			return prop.getProperty(contactName);			
+		} catch(Exception e){
+			System.out.println("unable to find facebook id for: " + contactName);
+			return null;
+		}
+	}
+	
+	public static void setThumbnailPicture(Contact c)
+	{
+		if(c == null){
+			Global.contactThumbnail.setIcon(Global.defaultContactImage);
+			return;
+		}
+		
+		if(Global.contactTOimageIcon.get(c.getPhoneNumber()) != null){
+			// If we have the image stored to memory, use that and return
+			Global.contactThumbnail.setIcon(Global.contactTOimageIcon.get(c.getPhoneNumber()));
+			return;
+		}
+			
+		String facebookID = getFacebookID(c);
+		
+		// First try to get picture from facebook
+		try{
+			if(facebookID == null)
+				throw new Exception("Unable to find facebook id in username.properties file");
+			
+			URL url = new URL("http://graph.facebook.com/" + facebookID + "/picture?type=square");
+			BufferedImage bi = ImageIO.read(url);
+			ImageIcon img = new ImageIcon(bi.getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+			Global.contactTOimageIcon.put(c.getPhoneNumber(), img);
+			Global.contactThumbnail.setIcon(img);
+		}catch(Exception e){
+			Global.contactTOimageIcon.put(c.getPhoneNumber(), Global.defaultContactImage);
+			
+			// If that doesn't work, ask for it from the phone
 			// Send a REQUEST for contact's picture
-			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, selectedContactCon);
+			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, c);
 			TaskBar.messageHost.sendObject(req1);
 		}
+		
 	}
 	
 	/**
@@ -779,7 +830,19 @@ public class Conversation {
 	}
 	
 	public static void initTabComponent(int i) {
-		Global.conversationPane.setTabComponentAt(i,new ButtonTabComponent(Global.conversationPane));
+		Global.conversationPane.setTabComponentAt(i, new ButtonTabComponent(Global.conversationPane));
+		Global.conversationPane.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				int j = Global.conversationPane.getSelectedIndex();
+				if(j > currentConvs.size())
+					j = currentConvs.size()-1;
+				if(j < 0)
+					setThumbnailPicture(null);
+				else
+					setThumbnailPicture(currentConvs.get(j));
+			}
+		});
 	}  
 	
 	public static void removeTab(int i){
