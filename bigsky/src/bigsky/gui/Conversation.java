@@ -37,6 +37,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 
 import bigsky.BlueTextRequest;
+import bigsky.BlueTextRequest.REQUEST;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
