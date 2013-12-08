@@ -40,7 +40,7 @@ public class Notification {
 	private int chatWinNum;
 	private float fade = 1.0F;
 	private final Timer timer1 = new Timer(50, null);
-	private final Timer timer2 = new Timer(20, null);
+	private final Timer timer2 = new Timer(10, null);
 	private float positionY;
 	private static int totalWindows;
 	private int windowNum = 0;
@@ -80,10 +80,8 @@ public class Notification {
 					 frame.dispose();
 					 totalWindows--;
 					 for(int i = windowNum - 1; i < openNotifications.size();i++){
-						 //System.out.println("Array Num: " + openNotifications.get(i).windowNum);
 						 openNotifications.get(i).windowNum--;
 					 }
-					// System.out.println("Removed Window: " + (windowNum));
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
@@ -129,10 +127,8 @@ public class Notification {
 			public void windowClosing(WindowEvent arg0) {
 				totalWindows--;
 				for(int i = windowNum - 1; i < openNotifications.size();i++){
-					//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
 					openNotifications.get(i).windowNum--;
 				}
-				// System.out.println("Removed Window: " + (windowNum));
 				openNotifications.remove(windowNum);
 				frame.dispose();
 				timer1.restart();
@@ -160,14 +156,11 @@ public class Notification {
 		JButton btnQuickChat = new JButton("Quick Chat");
 		btnQuickChat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//System.out.println("quickChatbtn");
 				TaskBar.smallChatWindows.get(chatWinNum).getFrmBluetext().setVisible(true);
 				totalWindows--;
 				for(int i = windowNum - 1; i < openNotifications.size();i++){
-					//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
 					openNotifications.get(i).windowNum--;
 				}
-				// System.out.println("Removed Window: " + (windowNum));
 				openNotifications.remove(windowNum);
 				frame.dispose();
 				timer1.restart();
@@ -181,16 +174,12 @@ public class Notification {
 		JButton btnMainWindow = new JButton("BlueText");
 		btnMainWindow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				Notification not = new Notification(new TextMessage(TaskBar.me,TaskBar.you,""));
-//				System.out.println("window Number: " + windowNum);
 				TaskBar.convo.getFrmBluetext().setVisible(true);
 				Global.conversationPane.setSelectedIndex(chatWinNum);
 				totalWindows--;
 				for(int i = windowNum - 1; i < openNotifications.size();i++){
-					//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
 					openNotifications.get(i).windowNum--;
 				}
-				// System.out.println("Removed Window: " + (windowNum));
 				openNotifications.remove(windowNum);
 				frame.dispose();
 				timer1.restart();
@@ -235,11 +224,11 @@ public class Notification {
 		     public void actionPerformed(ActionEvent e) {
 				 
 				 if ((positionY > ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
-					 positionY = positionY - 5;
+					 positionY = positionY - 10;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
 		         }
-				 else if(windowNum != 0 && ((positionY + 5) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
-					 positionY = positionY + 5;
+				 else if(windowNum != 0 && ((positionY + 10) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
+					 positionY = positionY + 10;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
 				 }
 		     }

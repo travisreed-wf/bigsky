@@ -761,7 +761,6 @@ public class Conversation {
     	Conversation.textPanes.remove(i);
 		Conversation.currentConvs.remove(i);
 		TaskBar.smallChatWindows.remove(i);
-        
 	}
 }
 
