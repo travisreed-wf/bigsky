@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -49,8 +50,6 @@ import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.messaging.TextMessageManager;
-
-import javax.swing.ImageIcon;
 
 /**
  * The main window for our application
@@ -302,22 +301,43 @@ public class Conversation {
 			}
 		});
 
-		txtSearch.setBounds(16, 6, 163, 29);
+		txtSearch.setBounds(14, 16, 163, 29);
 		panel.add(txtSearch);
 		txtSearch.setText("Search");
 		txtSearch.setColumns(10);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 41, 188, 346);
+		scrollPane.setBounds(14, 225, 188, 306);
 		panel.add(scrollPane);
 		Global.list.addMouseListener(new PopClickListener());
 		Global.list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				System.out.println("Here");
 				String selectedContact = (String)Global.list.getSelectedValue();
 				if (selectedContact.contains("Create Contact")) {
 					openNewContactWindow();
 				}
+				int i = findContactInListModel(selectedContact);
+				Contact con = Global.contactAList.get(i);
+				//Update Contact Image
+				String path;
+				if (con.getContactImageName() == null || con.getContactImageName().equals(Global.blankContactImage)) {
+					path = Global.blankContactImage;
+				}
+				else {
+					if (System.getProperty("os.name").indexOf("Mac") != -1){
+						path = "/BlueTextImages/";
+					}
+					else {
+						path = "c:/BlueTextImages/";
+					}
+					path += con.getContactImageName();
+				}
+				
+				System.out.println(path);
+				BufferedImage img = new ImgUtils().scaleImage(180,180, (path));
+				Global.lblNewLabel.setIcon(new ImageIcon(img));
 			}
 		});
 
@@ -328,18 +348,13 @@ public class Conversation {
 
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		conversationPanel.setBounds(226, 25, 490, 385);
+		conversationPanel.setBounds(226, 26, 490, 385);
 		
 		Global.conversationPane.setBounds(226, 0, 490, 35);
 		conversationPanel.add(Global.conversationPane);
 	
 		panel.add(conversationPanel);
 		conversationPanel.setLayout(new CardLayout(0, 0));
-
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_3.setBounds(16, 422, 190, 100);
-		panel.add(panel_3);
 
 		JButton btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
@@ -361,7 +376,7 @@ public class Conversation {
 	
 		
 		txtrEnterMessageHere.setText("New Message...");
-		txtrEnterMessageHere.setBounds(226, 429, 490, 93);
+		txtrEnterMessageHere.setBounds(226, 438, 490, 93);
 		panel.add(txtrEnterMessageHere);
 		txtrEnterMessageHere.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 
@@ -408,7 +423,7 @@ public class Conversation {
 				}
 			}
 		});
-		btn_select_contact.setBounds(16, 388, 186, 29);
+		btn_select_contact.setBounds(16, 536, 186, 29);
 		panel.add(btn_select_contact);
 		
 		JButton btnImportContacts = new JButton("");
@@ -420,8 +435,12 @@ public class Conversation {
 		});
 		btnImportContacts.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/user.png")));
 		btnImportContacts.setBackground(Color.WHITE);
-		btnImportContacts.setBounds(181, 7, 27, 29);
+		btnImportContacts.setBounds(178, 16, 27, 29);
 		panel.add(btnImportContacts);
+		System.out.println(System.getProperty("os.name"));
+		Global.lblNewLabel.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/android-logo2.jpg")));
+		Global.lblNewLabel.setBounds(14, 47, 188, 166);
+		panel.add(Global.lblNewLabel);
 		
 	}
 	/**
@@ -804,6 +823,3 @@ public class Conversation {
 		TaskBar.smallChatWindows.remove(i);
 	}
 }
-
-
-
