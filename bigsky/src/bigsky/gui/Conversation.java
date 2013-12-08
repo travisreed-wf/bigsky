@@ -44,6 +44,11 @@ import bigsky.TextMessage;
 import bigsky.messaging.TextMessageManager;
 import javax.swing.ImageIcon;
 
+/**
+ * The main window for our application
+ * @author Travis Reed, Jonathan Mielke, Andrew Hartman, Andrew Guibert
+ *
+ */
 public class Conversation {
 	
 	//added variables from Jon
@@ -65,27 +70,14 @@ public class Conversation {
 	private ButtonGroup previewMessageGroup;
 	private JMenuItem defaultSettings;
 
-	
-	
-
 	private static BlueTextRequest rq;
 
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
 	
-	private final int returnsNull = 99999;
+	private final int returnsNull = -1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
 
-	}
-
-	/**
-	 * Create the application.
-	 * @wbp.parser.entryPoint
-	 */
 	public Conversation() {
 		initialize();
 	}
@@ -202,9 +194,7 @@ public class Conversation {
 		textField_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textField_1.getText().matches("[0-9]+")){
-					
-					
-					Global.conversationPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+					updateTabFonts();
 					Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
 				}
 			}
@@ -214,6 +204,7 @@ public class Conversation {
 		defaultSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				defaultSettings();
+				updateTabFonts();
 				}
 		});
 		
@@ -318,11 +309,6 @@ public class Conversation {
 		scrollPane.setViewportView(Global.list);
 
 
-		
-
-//		JPanel panel_1 = new JPanel();
-//		Global.conversationPane.addTab("New Conversation", null, panel_1, null);
-
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		conversationPanel.setBounds(226, 25, 490, 385);
@@ -421,6 +407,9 @@ public class Conversation {
 		panel.add(btnImportContacts);
 		
 	}
+	/**
+	 * Bring up the Edit Contact Page
+	 */
 	private void editContactAction(){
 		String selectedValue = (String)Global.list.getSelectedValue();
 		if (selectedValue != null){
@@ -437,10 +426,17 @@ public class Conversation {
 		}
 	}
 
+	/**
+	 * Bring up the New Contact Window
+	 */
 	private void openNewContactWindow(){
 		NewContact newCon = new NewContact();
 		newCon.getFrmNewContact().setVisible(true);
 	}
+	/**
+	 * Modify the list model to only display items that match the requirements of the searchTerm
+	 * @param searchTerm - The text entered into the search bar
+	 */
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
@@ -473,6 +469,11 @@ public class Conversation {
 		}
 	}
 	
+	/**
+	 * Adds a contact to the global list model
+	 * @param firstName - First name of contact to be added
+	 * @param lastName - Last name of contact to be added
+	 */
 	private void addContactToListModel(String firstName, String lastName){
 		if (!firstName.equals("")){
 			String newEntry = firstName + " " + lastName;
@@ -484,7 +485,12 @@ public class Conversation {
 		}
 	}
 	
-	private int findContactInListModel(String selectedValue){
+	/**
+	 * Finds a contact from the list Model and returns the position of that contact in the ArrayList
+	 * @param selectedValue - String of the contact name from the list model
+	 * @return the position of that contact in the ArrayList
+	 */
+	private static int findContactInListModel(String selectedValue){
 		for (int i=0;i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
 			if (con.getFirstName().equals(selectedValue)){
@@ -497,13 +503,17 @@ public class Conversation {
 				return i;
 			}
 		}
-		return returnsNull;
+		//Contact was not found
+		return -1;
 	}
 
 	public JFrame getFrmBluetext() {
 		return frmBluetext;
 	}
 	
+	/**
+	 * Sort List Model Alphabetically by last first name
+	 */
 	private void sortListModel(){
 		String[] tempList = new String[Global.listModel.size()];
 		for (int i=0; i<Global.listModel.size(); i++) {
@@ -516,7 +526,10 @@ public class Conversation {
 		}
 	}
 	
-	
+	/**
+	 * Create a conversation tab
+	 * @param contact - Contact on other end of conversation
+	 */
 	public static void createTab(Contact contact){
 		JTextPane textPane = new JTextPane();
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
@@ -530,49 +543,35 @@ public class Conversation {
 		offset.add(new Integer(0));
 	}
 	
-	public static Contact getConvReceiver(String name){
-		String first = "";
-		String last = "";
-		String phoneNumber = null;
-		String secondPhone = null;
-		Scanner scanner = new Scanner(name);
-		first = scanner.next();
-		if(scanner.hasNext()){
-			last = scanner.next();
-		}
-		for(int i = 0; i < Global.contactAList.size(); i++){
-			if(Global.contactAList.get(i).getFirstName().equalsIgnoreCase(first) && Global.contactAList.get(i).getLastName().equalsIgnoreCase(last)){
-				phoneNumber = Global.contactAList.get(i).getPhoneNumber();
-				if(Global.contactAList.get(i).getSecondPhone() != null){
-					secondPhone = Global.contactAList.get(i).getSecondPhone();
-				}
-				break;
-			}
-		}
-		Contact receiver = new Contact(first, last,phoneNumber,secondPhone);
-		scanner.close();
-		return receiver;
-	}
-	
+	/**
+	 * Start a new conversation
+	 */
 	public static void startNewConv(){
 		boolean match = false;
-		System.out.println(getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber());
+		String selectedValue = (String)Global.list.getSelectedValue();
+		int j = findContactInListModel(selectedValue);
+		Contact selectedContactCon = Global.contactAList.get(j);
+		System.out.println(selectedContactCon.getPhoneNumber());
 		for(int i = 0; i < currentConvs.size(); i++){
-			if(getConvReceiver((String)Global.list.getSelectedValue()).getFirstName().equals(currentConvs.get(i).getFirstName()) &&
-					getConvReceiver((String)Global.list.getSelectedValue()).getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
+			if(selectedContactCon.getFirstName().equals(currentConvs.get(i).getFirstName()) &&
+					selectedContactCon.getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
 				match = true;
 				break;
 			}
 		}
 		if(!match){
-			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, getConvReceiver((String)Global.list.getSelectedValue()));
+			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, selectedContactCon);
 			TaskBar.messageHost.sendObject(rq);
 			
-			currentConvs.add(getConvReceiver((String)Global.list.getSelectedValue()));
-			createTab(getConvReceiver((String)Global.list.getSelectedValue()));
+			currentConvs.add(selectedContactCon);
+			createTab(selectedContactCon);
 		}
 	}
 	
+	/**
+	 * Update image with Battery Indicator
+	 * @param newPercentage - Percentage of battery remaining. Passed from phone
+	 */
 	public static void updateBatteryIndicator(int newPercentage){
 		if (newPercentage >= 85){
 			Global.batteryIndicator.setIcon(new ImageIcon(Conversation.class.getResource("/bigsky/gui/battery_discharging_100.png")));
@@ -630,6 +629,7 @@ public class Conversation {
 				}
 				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
+					TaskBar.updateTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
 					
 					TaskBar.smallChatWindows.get(current).receivedText(text);
@@ -735,8 +735,17 @@ public class Conversation {
 			
 		}
 		
-		Global.conversationPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
-
+		updateTabFonts();
+	}
+	/**
+	 * 
+	 */
+	private void updateTabFonts(){
+		int tabCount  = textPanes.size();
+		for(int i = 0 ; i < tabCount ; i++){
+			textPanes.get(i).setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+		}
+		
 	}
 }
 

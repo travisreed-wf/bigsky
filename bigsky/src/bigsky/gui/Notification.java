@@ -56,31 +56,32 @@ public class Notification {
 		}
 		
 		frame.setVisible(true);
+		
+		
 		 
-		timer1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if (fade < 0.0126F){
-					timer2.stop();
-					timer1.stop();
-					frame.dispose();
-					totalWindows--;
-					for(int i = windowNum - 1; i < openNotifications.size();i++){
-						//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
-						openNotifications.get(i).windowNum--;
-					}
+		 timer1.addActionListener(new ActionListener() {
+			 @Override
+		     public void actionPerformed(ActionEvent e) {
+		        	
+				 if (fade < 0.0126F){
+					 timer1.stop();
+					 frame.dispose();
+					 totalWindows--;
+					 for(int i = windowNum - 1; i < openNotifications.size();i++){
+						 //System.out.println("Array Num: " + openNotifications.get(i).windowNum);
+						 openNotifications.get(i).windowNum--;
+					 }
 					// System.out.println("Removed Window: " + (windowNum));
-					openNotifications.remove(windowNum);
-				}
-				fade = fade - 0.0125F;
-				frame.setOpacity(fade);
-			}
-		});
-		timer1.setInitialDelay(3000);
-		timer1.start();
-		this.animate();
-		openNotifications.add(this);
+					 openNotifications.remove(windowNum);
+		         }
+		         fade = fade - 0.0125F;
+		         //frame.setOpacity(fade);
+		     }
+		 });
+		 timer1.setInitialDelay(3000);
+		 timer1.start();
+		 this.animate();
+		 openNotifications.add(this);
 	}
 
 	/**
@@ -204,7 +205,7 @@ public class Notification {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
-				 frame.setOpacity(fade);
+				// frame.setOpacity(fade);
 				 timer1.stop();
 				 timer1.setInitialDelay(3000);
 				 timer1.start();

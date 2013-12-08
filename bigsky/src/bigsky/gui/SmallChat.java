@@ -104,8 +104,7 @@ public class SmallChat  {
 	 */
 	public SmallChat(Contact me, Contact you) {
 		initialize();
-		
-		this.me = TaskBar.me;
+		this.me = me;
 		this.you = you;
 		winNum = windowNum;
 		windowNum++;
@@ -115,6 +114,7 @@ public class SmallChat  {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		//final SystemTray tray = SystemTray.getSystemTray();
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		

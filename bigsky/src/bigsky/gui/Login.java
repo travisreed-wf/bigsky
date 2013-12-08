@@ -1,17 +1,9 @@
 package bigsky.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -23,13 +15,20 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
 
-import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
-import bigsky.messaging.*;
+import bigsky.messaging.MessageHost;
+import bigsky.messaging.TextMessageManager;
 
 public class Login extends JFrame {
 
@@ -100,6 +99,7 @@ public class Login extends JFrame {
 		JButton login = new JButton("Login");
 		login.setBounds(200, 258, 90, 29);
 		image.add(login);
+		contentPane.getRootPane().setDefaultButton(login);
 		
 		JButton register = new JButton("Register");
 		register.setBounds(315, 258, 90, 29);

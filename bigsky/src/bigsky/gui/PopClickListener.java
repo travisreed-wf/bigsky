@@ -5,6 +5,11 @@ import java.awt.event.MouseEvent;
 
 import bigsky.Global;
 
+/**
+ * Right Click Listener used by Popup class
+ * @author Travis Reed
+ *
+ */
 class PopClickListener extends MouseAdapter {
     public void mousePressed(MouseEvent e){
         if (e.isPopupTrigger())
