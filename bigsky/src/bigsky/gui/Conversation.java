@@ -429,23 +429,6 @@ public class Conversation {
 		Global.lblNewLabel.setBounds(14, 47, 188, 166);
 		panel.add(Global.lblNewLabel);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String path;
-				if (System.getProperty("os.name").indexOf("Mac") != -1){
-					path = "/BlueTextImages/";
-				}
-				else {
-					path = "c:/BlueTextImages/";
-				}
-				BufferedImage img=new ImgUtils().scaleImage(180,180, (path + "slowpoke.jpeg"));
-				Global.lblNewLabel.setIcon(new ImageIcon(img));
-			}
-		});
-		btnNewButton.setBounds(271, 550, 117, 29);
-		panel.add(btnNewButton);
-		
 	}
 	/**
 	 * Bring up the Edit Contact Page
