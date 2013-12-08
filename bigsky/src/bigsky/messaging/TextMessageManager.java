@@ -1,5 +1,18 @@
 package bigsky.messaging;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.text.BadLocationException;
 
 import bigsky.BlueTextRequest;
@@ -12,6 +25,12 @@ import bigsky.gui.Conversation;
 import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
 
+/**
+ * Separate thread that runs for processing most objects that are received 
+ * by the PC from the phone.  Also acts as an over-arching class for keeping
+ * the primary chat window and quick chat's synchronized.
+ * @author Andy Guibert, Jonathan Mielke
+ */
 public class TextMessageManager extends Thread
 {
 	public static boolean sendTexts = true;
@@ -154,6 +173,13 @@ public class TextMessageManager extends Thread
 		}
 	}
 	
+	/**
+	 * Looks at TaskBar.responseQueue which is an ArrayList of BlueTextResponses.
+	 * Currently supports the following response objects:
+	 * <LI>REQUEST.BATTERY_PERCENTAGE
+	 * <LI>REQUEST.CONTACT_CHAT_HISTORY
+	 * <LI>REQUEST.CONTACT_PICTURE
+	 */
 	private void processResponseQueue()
 	{
 		while(!TaskBar.responseQueue.isEmpty())
@@ -174,10 +200,36 @@ public class TextMessageManager extends Thread
 				}
 				 blueTextRqContact = resp.getOriginalRequest().getContact();
 			}
+			else if(REQUEST.CONTACT_PICTURE == req){
+				
+				Contact requestedContact = resp.getOriginalRequest().getContact();
+				Object imageResource = resp.getImageResource();
+				if(imageResource instanceof String && ((String)imageResource).equalsIgnoreCase("NO_IMG")){
+					//Global.contactTOimageIcon.put(requestedContact, Global.defaultContactImage);
+				}
+				else if(imageResource instanceof String){
+					// Deprecated code path, just use default image here
+					//Global.contactTOimageIcon.put(requestedContact, Global.defaultContactImage);
+				}
+				else if(imageResource instanceof byte[]){
+					// If a byte[] was returned by the phone, then the user
+					// actually has a contact picture
+					try{
+						ImageIcon img = new ImageIcon((byte[]) imageResource);
+						InputStream in = new ByteArrayInputStream((byte[]) imageResource);
+						BufferedImage bi = ImageIO.read(in);
+						img = new ImageIcon(bi.getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+						Global.contactTOimageIcon.put(requestedContact.getPhoneNumber(), img);
+					} catch(Exception e){
+						e.printStackTrace();
+						//Global.contactTOimageIcon.put(requestedContact, Global.defaultContactImage);
+					}
+				}		
+				Conversation.setThumbnailPicture(requestedContact);
+			}
 			else{
 				System.out.println("WARNING: an unknown response was received from the phone.");
 			}
 		}
-	}
-	
+	}	
 }

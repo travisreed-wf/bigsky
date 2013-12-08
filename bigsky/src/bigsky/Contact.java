@@ -81,7 +81,7 @@ public class Contact implements Serializable {
 	public void setSecondPhone(String number){
 		second_phone = number;
 	}
-
+	
 	/**
 	 * Get the first name
 	 * @return - Contact first name
@@ -113,5 +113,4 @@ public class Contact implements Serializable {
 	public String getSecondPhone(){
 		return second_phone;
 	}
-
 }
