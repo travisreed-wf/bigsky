@@ -14,6 +14,11 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 
+/**
+ * A New Contact Window - Creates a new contact
+ * @author Travis Reed
+ *
+ */
 public class NewContact {
 
 	private JFrame frmNewContact;
@@ -101,6 +106,7 @@ public class NewContact {
 				}	
 			}
 		});
+		frmNewContact.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frmNewContact.getContentPane().add(btnSubmit);
 		
