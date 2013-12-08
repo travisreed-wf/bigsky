@@ -68,7 +68,6 @@ public class Conversation {
 	private  JRadioButtonMenuItem messagePreviewON;
 	private  JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
-	private static JTextPane textPane = new JTextPane();
 	private JMenuItem defaultSettings;
 
 	private static BlueTextRequest rq;
@@ -195,7 +194,7 @@ public class Conversation {
 		textField_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textField_1.getText().matches("[0-9]+")){
-					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
+					updateTabFonts();
 					Login.saveInProp(Global.username,Global.conversationFontSize,textField_1.getText().toString());
 				}
 			}
@@ -205,6 +204,7 @@ public class Conversation {
 		defaultSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				defaultSettings();
+				updateTabFonts();
 				}
 		});
 		
@@ -531,6 +531,7 @@ public class Conversation {
 	 * @param contact - Contact on other end of conversation
 	 */
 	public static void createTab(Contact contact){
+		JTextPane textPane = new JTextPane();
 		DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
@@ -628,6 +629,7 @@ public class Conversation {
 				}
 				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
+					TaskBar.updateTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
 					
 					TaskBar.smallChatWindows.get(current).receivedText(text);
@@ -733,8 +735,17 @@ public class Conversation {
 			
 		}
 		
-		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
-
+		updateTabFonts();
+	}
+	/**
+	 * 
+	 */
+	private void updateTabFonts(){
+		int tabCount  = textPanes.size();
+		for(int i = 0 ; i < tabCount ; i++){
+			textPanes.get(i).setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
+		}
+		
 	}
 }
 
