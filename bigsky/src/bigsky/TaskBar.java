@@ -265,7 +265,7 @@ public class TaskBar
 		
     }
     public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
-    public static void updateTaskbarSmallChatWindows(){
+    public static void updateAddTaskbarSmallChatWindows(){
 		int i  = smallChatWindows.size() - 1;
 		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
 		menuItemArrays.add(curMenuItem);
