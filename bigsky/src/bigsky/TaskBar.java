@@ -213,33 +213,29 @@ public class TaskBar
     	Frame j = new Frame();
     	@SuppressWarnings("static-access")
     	Frame[] frames = j.getFrames();
-    	System.out.println(frames.length);
     	for(int i = 0; i < frames.length; i ++){
     		frames[i].dispose();
     	}
     	
     	tray.remove(trayIcon);
-    	messageHost.closeHost();
-    	messageHost = null;
+    	
+    	if(TaskBar.messageHost != null)
+    		TaskBar.messageHost.closeHost(false);
+    	    	
     	reLogin();
+    	
     	Properties prop = new Properties();
-
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
 		} catch (Exception e) {
 			System.out.println("loading file problem.");
-		}
-		
+		}		
 		prop.setProperty("save", Global.OFF);
-	
 		try {
 			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
-			
 		} catch (Exception e) {
 			System.out.println("storing file problem");
-
 		}
-		
     }
     /**
      * After logout this is called for the relogin screen to load 
