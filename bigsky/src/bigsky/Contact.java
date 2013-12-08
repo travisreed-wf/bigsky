@@ -70,4 +70,8 @@ public class Contact implements Serializable {
 		return second_phone;
 	}
 
+	@Override
+	public String toString(){
+		return String.format("%-15s",this.getFirstName()) + String.format("%-15s", this.getLastName()) + this.getPhoneNumber(); 
+	}
 }
