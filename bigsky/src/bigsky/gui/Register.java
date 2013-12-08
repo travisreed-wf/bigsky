@@ -1,15 +1,11 @@
 package bigsky.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -17,11 +13,9 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import java.awt.SystemColor;
 
 public class Register extends JFrame {
 

@@ -3,23 +3,16 @@ package bigsky.gui;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -49,12 +42,7 @@ import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
 import bigsky.messaging.TextMessageManager;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-
 import javax.swing.ImageIcon;
-import javax.swing.JProgressBar;
 
 public class Conversation {
 	
@@ -66,7 +54,6 @@ public class Conversation {
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 	private JTextField textField_1;
 	private JMenu settings;
-	private JMenu status;
 	private JMenu notification;
 	private JMenu fontSize;
 	private  JRadioButtonMenuItem notificationON;
@@ -457,7 +444,7 @@ public class Conversation {
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
-			for (int i = 0; i < Global.contactAList.size()-1; i++){
+			for (int i = 0; i < Global.contactAList.size(); i++){
 				Contact con = Global.contactAList.get(i);
 				String first = con.getFirstName();
 				String last = con.getLastName();
