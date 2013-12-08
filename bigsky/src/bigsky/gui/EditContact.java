@@ -16,6 +16,11 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
+/**
+ * Edit Contact Window - allows contact information to be updated
+ * @author Travis Reed
+ *
+ */
 public class EditContact {
 
 	private JFrame frame;
@@ -117,6 +122,7 @@ public class EditContact {
 				
 			}
 		});
+		frame.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frame.getContentPane().add(btnSubmit);
 		
@@ -130,10 +136,22 @@ public class EditContact {
 		frame.getContentPane().add(btnCancel);
 		
 	}
+	/**
+	 * Return the frame
+	 * @return the frame for this window
+	 */
 	public JFrame getFrmEditContact(){
 		return frame;
 	}
 	
+	/**
+	 * Validate a contact by making sure the name is valid, the phone numbers have 10 digits, and the name/phone numbers are unique
+	 * @param firstName - First name to be validated
+	 * @param lastName - Last name to be validated
+	 * @param phone - Primary phone to be validated
+	 * @param secondPhone - Secondary Phone to be validated
+	 * @return - A new contact object if validation passes
+	 */
 	private Contact validateContact(String firstName, String lastName, String phone, String secondPhone){
 		if (firstName.equals("")) {
 			if (lastName.equals("")) {
@@ -186,6 +204,12 @@ public class EditContact {
 		return new Contact(firstName, lastName, phone, secondPhone);
 	}
 	
+	/**
+	 * Adds a specified contact to list model
+	 * @param firstName - first name of new contact
+	 * @param lastName - last name of new contact
+	 * @return
+	 */
 	private boolean addContactToListModel(String firstName, String lastName){
 		String newEntry;
 		if (!firstName.equals("")){
@@ -209,6 +233,12 @@ public class EditContact {
 		return false;
 	}
 	
+	/**
+	 * If a contact is edited it may need to move in the list model.
+	 * @param j - the current position
+	 * @param newEntry - new first name
+	 * @return the new position
+	 */
 	private int getNewPositionBasedOnStringComparision(int j , String newEntry){
 		String testEntry = newEntry.toLowerCase();
 		String listEntry = (String)Global.listModel.get(j);

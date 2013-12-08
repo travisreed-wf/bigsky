@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;

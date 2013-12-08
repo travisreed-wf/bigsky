@@ -1,5 +1,10 @@
 package bigsky;
 
+/**
+ * A conversation object - used by TextMessage
+ * @author Travis Reed
+ *
+ */
 public class Convo {
 	private Contact target;
 	private String phone_number;
