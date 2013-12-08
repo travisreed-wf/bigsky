@@ -52,7 +52,7 @@ public class TaskBar
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-                
+        
         // Checks to see if the user setting is to save username and password
         if(savedInfo(Global.save, Global.ON)){
         	TaskBar.putIconInSystemTray();
@@ -67,7 +67,7 @@ public class TaskBar
 	   	   		textManager.start();
 	        }
         }
-
+        
         else{
         	Login login = new Login();
            	login.setVisible(true);
