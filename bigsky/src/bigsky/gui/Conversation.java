@@ -592,6 +592,11 @@ public class Conversation {
 		Global.batteryIndicator.setText((batteryString));
 	}
 	
+	/**
+	 * updates conversation of Conversation window with text received or sent
+	 * @param text message that will update the window
+	 * @throws BadLocationException
+	 */
 	public static void updateConv(TextMessage text) throws BadLocationException{
 		
 		int current = 0;
@@ -751,10 +756,18 @@ public class Conversation {
 		
 	}
 	
+	/**
+	 * initializes the close button on a tab at index i
+	 * @param i index of tab
+	 */
 	public static void initTabComponent(int i) {
 		Global.conversationPane.setTabComponentAt(i,new ButtonTabComponent(Global.conversationPane));
 	}  
 	
+	/**
+	 * removes tab from conversationPane
+	 * @param i index of tab being removed
+	 */
 	public static void removeTab(int i){
     	TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
     	Conversation.offset.remove(i);

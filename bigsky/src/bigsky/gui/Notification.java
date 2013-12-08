@@ -217,7 +217,10 @@ public class Notification {
 			}
 		});
 	}
-	
+	/**
+	 * starts the animation of notification pop-ups will cause all gaps to be closed once a notification
+	 * has expired.  Notifications will remain as close to bottom of screen as possible.
+	 */
 	private void animate(){
 		 timer2.addActionListener(new ActionListener() {
 			 @Override

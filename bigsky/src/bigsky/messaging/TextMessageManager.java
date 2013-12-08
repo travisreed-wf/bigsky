@@ -1,8 +1,5 @@
 package bigsky.messaging;
 
-import java.awt.TrayIcon.MessageType;
-import java.util.Arrays;
-
 import javax.swing.text.BadLocationException;
 
 import bigsky.BlueTextRequest;
@@ -22,6 +19,7 @@ public class TextMessageManager extends Thread
 	public void run()
 	{
 		boolean matchR = false;
+		@SuppressWarnings("unused")
 		String phoneHLine;
 		
 		try {
@@ -43,7 +41,7 @@ public class TextMessageManager extends Thread
                             }
                         }
                         if(smallChatNum == 0){
-                        	TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), blueTextRqContact));
+                        	TaskBar.smallChatWindows.add(new SmallChat(TaskBar.me, blueTextRqContact));
                            	TaskBar.updateTaskbarSmallChatWindows();
                         	smallChatNum = TaskBar.smallChatWindows.size() - 1;
                         }
@@ -69,7 +67,8 @@ public class TextMessageManager extends Thread
 					// Handle incoming text messages
                     if(!TaskBar.myTextArray.isEmpty()){
                     	System.out.println("hit manager sending");
-						if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON)){
+						if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON) && !SmallChat.hasFucusedSmallChat(TaskBar.myTextArray.get(0).getSender().getPhoneNumber())){
+							@SuppressWarnings("unused")
 							Notification notify = new Notification(TaskBar.myTextArray.get(0));
 						}
 							//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
