@@ -709,7 +709,7 @@ public class Conversation {
 				}
 				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
-					TaskBar.updateTaskbarSmallChatWindows();
+					TaskBar.updateAddTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
 					
 					TaskBar.smallChatWindows.get(current).receivedText(text);
@@ -850,6 +850,15 @@ public class Conversation {
     	Conversation.offset.remove(i);
     	Conversation.textPanes.remove(i);
 		Conversation.currentConvs.remove(i);
+		String name = TaskBar.smallChatWindows.get(i).getFromContact().getFirstName() + " " + TaskBar.smallChatWindows.get(i).getFromContact().getLastName();
 		TaskBar.smallChatWindows.remove(i);
+		int menuitemlength = TaskBar.menuItemArrays.size();
+		for(int j = 0; j < menuitemlength; j++){	
+			String array = TaskBar.menuItemArrays.get(j).getLabel();
+			if(array.equalsIgnoreCase(name)){
+				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
+				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
+			}
+		}
 	}
 }
