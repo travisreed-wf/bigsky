@@ -132,7 +132,7 @@ public class PopUp_FacebookContacts extends JFrame{
 	        for(i = 2; i < tokens.length-4; i +=2){
 	        	if(prop.getProperty(tokens[i]) == null){
 	        		//System.out.println("name is: " + String.format("%-30s", tokens[i]) + " id is: " + tokens[i+1]);
-	        		prop.setProperty(tokens[i], tokens[i+1]);
+	        		prop.setProperty(tokens[i].toLowerCase(), tokens[i+1]);
 	        	}
 	        }            	       
 	        
