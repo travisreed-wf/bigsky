@@ -21,8 +21,8 @@ public class Global {
 	public static JLabel lblNewLabel = new JLabel("");
 	public static JList list = new JList(listModel);
 	public static JMenuItem batteryIndicator = new JMenuItem();
-	public static Integer battery_remaining = 100;
-	public static String blankContactImage = "EMPTY";
+	public static  Integer battery_remaining = 100;
+	public final static String blankContactImage = "EMPTY";
 	public final static String ON = "ON";
 	public final static String OFF = "OFF";
 	public final static String MESSAGEPREVIEW = "MESSAGEPREVIEW";
