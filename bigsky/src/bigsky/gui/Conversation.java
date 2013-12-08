@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,13 +12,18 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -235,7 +241,16 @@ public class Conversation {
 				} catch (Exception e1) {}
 			}
 		});
+		
+		JMenuItem mntmImportFromFacebook = new JMenuItem("Import from Facebook");
+		mnFile.add(mntmImportFromFacebook);
 		mnFile.add(mnu_logout);
+		mntmImportFromFacebook.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new PopUp_FacebookContacts();
+			}
+		});
 
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -569,9 +584,30 @@ public class Conversation {
 			currentConvs.add(selectedContactCon);
 			createTab(selectedContactCon);
 			
-			// Send a REQUEST for contact's picture
-			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, selectedContactCon);
-			TaskBar.messageHost.sendObject(req1);
+			// Get facebook username from properties file
+			try{
+				Properties prop = new Properties();
+				prop.load(new FileInputStream(Global.username + ".properties"));
+				
+				String propString = selectedContactCon.getFirstName()+selectedContactCon.getLastName();
+				String facebookID = (String)prop.get(propString.replace(' ', '.'));
+				
+				if(facebookID == null)
+					throw new Exception("Unable to find facebook id in username.properties file");
+				
+				URL url = new URL("http://graph.facebook.com/" 
+						+ facebookID 
+						+ "/picture?type=square");
+				BufferedImage bi = ImageIO.read(url);
+				ImageIcon img = new ImageIcon(bi.getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+			}catch(Exception e){
+				// If there was any error at all trying to get the facebook picture, then use default image
+            	System.out.println("got exception getting facebook picture" + e.getMessage() + "\n Will be using default picture...");
+            	
+    			// Send a REQUEST for contact's picture
+    			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, selectedContactCon);
+    			TaskBar.messageHost.sendObject(req1);
+            }	
 		}
 	}
 	

@@ -30,4 +30,5 @@ public class Global {
 	public static ArrayList<TextMessage> historyGatherText = new ArrayList<TextMessage>();
 	public final static String smallChatFontSize = "SMALLCHATFONTSIZE";
 	public final static String conversationFontSize = "CONVERSATIONFONSIZE";
+	public static String ACCESS_TOKEN = null;
 }

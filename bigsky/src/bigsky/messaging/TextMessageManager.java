@@ -202,22 +202,9 @@ public class TextMessageManager extends Thread
 					System.out.println("received NO_IMG from phone, will use default picture soon.");
 				}
 				else if(imageResource instanceof String){
-					// Get facebook username from properties file
-					try{
-						Properties prop = new Properties();
-						prop.load(new FileInputStream("config.properties"));
-						
-						String facebookName = (String)prop.get(resp.getOriginalRequest().getContact().getPhoneNumber());
-						
-						URL url = new URL("http://graph.facebook.com/" 
-								+ facebookName 
-								+ "/picture?type=square");
-			            img = new ImageIcon(ImageIO.read(url));
-					}catch(Exception e){
-						// If there was any error at all trying to get the facebook picture, then use default image
-		            	System.out.println("got exception getting facebook picture" + e.getMessage() + "\n Will be using default picture...");
-		            	img = null;
-		            }					
+					// This method is deprecated because we should check for facebook image before
+					// sending a request to phone.  If we get to this case just use default image.
+					// TRAVIS TODO set a default picture
 				}
 				else if(imageResource instanceof byte[]){
 					// If a byte[] was returned by the phone, then the user
