@@ -301,11 +301,6 @@ public class TaskBar
         
 		menuItemTOactionListener.put(curListener, curMenuItem);
 		curMenuItem.addActionListener(curListener);
-		ActionEvent e1 = new ActionEvent(curMenuItem, 1, null);
-		curMenuItem.dispatchEvent(e1);
-		System.out.println(curMenuItem.getActionCommand());
-		curMenuItem.enable();
-		System.out.println(curMenuItem.getActionListeners());
 		smallChat.add(menuItemArrays.get(i));
 		System.out.println("small chat adding to " +i);
     }
