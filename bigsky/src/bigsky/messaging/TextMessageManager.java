@@ -99,6 +99,7 @@ public class TextMessageManager extends Thread
 					// Handle incoming Contacts
 					while(!TaskBar.incomingContactQueue.isEmpty()){
 						Contact ct = TaskBar.incomingContactQueue.remove();
+						ct.setContactImageName(Global.blankContactImage);
 						if (ct.getLastName() == null){
 							ct.setLastName("");
 						}
