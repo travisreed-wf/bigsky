@@ -629,7 +629,7 @@ public class Conversation {
 				}
 				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
-					TaskBar.updateTaskbarSmallChatWindows();
+					TaskBar.updateAddTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
 					
 					TaskBar.smallChatWindows.get(current).receivedText(text);
