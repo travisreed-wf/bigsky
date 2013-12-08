@@ -75,6 +75,7 @@ public class Notification {
 		     public void actionPerformed(ActionEvent e) {
 		        	
 				 if (fade < 0.0126F){
+					 timer2.stop();
 					 timer1.stop();
 					 frame.dispose();
 					 totalWindows--;

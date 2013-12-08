@@ -35,6 +35,9 @@ package bigsky.gui;
 import javax.swing.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
+
+import bigsky.TaskBar;
+
 import java.awt.*;
 import java.awt.event.*;
  
@@ -100,7 +103,8 @@ public class ButtonTabComponent extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
-                pane.remove(i);
+            	Conversation.removeTab(i);
+            	pane.remove(i);
             }
         }
  
