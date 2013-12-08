@@ -102,7 +102,7 @@ public class Conversation {
 
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
-
+		
 		JMenuItem mnu_new_contact = new JMenuItem("New Contact");
 		mnu_new_contact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -562,6 +562,7 @@ public class Conversation {
 		textPanes.add(textPane);
 		JScrollPane scroll = new JScrollPane(textPane);
 		Global.conversationPane.addTab((String)Global.list.getSelectedValue(), null, scroll, null);
+		initTabComponent(Global.conversationPane.getTabCount()-1);
 		Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 		offset.add(new Integer(0));
 	}
@@ -694,6 +695,7 @@ public class Conversation {
 			textPanes.add(textPane);
 			JScrollPane scroll = new JScrollPane(textPane);
 			Global.conversationPane.addTab(text.getSender().getFirstName() + " " + text.getSender().getLastName(), null, scroll, null);
+			initTabComponent(Global.conversationPane.getTabCount()-1);
 			Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 			offset.add(new Integer(0));
 			current = offset.size() - 1;
@@ -769,5 +771,17 @@ public class Conversation {
 			textPanes.get(i).setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 		}
 		
+	}
+	
+	public static void initTabComponent(int i) {
+		Global.conversationPane.setTabComponentAt(i,new ButtonTabComponent(Global.conversationPane));
+	}  
+	
+	public static void removeTab(int i){
+    	TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
+    	Conversation.offset.remove(i);
+    	Conversation.textPanes.remove(i);
+		Conversation.currentConvs.remove(i);
+		TaskBar.smallChatWindows.remove(i);
 	}
 }

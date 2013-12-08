@@ -382,6 +382,7 @@ public class SmallChat  {
 					Conversation.textPanes.add(textPane);
 					JScrollPane scroll = new JScrollPane(textPane);
 					Global.conversationPane.addTab(text.getReceiver().getFirstName() + " " + text.getReceiver().getLastName(), null, scroll, null);
+					Conversation.initTabComponent(Global.conversationPane.getTabCount()-1);
 					Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 					Conversation.offset.add(new Integer(0));
 					Conversation.currentConvs.add(text.getReceiver());
