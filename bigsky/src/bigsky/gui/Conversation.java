@@ -37,6 +37,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 
 import bigsky.BlueTextRequest;
+import bigsky.BlueTextRequest.REQUEST;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
@@ -567,6 +568,10 @@ public class Conversation {
 			
 			currentConvs.add(selectedContactCon);
 			createTab(selectedContactCon);
+			
+			// Send a REQUEST for contact's picture
+			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, selectedContactCon);
+			TaskBar.messageHost.sendObject(req1);
 		}
 	}
 	
