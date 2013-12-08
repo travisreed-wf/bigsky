@@ -270,29 +270,28 @@ public class TaskBar
     }
     public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
     public static void updateTaskbarSmallChatWindows(){
-    	int menuArraySize = menuItemArrays.size();
-    	int smallChatwindowsSize  = smallChatWindows.size();
-    	for(int i = menuArraySize; i < smallChatWindows.size();i ++){
-    		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
-    		menuItemArrays.add(curMenuItem);
-    		ActionListener curListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-    					String name =  menuItemTOactionListener.get(this).getName();
-    		            System.out.println(name);
-    		            String number = name.replaceAll("menuitem", "");
-    					int menuNumber = Integer.valueOf(number);
-    		            System.out.println("Menunumber is " + menuNumber);
-    					smallChatWindows.get(menuNumber).getFrmBluetext().setVisible(true);
-
-                }
-            };
-    		menuItemTOactionListener.put(curListener, curMenuItem);
-    		curMenuItem.addActionListener(curListener);
-
-    		smallChat.add(menuItemArrays.get(i));
-    		System.out.println("small chat adding to " +i);
-    	}
-    	
+    	int i  = smallChatWindows.size() - 1;
+		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
+		menuItemArrays.add(curMenuItem);
+		ActionListener curListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            		String name = e.getActionCommand();
+		            for (int j = 0; j<smallChatWindows.size(); j++){
+		            	Contact from = smallChatWindows.get(j).getFromContact();
+		            	String first = from.getFirstName();
+		            	String last = from.getLastName();
+		            	if (first.equals(name) || last.equals(name) || (first + " " + last).equals(name)){
+		            		smallChatWindows.get(j).getFrmBluetext().setVisible(true);
+		            	}
+		            }
+					
+            }
+        };
+        
+		menuItemTOactionListener.put(curListener, curMenuItem);
+		curMenuItem.addActionListener(curListener);
+		smallChat.add(menuItemArrays.get(i));
+		System.out.println("small chat adding to " +i);
     }
 }
 
