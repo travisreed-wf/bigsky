@@ -14,7 +14,6 @@ public class Contact implements Serializable {
 	private String last_name;
 	private String phone_number;
 	private String second_phone;
-	private String contactImageName;
 
 	/**
 	 * Constructor for Contact
@@ -40,7 +39,6 @@ public class Contact implements Serializable {
 		last_name = start_last_name;
 		phone_number = start_phone_number;
 		second_phone = start_second_phone;
-		contactImageName = Global.blankContactImage;
 	}
 	
 	/**
@@ -85,14 +83,6 @@ public class Contact implements Serializable {
 	}
 	
 	/**
-	 * Set contact image name
-	 * @param name - the contact image name
-	 */
-	public void setContactImageName(String name){
-		contactImageName = name;
-	}
-
-	/**
 	 * Get the first name
 	 * @return - Contact first name
 	 */
@@ -122,14 +112,6 @@ public class Contact implements Serializable {
 	 */
 	public String getSecondPhone(){
 		return second_phone;
-	}
-	
-	/**
-	 * Get the contact image name
-	 * @return - Contact image Name
-	 */
-	public String getContactImageName(){
-		return contactImageName;
 	}
 
 	@Override
