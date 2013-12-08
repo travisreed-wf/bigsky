@@ -1,7 +1,15 @@
 package bigsky;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTException;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
@@ -14,13 +22,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.swing.*;
-import bigsky.gui.*;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import bigsky.gui.Conversation;
+import bigsky.gui.Login;
+import bigsky.gui.SmallChat;
 import bigsky.messaging.MessageHost;
 import bigsky.messaging.TextMessageManager;
 
@@ -270,30 +281,35 @@ public class TaskBar
     }
     public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
     public static void updateTaskbarSmallChatWindows(){
-    	int menuArraySize = menuItemArrays.size();
-    	int smallChatwindowsSize  = smallChatWindows.size();
-    	for(int i = menuArraySize; i < smallChatWindows.size();i ++){
-    		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
-    		menuItemArrays.add(curMenuItem);
-    		ActionListener curListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-    					String name =  menuItemTOactionListener.get(this).getName();
-    		            System.out.println(name);
-    		            String number = name.replaceAll("menuitem", "");
-    					int menuNumber = Integer.valueOf(number);
-    		            System.out.println("Menunumber is " + menuNumber);
-    					smallChatWindows.get(menuNumber).getFrmBluetext().setVisible(true);
-
-                }
-            };
-    		menuItemTOactionListener.put(curListener, curMenuItem);
-    		curMenuItem.addActionListener(curListener);
-
-    		smallChat.add(menuItemArrays.get(i));
-    		System.out.println("small chat adding to " +i);
-    	}
-    	
+    	int i  = smallChatWindows.size() - 1;
+		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
+		menuItemArrays.add(curMenuItem);
+		ActionListener curListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            		String name = e.getActionCommand();
+		            for (int j = 0; j<smallChatWindows.size(); j++){
+		            	Contact from = smallChatWindows.get(j).getFromContact();
+		            	String first = from.getFirstName();
+		            	String last = from.getLastName();
+		            	if (first.equals(name) || last.equals(name) || (first + " " + last).equals(name)){
+		            		smallChatWindows.get(j).getFrmBluetext().setVisible(true);
+		            	}
+		            }
+					
+            }
+        };
+        
+		menuItemTOactionListener.put(curListener, curMenuItem);
+		curMenuItem.addActionListener(curListener);
+		ActionEvent e1 = new ActionEvent(curMenuItem, 1, null);
+		curMenuItem.dispatchEvent(e1);
+		System.out.println(curMenuItem.getActionCommand());
+		curMenuItem.enable();
+		System.out.println(curMenuItem.getActionListeners());
+		smallChat.add(menuItemArrays.get(i));
+		System.out.println("small chat adding to " +i);
     }
+    	
 }
 
 class Queue<T>{

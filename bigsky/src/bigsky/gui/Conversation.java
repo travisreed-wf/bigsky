@@ -55,7 +55,7 @@ public class Conversation {
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
 	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
-	private static Contact me = new Contact("Jonathan", "Mielke", "6185204620", null);
+	private static Contact me = TaskBar.me;
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 	private JTextField textField_1;
 	private JMenu settings;

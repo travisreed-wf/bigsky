@@ -104,7 +104,7 @@ public class SmallChat  {
 	 */
 	public SmallChat(Contact me, Contact you) {
 		initialize();
-		this.me = me;
+		this.me = TaskBar.me;
 		this.you = you;
 		winNum = windowNum;
 		windowNum++;
