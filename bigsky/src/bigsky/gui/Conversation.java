@@ -309,16 +309,19 @@ public class Conversation {
 				Contact con = Global.contactAList.get(i);
 				//Update Contact Image
 				String path;
-				if (System.getProperty("os.name").indexOf("Mac") != -1){
-					path = "/BlueTextImages/";
+				if (con.getContactImageName() == null || con.getContactImageName().equals(Global.blankContactImage)) {
+					path = Global.blankContactImage;
 				}
 				else {
-					path = "c:/BlueTextImages/";
+					if (System.getProperty("os.name").indexOf("Mac") != -1){
+						path = "/BlueTextImages/";
+					}
+					else {
+						path = "c:/BlueTextImages/";
+					}
+					path += con.getContactImageName();
 				}
-				if (con.getContactImageName() == null) {
-					con.setContactImageName(Global.blankContactImage);
-				}
-				path += con.getContactImageName();
+				
 				System.out.println(path);
 				BufferedImage img = new ImgUtils().scaleImage(180,180, (path));
 				Global.lblNewLabel.setIcon(new ImageIcon(img));

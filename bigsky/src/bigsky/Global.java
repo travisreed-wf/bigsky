@@ -22,7 +22,7 @@ public class Global {
 	public static JList list = new JList(listModel);
 	public static JMenuItem batteryIndicator = new JMenuItem();
 	public static Integer battery_remaining = 100;
-	public static String blankContactImage = "slowpoke.jpeg";
+	public static String blankContactImage = "EMPTY";
 	public final static String ON = "ON";
 	public final static String OFF = "OFF";
 	public final static String MESSAGEPREVIEW = "MESSAGEPREVIEW";
