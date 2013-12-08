@@ -14,6 +14,11 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 
+/**
+ * A New Contact Window - Creates a new contact
+ * @author Travis Reed
+ *
+ */
 public class NewContact {
 
 	private JFrame frmNewContact;
@@ -101,6 +106,7 @@ public class NewContact {
 				}	
 			}
 		});
+		frmNewContact.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frmNewContact.getContentPane().add(btnSubmit);
 		
@@ -161,6 +167,14 @@ public class NewContact {
 					JOptionPane.showMessageDialog(null, "This name already exists. Please choose a new name");
 					return null;
 				}
+			}
+			if (con.getPhoneNumber().equals(phone) || con.getSecondPhone().equals(phone)){
+				JOptionPane.showMessageDialog(null, "This phone number already exists on a different contact");
+				return null;
+			}
+			if (!secondPhone.equals("") && (con.getPhoneNumber().equals(secondPhone) || con.getSecondPhone().equals(secondPhone))){
+				JOptionPane.showMessageDialog(null, "This secondary phone number already exists on a different contact");
+				return null;
 			}
 		}
 		Contact c = new Contact(firstName, lastName, phone, secondPhone);

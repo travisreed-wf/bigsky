@@ -7,6 +7,11 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 
+/**
+ * Global Variables used throughout the program
+ * @author Travis Reed, Jonathan Mielke, Andrew Hartman
+ *
+ */
 public class Global {
 	//These are used by the contactList or contact search is one way or another
 	public static ArrayList<Contact> contactAList = new ArrayList<Contact>();

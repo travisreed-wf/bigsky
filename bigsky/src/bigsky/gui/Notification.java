@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -8,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 import javax.swing.JButton;
@@ -39,38 +40,18 @@ public class Notification {
 	private int chatWinNum;
 	private float fade = 1.0F;
 	private final Timer timer1 = new Timer(50, null);
-	private final Timer timer2 = new Timer(1, null);
+	private final Timer timer2 = new Timer(10, null);
 	private float positionY;
 	private static int totalWindows;
 	private int windowNum = 0;
 	private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	public static ArrayList<Notification> openNotifications = new ArrayList<Notification>();
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-        	UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        UIManager.put("swing.boldMetal", Boolean.FALSE);
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Notification window = new Notification(new TextMessage(TaskBar.me, TaskBar.you, "HEY STUPID"));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
 	 */
-	public Notification(TextMessage messager) {
+	public Notification(TextMessage messager){
 		this.messager = messager;
 		chatWinNum = 0;
 		
@@ -94,14 +75,13 @@ public class Notification {
 		     public void actionPerformed(ActionEvent e) {
 		        	
 				 if (fade < 0.0126F){
+					 timer2.stop();
 					 timer1.stop();
 					 frame.dispose();
 					 totalWindows--;
 					 for(int i = windowNum - 1; i < openNotifications.size();i++){
-						 //System.out.println("Array Num: " + openNotifications.get(i).windowNum);
 						 openNotifications.get(i).windowNum--;
 					 }
-					// System.out.println("Removed Window: " + (windowNum));
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
@@ -125,23 +105,67 @@ public class Notification {
 			}
 		}
 		
-		
-		
 		frame = new JDialog();
 		frame.setName("New Message");
 		frame.setResizable(false);
 		frame.setBounds(gd.getDisplayMode().getWidth() - 260, gd.getDisplayMode().getHeight(), 257, 178);
-		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("New Message");
 		
+		frame.addWindowListener(new WindowListener() {
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				totalWindows--;
+				for(int i = windowNum - 1; i < openNotifications.size();i++){
+					openNotifications.get(i).windowNum--;
+				}
+				openNotifications.remove(windowNum);
+				frame.dispose();
+				timer1.restart();
+				timer1.stop();
+				timer2.stop();
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+			}
+		});
+		
 		JButton btnQuickChat = new JButton("Quick Chat");
 		btnQuickChat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//System.out.println("quickChatbtn");
 				TaskBar.smallChatWindows.get(chatWinNum).getFrmBluetext().setVisible(true);
+				totalWindows--;
+				for(int i = windowNum - 1; i < openNotifications.size();i++){
+					openNotifications.get(i).windowNum--;
+				}
+				openNotifications.remove(windowNum);
 				frame.dispose();
+				timer1.restart();
+				timer1.stop();
+				timer2.stop();
 			}
 		});
 		btnQuickChat.setBounds(0, 114, 125, 36);
@@ -150,13 +174,17 @@ public class Notification {
 		JButton btnMainWindow = new JButton("BlueText");
 		btnMainWindow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				Notification not = new Notification(new TextMessage(TaskBar.me,TaskBar.you,""));
-//				System.out.println("window Number: " + windowNum);
-				
-//				System.out.println("mainWindowbtn");
 				TaskBar.convo.getFrmBluetext().setVisible(true);
 				Global.conversationPane.setSelectedIndex(chatWinNum);
+				totalWindows--;
+				for(int i = windowNum - 1; i < openNotifications.size();i++){
+					openNotifications.get(i).windowNum--;
+				}
+				openNotifications.remove(windowNum);
 				frame.dispose();
+				timer1.restart();
+				timer1.stop();
+				timer2.stop();
 			}
 		});
 		btnMainWindow.setBounds(125, 114, 125, 36);
@@ -186,7 +214,6 @@ public class Notification {
 
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				
 			}
 		});
 	}
@@ -197,15 +224,12 @@ public class Notification {
 		     public void actionPerformed(ActionEvent e) {
 				 
 				 if ((positionY > ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
-					 positionY = positionY - 5;
+					 positionY = positionY - 10;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
 		         }
-				 else if(windowNum != 0 && ((positionY + 5) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
-					 positionY = positionY + 5;
+				 else if(windowNum != 0 && ((positionY + 10) < ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
+					 positionY = positionY + 10;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);
-				 }
-				 else{
-					 
 				 }
 		     }
 		 });

@@ -12,7 +12,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -39,6 +42,8 @@ public class TaskBar
 	public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
 	public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
 	public static boolean doNotSend = false;
+	public static Menu smallChat;
+	public static ArrayList<MenuItem> menuItemArrays = new ArrayList<MenuItem>();
 
     public static void main(String[] args) {
         try {
@@ -47,7 +52,7 @@ public class TaskBar
             ex.printStackTrace();
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-                
+        
         // Checks to see if the user setting is to save username and password
         if(savedInfo(Global.save, Global.ON)){
         	TaskBar.putIconInSystemTray();
@@ -62,7 +67,7 @@ public class TaskBar
 	   	   		textManager.start();
 	        }
         }
-
+        
         else{
         	Login login = new Login();
            	login.setVisible(true);
@@ -87,7 +92,7 @@ public class TaskBar
 
         //  menu items
         MenuItem conversation = new MenuItem("Open BlueText");
-        MenuItem smallChat = new MenuItem("Side Chat");
+        smallChat = new Menu("Side Chat");
         MenuItem logout = new MenuItem("Log out");
         MenuItem exitItem = new MenuItem("Exit");
 
@@ -101,15 +106,6 @@ public class TaskBar
         conversation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	convo.getFrmBluetext().setVisible(true);
-            }
-        });
-
-        smallChat.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	System.out.println("small chat windows: " +  smallChatWindows.size());
-            	for(int i = 0; i < smallChatWindows.size(); i++){
-            		smallChatWindows.get(i).getFrmBluetext().setVisible(true);
-            	}
             }
         });
         
@@ -268,6 +264,31 @@ public class TaskBar
     	}
 		
     }
+    public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
+    public static void updateTaskbarSmallChatWindows(){
+		int i  = smallChatWindows.size() - 1;
+		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
+		menuItemArrays.add(curMenuItem);
+		ActionListener curListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					String name = e.getActionCommand();
+					for (int j = 0; j<smallChatWindows.size(); j++){
+						Contact from = smallChatWindows.get(j).getFromContact();
+						String first = from.getFirstName();
+						String last = from.getLastName();
+						if (first.equals(name) || last.equals(name) || (first + " " + last).equals(name)){
+							smallChatWindows.get(j).getFrmBluetext().setVisible(true);
+						}
+					}
+					
+			}
+		};
+		
+		menuItemTOactionListener.put(curListener, curMenuItem);
+		curMenuItem.addActionListener(curListener);
+		smallChat.add(menuItemArrays.get(i));
+		System.out.println("small chat adding to " +i);
+	}
 }
 
 class Queue<T>{

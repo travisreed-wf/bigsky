@@ -55,7 +55,8 @@ public class TextMessageManager extends Thread
                         }
                         if(smallChatNum == 0){
                         	TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), blueTextRqContact));
-                           	smallChatNum = TaskBar.smallChatWindows.size() - 1;
+                           	TaskBar.updateTaskbarSmallChatWindows();
+                        	smallChatNum = TaskBar.smallChatWindows.size() - 1;
                         }
                             
                         sendTexts = false;
@@ -99,7 +100,7 @@ public class TextMessageManager extends Thread
                         	}
                         }
                         if(!matchR){
-                        	Global.historyGatherText.add(TaskBar.myTextArray.get(0));
+//                        	Global.historyGatherText.add(TaskBar.myTextArray.get(0));
                         	BlueTextRequest rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, TaskBar.myTextArray.get(0).getSender());
                         	TaskBar.myTextArray.remove(0);
                         	TaskBar.messageHost.sendObject(rq);
@@ -186,9 +187,9 @@ public class TextMessageManager extends Thread
 			}
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
 				Global.phoneTextHistory = resp.getChatHistory();
-				if(!Global.historyGatherText.isEmpty()){
-					Global.phoneTextHistory.add(Global.historyGatherText.get(0));
-					Global.historyGatherText.remove(0);
+				if(!TaskBar.myTextArray.isEmpty()){
+					Global.phoneTextHistory.add(TaskBar.myTextArray.get(0));
+					TaskBar.myTextArray.remove(0);
 				}
 				 blueTextRqContact = resp.getOriginalRequest().getContact();
 			}

@@ -104,8 +104,7 @@ public class SmallChat  {
 	 */
 	public SmallChat(Contact me, Contact you) {
 		initialize();
-		
-		this.me = me;
+		this.me = TaskBar.me;
 		this.you = you;
 		winNum = windowNum;
 		windowNum++;
@@ -115,6 +114,7 @@ public class SmallChat  {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		//final SystemTray tray = SystemTray.getSystemTray();
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		
@@ -382,6 +382,7 @@ public class SmallChat  {
 					Conversation.textPanes.add(textPane);
 					JScrollPane scroll = new JScrollPane(textPane);
 					Global.conversationPane.addTab(text.getReceiver().getFirstName() + " " + text.getReceiver().getLastName(), null, scroll, null);
+					Conversation.initTabComponent(Global.conversationPane.getTabCount()-1);
 					Global.conversationPane.setSelectedIndex(Global.conversationPane.getTabCount()-1);
 					Conversation.offset.add(new Integer(0));
 					Conversation.currentConvs.add(text.getReceiver());
