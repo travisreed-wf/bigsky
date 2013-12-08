@@ -1,18 +1,18 @@
 package bigsky.gui;
 
+import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 
 import bigsky.Global;
@@ -20,7 +20,16 @@ import bigsky.TaskBar;
 import bigsky.TextMessage;
 
 import java.awt.Font;
+
+
+
+
+
+
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
+
 
 public class Notification {
 
