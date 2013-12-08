@@ -6,14 +6,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
+
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
+
 import java.awt.Font;
 import java.util.ArrayList;
 
@@ -97,6 +102,47 @@ public class Notification {
 		frame.setUndecorated(true);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("New Message");
+		
+		frame.addWindowListener(new WindowListener() {
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				totalWindows--;
+				for(int i = windowNum - 1; i < openNotifications.size();i++){
+					//System.out.println("Array Num: " + openNotifications.get(i).windowNum);
+					openNotifications.get(i).windowNum--;
+				}
+				// System.out.println("Removed Window: " + (windowNum));
+				openNotifications.remove(windowNum);
+				frame.dispose();
+				timer1.restart();
+				timer1.stop();
+				timer2.stop();
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+			}
+		});
 		
 		JButton btnQuickChat = new JButton("Quick Chat");
 		btnQuickChat.addActionListener(new ActionListener() {
