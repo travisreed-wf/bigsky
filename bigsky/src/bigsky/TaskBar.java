@@ -270,29 +270,29 @@ public class TaskBar
     }
     public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
     public static void updateTaskbarSmallChatWindows(){
-    	int i  = smallChatWindows.size() - 1;
+		int i  = smallChatWindows.size() - 1;
 		MenuItem curMenuItem = new MenuItem(smallChatWindows.get(i).getFromContact().getFirstName() +  " " + smallChatWindows.get(i).getFromContact().getLastName());
 		menuItemArrays.add(curMenuItem);
 		ActionListener curListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            		String name = e.getActionCommand();
-		            for (int j = 0; j<smallChatWindows.size(); j++){
-		            	Contact from = smallChatWindows.get(j).getFromContact();
-		            	String first = from.getFirstName();
-		            	String last = from.getLastName();
-		            	if (first.equals(name) || last.equals(name) || (first + " " + last).equals(name)){
-		            		smallChatWindows.get(j).getFrmBluetext().setVisible(true);
-		            	}
-		            }
+			public void actionPerformed(ActionEvent e) {
+					String name = e.getActionCommand();
+					for (int j = 0; j<smallChatWindows.size(); j++){
+						Contact from = smallChatWindows.get(j).getFromContact();
+						String first = from.getFirstName();
+						String last = from.getLastName();
+						if (first.equals(name) || last.equals(name) || (first + " " + last).equals(name)){
+							smallChatWindows.get(j).getFrmBluetext().setVisible(true);
+						}
+					}
 					
-            }
-        };
-        
+			}
+		};
+		
 		menuItemTOactionListener.put(curListener, curMenuItem);
 		curMenuItem.addActionListener(curListener);
 		smallChat.add(menuItemArrays.get(i));
 		System.out.println("small chat adding to " +i);
-    }
+	}
 }
 
 class Queue<T>{
