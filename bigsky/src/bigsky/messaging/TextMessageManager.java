@@ -44,7 +44,8 @@ public class TextMessageManager extends Thread
                         }
                         if(smallChatNum == 0){
                         	TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), blueTextRqContact));
-                           	smallChatNum = TaskBar.smallChatWindows.size() - 1;
+                           	TaskBar.updateTaskbarSmallChatWindows();
+                        	smallChatNum = TaskBar.smallChatWindows.size() - 1;
                         }
                             
                         sendTexts = false;
