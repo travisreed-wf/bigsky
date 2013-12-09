@@ -37,7 +37,7 @@ class ClientConn implements Runnable {
 	}
 
 	public void run() {
-		Contact user = new Contact("Jonathan", "Mielke", "6185204620", "");
+		Contact user = TaskBar.me;
 		ObjectInputStream br = null;
 		try {
 			br = new ObjectInputStream(client.getInputStream());
