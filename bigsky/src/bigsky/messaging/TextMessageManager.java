@@ -193,8 +193,8 @@ public class TextMessageManager extends Thread
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
 				blueTextRqContact = resp.getOriginalRequest().getContact();
 				Global.phoneTextHistory = resp.getChatHistory();
-				if(!Global.phoneTextHistory.isEmpty() && Global.phoneTextHistory.get(0).getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
-					Global.phoneTextHistory.add(Global.phoneTextHistory.size()-1, new TextMessage(blueTextRqContact,TaskBar.me,"hey"));
+				if(!Global.phoneTextHistory.isEmpty() && Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
+					Global.phoneTextHistory.add(new TextMessage(blueTextRqContact,TaskBar.me,"hey"));
 				}
 				if(Global.phoneTextHistory.isEmpty()){
 					Global.phoneTextHistory.add(new TextMessage(TaskBar.me, blueTextRqContact, "BlueText - Start Conversation: (this message is not sent)"));

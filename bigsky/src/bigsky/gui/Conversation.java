@@ -860,7 +860,7 @@ public class Conversation {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				int j = Global.conversationPane.getSelectedIndex();
-				if(j > currentConvs.size())
+				if(j >= currentConvs.size())
 					j = currentConvs.size()-1;
 				if(j < 0)
 					setThumbnailPicture(null);
@@ -888,6 +888,7 @@ public class Conversation {
 				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
 				TaskBar.menuItemArrays.remove(j);
 				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
+				break;
 			}
 		}
 	}
