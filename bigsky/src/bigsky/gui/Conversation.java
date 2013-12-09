@@ -826,7 +826,7 @@ public class Conversation {
 		updateTabFonts();
 	}
 	/**
-	 * 
+	 * This updates the textpanes fonts immediately
 	 */
 	private void updateTabFonts(){
 		int tabCount  = textPanes.size();

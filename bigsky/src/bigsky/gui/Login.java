@@ -173,7 +173,11 @@ public class Login extends JFrame {
 		        });	
 
 	}
-	
+	/**
+	 * gets the password typed in password field
+	 * @param Jpass
+	 * @return returns password field as a string
+	 */
 	private String getPassword(JPasswordField pass){
 		String password = "";
 		char [] word = pass.getPassword();
@@ -182,7 +186,10 @@ public class Login extends JFrame {
 		}
 		return password;	
 	}
-	
+	/**
+	 * retrieves string from textfield of login screen
+	 * @return string from textfield
+	 */
 	private String getUsername(){
 		String user = textField.getText();
 		//takes out all not  digits
@@ -277,7 +284,7 @@ public class Login extends JFrame {
 		}
 		
 	}
-	/*
+	/**
 	 * Create Contact for phone
 	 * @return me contact
 	 */

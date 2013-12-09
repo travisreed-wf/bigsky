@@ -257,8 +257,7 @@ public class SmallChat  {
 				defaultSettings();
 				}
 		});
-		
-
+	
 	}
 	
 	/**
