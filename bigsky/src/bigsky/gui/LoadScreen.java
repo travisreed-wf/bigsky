@@ -48,8 +48,10 @@ public class LoadScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public LoadScreen() {
-		  setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
-		  setResizable(false);
+        if (!System.getProperty("os.name").contains("Mac")){
+        	  setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
+          }
+          setResizable(false);
 		  setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		  JLabel image = new JLabel();
           contentPane = (JPanel) getContentPane();

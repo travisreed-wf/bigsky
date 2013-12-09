@@ -58,7 +58,9 @@ public class Register extends JFrame {
 	 */
 	public Register() {
 		JFrame frame = new JFrame();
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
+		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(521, 434);
 		getContentPane().setLayout(null);
@@ -282,7 +284,9 @@ public class Register extends JFrame {
 		
 		return false;
 	}
-	
+	/**
+	 * Puts a system file in the system with the last user
+	 */
 	private void putInSystem(){
 		try{
 		Class.forName("com.mysql.jdbc.Driver");
@@ -301,7 +305,10 @@ public class Register extends JFrame {
 		}
 	}
 	
-	
+	/**
+	 * Checks to see already in system
+	 * @return true if in system
+	 */
 	private boolean isInSystem(){
 		
 		try{
