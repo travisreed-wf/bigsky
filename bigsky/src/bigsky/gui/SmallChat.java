@@ -81,9 +81,9 @@ public class SmallChat  {
 	 * @param you Contact the user communicates with
 	 */
 	public SmallChat(Contact me, Contact you) {
-		initialize();
 		this.me = TaskBar.me;
 		this.you = you;
+		initialize();
 		winNum = windowNum;
 		windowNum++;
 	}
@@ -103,7 +103,7 @@ public class SmallChat  {
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
-		frmBluetext.setTitle("BlueText");
+		frmBluetext.setTitle(you.getFirstName() + " " + you.getLastName());
 		if((gd.getDisplayMode().getHeight() - 385 * (winNum + 1)) > gd.getDisplayMode().getHeight()){
 			winLocationY = gd.getDisplayMode().getHeight();
 		}
