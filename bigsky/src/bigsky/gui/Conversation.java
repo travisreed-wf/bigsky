@@ -544,7 +544,7 @@ public class Conversation {
 			tempList[i] = (String)Global.listModel.get(i);
 		}
 		Global.listModel.removeAllElements();
-		Arrays.sort(tempList);
+		Arrays.sort(tempList, 0, tempList.length, String.CASE_INSENSITIVE_ORDER);
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
