@@ -21,6 +21,7 @@ import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
+import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
@@ -38,6 +39,7 @@ public class TextMessageManager extends Thread
 	public void run()
 	{
 		boolean matchR = false;
+		@SuppressWarnings("unused")
 		String phoneHLine;
 		
 		try {
@@ -59,7 +61,7 @@ public class TextMessageManager extends Thread
                             }
                         }
                         if(smallChatNum == 0){
-                        	TaskBar.smallChatWindows.add(new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), blueTextRqContact));
+                        	TaskBar.smallChatWindows.add(new SmallChat(TaskBar.me, blueTextRqContact));
                            	TaskBar.updateAddTaskbarSmallChatWindows();
                         	smallChatNum = TaskBar.smallChatWindows.size() - 1;
                         }
@@ -85,7 +87,8 @@ public class TextMessageManager extends Thread
 					// Handle incoming text messages
                     if(!TaskBar.myTextArray.isEmpty()){
                     	System.out.println("hit manager sending");
-						if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON)){
+						if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON) && !SmallChat.hasFucusedSmallChat(TaskBar.myTextArray.get(0).getSender().getPhoneNumber())){
+							@SuppressWarnings("unused")
 							Notification notify = new Notification(TaskBar.myTextArray.get(0));
 						}
 							//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
@@ -191,12 +194,16 @@ public class TextMessageManager extends Thread
 				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
 			}
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
+				blueTextRqContact = resp.getOriginalRequest().getContact();
 				Global.phoneTextHistory = resp.getChatHistory();
+				if(Global.phoneTextHistory.isEmpty()){
+					Global.phoneTextHistory.add(new TextMessage(TaskBar.me, blueTextRqContact, "BlueText - Start Conversation: (this message is not sent)"));
+				}
 				if(!TaskBar.myTextArray.isEmpty()){
 					Global.phoneTextHistory.add(TaskBar.myTextArray.get(0));
 					TaskBar.myTextArray.remove(0);
 				}
-				 blueTextRqContact = resp.getOriginalRequest().getContact();
+				 
 			}
 			else if(REQUEST.CONTACT_PICTURE == req){
 				

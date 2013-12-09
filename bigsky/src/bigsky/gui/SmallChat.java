@@ -73,36 +73,17 @@ public class SmallChat  {
 	private ButtonGroup notiGroup;
 	private JMenuBar menuBar;
 	private ButtonGroup previewMessageGroup;
-    private JMenuItem defaultSettings;	
+    private JMenuItem defaultSettings;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SmallChat window = new SmallChat(new Contact("Jonathan", "Mielke", "6185204620", ""), new Contact("Friendly", "Friend", "55555555555", ""));
-					window.frmBluetext.setVisible(true);
-					
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			}
-		});
-	}
-
-	/**
-	 * initiallizes a quick chat window
-	 * @param me
-	 * @param you
+	 * Initializes a quick chat window
+	 * @param me user Contact
+	 * @param you Contact the user communicates with
 	 */
 	public SmallChat(Contact me, Contact you) {
-		initialize();
 		this.me = TaskBar.me;
 		this.you = you;
+		initialize();
 		winNum = windowNum;
 		windowNum++;
 	}
@@ -124,7 +105,7 @@ public class SmallChat  {
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
-		frmBluetext.setTitle("BlueText");
+		frmBluetext.setTitle(you.getFirstName() + " " + you.getLastName());
 		if((gd.getDisplayMode().getHeight() - 385 * (winNum + 1)) > gd.getDisplayMode().getHeight()){
 			winLocationY = gd.getDisplayMode().getHeight();
 		}
@@ -336,7 +317,11 @@ public class SmallChat  {
 
 	}
 	
-	
+	/**
+	 * updates conversation based on text message received or sent.  Logic inside determines how to update
+	 * @param text text message that will be updated
+	 * @throws BadLocationException
+	 */
 	protected void updateConv(TextMessage text) throws BadLocationException{
 		boolean check = false;
 		int temp = 0;
@@ -408,37 +393,77 @@ public class SmallChat  {
 		scrollPane.scrollRectToVisible(new Rectangle(0,textPane.getBounds(null).height,1,1));
 		
 	}
-
+	
+	/**
+	 * returns the user as Contact object
+	 * @return user contact
+	 */
 	public Contact getLocalContact()
 	{
 		return me;
 	}
 	
+	/**
+	 * returns the Contact the user is communicating with
+	 * @return Contact user is chating with
+	 */
 	public Contact getFromContact(){
 		return you;
 	}
 	
+	/**
+	 * updates the SmallChat window from the received text
+	 * @param text the text message received
+	 * @throws BadLocationException
+	 */
 	public void receivedText(TextMessage text) throws BadLocationException{
 		updateConv(text);
 	}
-
+	
+	/**
+	 * returns number of texts
+	 * @return number of texts
+	 */
 	public int getMyTextCount(){
 		return textCount;
 	}
 	
+	/**
+	 * returns text history
+	 * @return text history
+	 */
 	public ArrayList<TextMessage> getMyHistory(){
 		return myTextHistory;
 	}
 	
+	/**
+	 * returns this windows index
+	 * @return window index
+	 */
 	public int getChatNumber(){
 		return winNum;
 	}
 	
+	/**
+	 * returns the frame component
+	 * @return frame component
+	 */
 	public JFrame getFrmBluetext() {
 		return frmBluetext;
 	}
 	
-	
-	
+	/**
+	 * Checks if a small chat window with a specific phone number has focus
+	 * @param phone number to be checked
+	 * @return true if SmallChat window with phone number has focus, false else
+	 */
+	public static boolean hasFucusedSmallChat(String phone){
+		for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
+			if(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber().equalsIgnoreCase(phone) && TaskBar.smallChatWindows.get(i).getFrmBluetext().isFocused()){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }
