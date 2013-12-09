@@ -92,7 +92,7 @@ public class TaskBar
 
         //  menu items
         MenuItem conversation = new MenuItem("Open BlueText");
-        smallChat = new Menu("Side Chat");
+        smallChat = new Menu("Quick Chat");
         MenuItem logout = new MenuItem("Log out");
         MenuItem exitItem = new MenuItem("Exit");
 
