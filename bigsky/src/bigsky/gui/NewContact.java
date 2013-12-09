@@ -50,7 +50,6 @@ public class NewContact {
 			frmNewContact.setIconImage(Toolkit.getDefaultToolkit().getImage(NewContact.class.getResource("/bigsky/BlueText.gif")));
 		}
 		frmNewContact.setSize(355, 301);
-		frmNewContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewContact.getContentPane().setLayout(null);
 		frmNewContact.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmNewContact.setLocationRelativeTo(null);
