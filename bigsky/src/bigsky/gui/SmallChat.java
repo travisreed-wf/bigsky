@@ -62,14 +62,14 @@ public class SmallChat  {
 	private Contact you;
 	private TextMessage sent;
 	private JTextField textField_1;
-	private JMenu settings;
+	protected JMenu settings;
 	private JMenu messagePreview;
 	private JMenu notification;
 	private JMenu fontSize;
-	private JRadioButtonMenuItem notificationON;
-	private JRadioButtonMenuItem notificationOFF;
-	private JRadioButtonMenuItem messagePreviewON;
-	private JRadioButtonMenuItem messagePreviewOFF;
+	protected static JRadioButtonMenuItem notificationON;
+	protected static JRadioButtonMenuItem notificationOFF;
+	protected static JRadioButtonMenuItem messagePreviewON;
+	protected static JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup notiGroup;
 	private JMenuBar menuBar;
 	private ButtonGroup previewMessageGroup;
@@ -210,6 +210,7 @@ public class SmallChat  {
 				if(notificationON.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
 					notificationOFF.setSelected(false);
+					Conversation.selectNotificationOn();
 				}				
 			}
 		});
@@ -219,6 +220,7 @@ public class SmallChat  {
 				if(notificationOFF.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
 					notificationON.setSelected(false);
+					Conversation.selectNotificationOff();
 				}						
 			}
 		});
@@ -228,6 +230,7 @@ public class SmallChat  {
 				if(messagePreviewON.isSelected()){
 					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
 					messagePreviewOFF.setSelected(false);
+					Conversation.selectPreviewOn();
 				}				
 			}
 		});
@@ -237,6 +240,7 @@ public class SmallChat  {
 						if(messagePreviewOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
 							messagePreviewON.setSelected(false);
+							Conversation.selectPreviewOff();
 						}						
 					}
 				});
@@ -464,5 +468,28 @@ public class SmallChat  {
 		}
 		return false;
 	}
+	/**
+	 * All of these below update help update
+	 * smallchats settings when they are 
+	 * changed in the conversation window
+	 * 
+	 */
+	public static void selectPreviewOn(){
+		messagePreviewON.setSelected(true);
+		messagePreviewOFF.setSelected(false);
+	}
+	public static void selectPreviewOff(){
+		messagePreviewOFF.setSelected(true);
+		messagePreviewON.setSelected(false);
+	}
+	public static void selectNotificationOn(){
+		notificationON.setSelected(true);
+		notificationOFF.setSelected(false);
+	}
+	public static void selectNotificationOff(){
+		notificationOFF.setSelected(true);
+		notificationON.setSelected(false);
+	}
+	
 	
 }

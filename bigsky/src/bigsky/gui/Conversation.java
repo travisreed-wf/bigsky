@@ -75,12 +75,12 @@ public class Conversation {
 	private JMenu settings;
 	private JMenu notification;
 	private JMenu fontSize;
-	private  JRadioButtonMenuItem notificationON;
-	private  JRadioButtonMenuItem notificationOFF;
+	private static JRadioButtonMenuItem notificationON;
+	private static JRadioButtonMenuItem notificationOFF;
 	private ButtonGroup notiGroup;
 	private JMenu messagePreview;
-	private  JRadioButtonMenuItem messagePreviewON;
-	private  JRadioButtonMenuItem messagePreviewOFF;
+	private static JRadioButtonMenuItem messagePreviewON;
+	private static JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
 	private JMenuItem defaultSettings;
 
@@ -175,6 +175,7 @@ public class Conversation {
 				if(notificationON.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
 					notificationOFF.setSelected(false);
+					SmallChat.selectNotificationOn();
 				}				
 			}
 		});
@@ -184,6 +185,7 @@ public class Conversation {
 						if(notificationOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
 							notificationON.setSelected(false);
+							SmallChat.selectNotificationOff();
 						}						
 					}
 				});
@@ -193,6 +195,8 @@ public class Conversation {
 				if(messagePreviewON.isSelected()){
 					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
 					messagePreviewOFF.setSelected(false);
+					SmallChat.selectPreviewOn();
+
 				}				
 			}
 		});
@@ -202,6 +206,8 @@ public class Conversation {
 						if(messagePreviewOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
 							messagePreviewON.setSelected(false);
+							SmallChat.selectPreviewOff();
+
 						}						
 					}
 				});
@@ -874,5 +880,28 @@ public class Conversation {
 				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
 			}
 		}
+	}
+	
+	/**
+	 * All of these below update help update
+	 * smallchats settings when they are 
+	 * changed in the SmallChat window
+	 * 
+	 */
+	public static void selectPreviewOn(){
+		messagePreviewON.setSelected(true);
+		messagePreviewOFF.setSelected(false);
+	}
+	public static void selectPreviewOff(){
+		messagePreviewOFF.setSelected(true);
+		messagePreviewON.setSelected(false);
+	}
+	public static void selectNotificationOn(){
+		notificationON.setSelected(true);
+		notificationOFF.setSelected(false);
+	}
+	public static void selectNotificationOff(){
+		notificationOFF.setSelected(true);
+		notificationON.setSelected(false);
 	}
 }
