@@ -194,8 +194,12 @@ public class Notification {
 		messagerContent.setEditable(false);
 		messagerContent.setBounds(0, 34, 250, 82);
 		frame.getContentPane().add(messagerContent);
-		messagerContent.getDocument().insertString(0,"- " + messager.getContent(), null);
-		
+		if(TaskBar.savedInfo(Global.MESSAGEPREVIEW, Global.ON)){
+			messagerContent.getDocument().insertString(0,"- " + messager.getContent(), null);
+		}
+		else{
+			messagerContent.getDocument().insertString(0,"- NEW MESSAGE", null);
+		}
 		JTextPane messagerName = new JTextPane();
 		messagerName.setFont(new Font("Tahoma", Font.BOLD, 16));
 		messagerName.setEditable(false);

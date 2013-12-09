@@ -14,6 +14,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.io.FileOutputStream;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
@@ -329,11 +330,16 @@ public class SmallChat  {
 		boolean check = false;
 		int temp = 0;
 		
+		String person1 = text.getSender().getFirstName() + ":";
+		
+		for(int i = person1.length(); i < 17;i++){
+			person1 = person1 + " ";
+		}
 		
 		//checks if user is sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
-			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPane.getDocument().insertString(offset, person1 + text.getContent() + "\n\n", null);
+			offset += (person1 + text.getContent() + "\n\n").length();
 			textCount++;
 			myTextHistory.add(text);
 			you.setSecondPhone("");
@@ -349,8 +355,8 @@ public class SmallChat  {
 						TaskBar.doNotSend = true;
 						Conversation.updateConv(text);
 						temp = Conversation.offset.get(i);
-						Conversation.textPanes.get(i).getDocument().insertString(Conversation.offset.get(i), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-						temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+						Conversation.textPanes.get(i).getDocument().insertString(Conversation.offset.get(i), person1 + text.getContent() + "\n\n", null);
+						temp += (person1 + text.getContent() + "\n\n").length();
 						Conversation.offset.set(i, temp);
 						TaskBar.outGoingInSmall.remove(0);
 						TaskBar.doNotSend = false;
@@ -388,8 +394,8 @@ public class SmallChat  {
 		
 			
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equals(you.getPhoneNumber())){
-			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPane.getDocument().insertString(offset, person1 + text.getContent() + "\n\n", null);
+			offset += (person1 + text.getContent() + "\n\n").length();
 		}
 		//attempt to scroll on creation
 		textPane.setAutoscrolls(true);

@@ -354,7 +354,7 @@ public class Conversation {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+				TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
             	try {
             		System.out.println(text.getReceiver().getFirstName());
 					updateConv(text);
@@ -382,7 +382,7 @@ public class Conversation {
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
-	            	TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+	            	TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
 	            	try {
 	            		System.out.println(text.getReceiver().getFirstName());
 						updateConv(text);
@@ -550,7 +550,7 @@ public class Conversation {
 			tempList[i] = (String)Global.listModel.get(i);
 		}
 		Global.listModel.removeAllElements();
-		Arrays.sort(tempList);
+		Arrays.sort(tempList, 0, tempList.length, String.CASE_INSENSITIVE_ORDER);
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
@@ -691,15 +691,20 @@ public class Conversation {
 		boolean check1 = false;
 		boolean check2 = false;
 		boolean check3 = false;
+		String person1 = text.getSender().getFirstName() + ":";
+		
+		for(int i = person1.length(); i < 17;i++){
+			person1 = person1 + " ";
+		}
 		if(Global.conversationPane.getTabCount()!=0){
 			current = Global.conversationPane.getSelectedIndex();
 			temp = offset.get(current);
 		}
 		//Checks if the user is the sender
-		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
 			if(!TaskBar.doNotSend){
-				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+				textPanes.get(current).getDocument().insertString(offset.get(current), person1 + text.getContent() + "\n\n", null);
+				temp += (person1 + text.getContent() + "\n\n").length();
 				offset.set(current, temp);
 			}
 			
@@ -711,7 +716,6 @@ public class Conversation {
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
 					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
 						TaskBar.doNotSend = true;
-						//System.out.println(text.getReceiver().getFirstName() + text.getSender().getFirstName());
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
@@ -750,8 +754,8 @@ public class Conversation {
 		}	
 		if(!text.getContent().trim().isEmpty() && check2){
 			temp = offset.get(current);
-			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPanes.get(current).getDocument().insertString(temp, person1 + text.getContent() + "\n\n", null);
+			temp += (person1 + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		}
 		else if(!text.getContent().trim().isEmpty() && you == null && !check1){
@@ -769,8 +773,8 @@ public class Conversation {
 			current = offset.size() - 1;
 			temp = offset.get(current);
 			currentConvs.add(text.getSender());
-			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPanes.get(current).getDocument().insertString(temp, person1 + text.getContent() + "\n\n", null);
+			temp += (person1 + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		};
 	}
@@ -877,6 +881,7 @@ public class Conversation {
 			String array = TaskBar.menuItemArrays.get(j).getLabel();
 			if(array.equalsIgnoreCase(name)){
 				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
+				TaskBar.menuItemArrays.remove(j);
 				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
 			}
 		}
