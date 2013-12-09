@@ -2,12 +2,9 @@ package bigsky.gui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,13 +12,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +25,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -279,6 +271,7 @@ public class Conversation {
 		mntmImportContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sortListModel();
+				JOptionPane.showMessageDialog(null, "Contacts updated. Happy conversations!");
 			}
 		});
 		mnView.add(mntmImportContacts);
@@ -287,6 +280,12 @@ public class Conversation {
 		menuBar.add(mnHelp);
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
+		mntmAboutBluetext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AboutDialog about = new AboutDialog();
+				about.getFrame().setVisible(true);
+			}
+		});
 		mnHelp.add(mntmAboutBluetext);
 		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
