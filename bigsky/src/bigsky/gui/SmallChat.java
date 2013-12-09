@@ -252,6 +252,7 @@ public class SmallChat  {
 				if (textField_1.getText().matches("[0-9]+")){
 					textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(textField_1.getText())));
 					Login.saveInProp(Global.username,Global.smallChatFontSize,textField_1.getText().toString());
+					updateSmallChatFontSize();
 				}
 			}
 		});
@@ -260,6 +261,8 @@ public class SmallChat  {
 		defaultSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				defaultSettings();
+				updateSmallChatFontSize();
+
 				}
 		});
 	
@@ -496,6 +499,13 @@ public class SmallChat  {
 		notificationOFF.setSelected(true);
 		notificationON.setSelected(false);
 	}
-	
+	public JTextPane getTextPane(){
+		return textPane;
+	}
+	private void updateSmallChatFontSize(){
+		for(int i = 0; i < TaskBar.smallChatWindows.size(); i++){
+			TaskBar.smallChatWindows.get(i).getTextPane().setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.smallChatFontSize))));
+		}
+	}
 	
 }
