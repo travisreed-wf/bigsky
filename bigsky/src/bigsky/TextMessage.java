@@ -42,4 +42,12 @@ public class TextMessage implements Serializable{
 		return content;
 	}
 
+	@Override
+	public String toString(){
+		return
+				"-------------------------------" + 
+				"  Sender:   " + this.getSender() + 
+				"  Receiver: " + this.getReceiver() + 
+				"  Content:  " + this.getContent();
+	}
 }

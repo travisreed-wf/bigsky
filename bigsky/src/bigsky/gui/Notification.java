@@ -85,7 +85,7 @@ public class Notification {
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
-		         frame.setOpacity(fade);
+		//         frame.setOpacity(fade);
 		     }
 		 });
 		 timer1.setInitialDelay(3000);
@@ -206,7 +206,7 @@ public class Notification {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
-				 frame.setOpacity(fade);
+			//	 frame.setOpacity(fade);
 				 timer1.stop();
 				 timer1.setInitialDelay(3000);
 				 timer1.start();
@@ -217,7 +217,10 @@ public class Notification {
 			}
 		});
 	}
-	
+	/**
+	 * starts the animation of notification pop-ups will cause all gaps to be closed once a notification
+	 * has expired.  Notifications will remain as close to bottom of screen as possible.
+	 */
 	private void animate(){
 		 timer2.addActionListener(new ActionListener() {
 			 @Override

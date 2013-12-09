@@ -102,8 +102,10 @@ public class Conversation {
 
 	private void initialize() {
 		frmBluetext = new JFrame();
-		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
-		frmBluetext.setTitle("BlueText");
+        if (!System.getProperty("os.name").contains("Mac")){
+        	frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
+        }
+        frmBluetext.setTitle("BlueText");
 		frmBluetext.setSize(new Dimension(800,650));
 		frmBluetext.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frmBluetext.setLocationRelativeTo(null);
@@ -670,6 +672,11 @@ public class Conversation {
 		Global.batteryIndicator.setText((batteryString));
 	}
 	
+	/**
+	 * updates conversation of Conversation window with text received or sent
+	 * @param text message that will update the window
+	 * @throws BadLocationException
+	 */
 	public static void updateConv(TextMessage text) throws BadLocationException{
 		
 		int current = 0;
@@ -709,7 +716,7 @@ public class Conversation {
 				}
 				if(check3 == false && TextMessageManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
-					TaskBar.updateTaskbarSmallChatWindows();
+					TaskBar.updateAddTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
 					
 					TaskBar.smallChatWindows.get(current).receivedText(text);
@@ -819,7 +826,7 @@ public class Conversation {
 		updateTabFonts();
 	}
 	/**
-	 * 
+	 * This updates the textpanes fonts immediately
 	 */
 	private void updateTabFonts(){
 		int tabCount  = textPanes.size();
@@ -829,6 +836,10 @@ public class Conversation {
 		
 	}
 	
+	/**
+	 * initializes the close button on a tab at index i
+	 * @param i index of tab
+	 */
 	public static void initTabComponent(int i) {
 		Global.conversationPane.setTabComponentAt(i, new ButtonTabComponent(Global.conversationPane));
 		Global.conversationPane.addChangeListener(new ChangeListener(){
@@ -845,11 +856,24 @@ public class Conversation {
 		});
 	}  
 	
+	/**
+	 * removes tab from conversationPane
+	 * @param i index of tab being removed
+	 */
 	public static void removeTab(int i){
     	TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
     	Conversation.offset.remove(i);
     	Conversation.textPanes.remove(i);
 		Conversation.currentConvs.remove(i);
+		String name = TaskBar.smallChatWindows.get(i).getFromContact().getFirstName() + " " + TaskBar.smallChatWindows.get(i).getFromContact().getLastName();
 		TaskBar.smallChatWindows.remove(i);
+		int menuitemlength = TaskBar.menuItemArrays.size();
+		for(int j = 0; j < menuitemlength; j++){	
+			String array = TaskBar.menuItemArrays.get(j).getLabel();
+			if(array.equalsIgnoreCase(name)){
+				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
+				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
+			}
+		}
 	}
 }
