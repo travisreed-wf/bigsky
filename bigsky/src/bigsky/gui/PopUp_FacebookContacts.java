@@ -21,7 +21,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
+import javax.swing.JLabel;
 
+/**
+ * Popup to allow access to facebook pictures
+ * @author Andrew Guibert, Andrew Hartman, Travis Reed
+ *
+ */
 public class PopUp_FacebookContacts extends JFrame{
 	private static final long serialVersionUID = -5289641047430720306L;
 	private JTextField textField;
@@ -35,6 +41,7 @@ public class PopUp_FacebookContacts extends JFrame{
 	}
 	
 	public PopUp_FacebookContacts(){
+		getContentPane().setFont(new Font("Dialog", Font.PLAIN, 16));
 		thisFrame = this;
         if (!System.getProperty("os.name").contains("Mac")){
 			setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
@@ -44,12 +51,6 @@ public class PopUp_FacebookContacts extends JFrame{
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		JTextPane txtStep1 = new JTextPane();
-		txtStep1.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
-		txtStep1.setText(" 1 :   Click button to open web browser");
-		txtStep1.setBounds(62, 22, 301, 38);
-		getContentPane().add(txtStep1);
 		
 		JButton btnOpenBrowser = new JButton("Open Browser");
 		btnOpenBrowser.setBounds(154, 71, 121, 23);
@@ -64,12 +65,6 @@ public class PopUp_FacebookContacts extends JFrame{
 				}
 			}
 		});
-				
-		JTextPane txtpnClick = new JTextPane();
-		txtpnClick.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
-		txtpnClick.setText(" 2 :   Click \"Get Access Token\" \r\n\r\n 3 :   Select \"user_friends\".\r\n\r\n 4 :   Paste Access Token below:");
-		txtpnClick.setBounds(62, 118, 301, 106);
-		getContentPane().add(txtpnClick);
 		
 		textField = new JTextField();
 		textField.setBounds(62, 235, 301, 29);
@@ -90,6 +85,26 @@ public class PopUp_FacebookContacts extends JFrame{
 		JButton btnDone = new JButton("Done");
 		btnDone.setBounds(369, 286, 89, 23);
 		getContentPane().add(btnDone);
+		
+		JLabel lblNewLabel = new JLabel("2 : Click \"Get Access Token\"");
+		lblNewLabel.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
+		lblNewLabel.setBounds(62, 106, 301, 38);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblSelectuserfriends = new JLabel("3: Select \"user_friends\".");
+		lblSelectuserfriends.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
+		lblSelectuserfriends.setBounds(62, 142, 301, 38);
+		getContentPane().add(lblSelectuserfriends);
+		
+		JLabel lblPaseAccess = new JLabel("4: Paste access token below:");
+		lblPaseAccess.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
+		lblPaseAccess.setBounds(62, 184, 258, 16);
+		getContentPane().add(lblPaseAccess);
+		
+		JLabel lblClickButton = new JLabel("1: Click button to open web browser.");
+		lblClickButton.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
+		lblClickButton.setBounds(62, 23, 301, 16);
+		getContentPane().add(lblClickButton);
 		btnDone.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
