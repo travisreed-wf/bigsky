@@ -39,8 +39,6 @@ public class TextMessageManager extends Thread
 	public void run()
 	{
 		boolean matchR = false;
-		@SuppressWarnings("unused")
-		String phoneHLine;
 		
 		try {
 			synchronized(this){
@@ -70,7 +68,6 @@ public class TextMessageManager extends Thread
                         sendTexts = false;
                                                                             
                         for(int i = 0; i < size;i++){
-                        	phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
                             try {
                             	Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
                             	TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
@@ -92,7 +89,6 @@ public class TextMessageManager extends Thread
 							@SuppressWarnings("unused")
 							Notification notify = new Notification(TaskBar.myTextArray.get(0));
 						}
-							//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
                         matchR = false;
                         for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
                         	if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
