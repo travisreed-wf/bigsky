@@ -278,6 +278,10 @@ public class Conversation {
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
+		JMenu mnHidden = new JMenu("                                                                                                                                         ");
+		mnHidden.setEnabled(false);
+		mnHidden.setFocusable(false);
+		menuBar.add(mnHidden);
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
 		mntmAboutBluetext.addActionListener(new ActionListener() {
@@ -290,6 +294,7 @@ public class Conversation {
 		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
 		Global.batteryIndicator.setArmed(false);
+		Global.batteryIndicator.setFocusable(false);
 
 		JPanel panel = new JPanel();
 		frmBluetext.getContentPane().add(panel);
