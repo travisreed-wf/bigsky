@@ -690,6 +690,13 @@ public class Conversation {
 	 */
 	public static void updateConv(TextMessage text) throws BadLocationException{
 		
+		System.out.println("update convo sizes: " +
+				 offset.size() + ' ' +
+				 Global.conversationPane.getTabCount() + ' ' +
+				 textPanes.size() + ' ' +
+				 currentConvs.size() + ' ' +
+				 TaskBar.smallChatWindows.size() + ' ');
+		
 		int current = 0;
 		int temp = 0;
 		Contact you = null;
@@ -703,6 +710,12 @@ public class Conversation {
 		}
 		if(Global.conversationPane.getTabCount()!=0){
 			current = Global.conversationPane.getSelectedIndex();
+			// added if check
+			if(offset.size() <= current){
+				current = offset.size()-1;
+				System.out.println("Error in updateConv()");
+			}
+				
 			temp = offset.get(current);
 		}
 		//Checks if the user is the sender
@@ -875,7 +888,14 @@ public class Conversation {
 	 * @param i index of tab being removed
 	 */
 	public static void removeTab(int i){
-    	TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
+		System.out.println("removeTab array sizes: " +
+				TaskBar.smallChatWindows.size() + ' ' +
+				Conversation.offset.size() + ' ' +
+				Conversation.textPanes.size() + ' ' + 
+				Conversation.currentConvs.size() + ' ' + 
+				TaskBar.menuItemArrays.size());
+		
+		TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
     	Conversation.offset.remove(i);
     	Conversation.textPanes.remove(i);
 		Conversation.currentConvs.remove(i);

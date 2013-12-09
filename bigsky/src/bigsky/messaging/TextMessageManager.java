@@ -53,7 +53,7 @@ public class TextMessageManager extends Thread
                     	int smallChatNum = 0;
                         int size = Global.phoneTextHistory.size();
                         for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
-                           	if(blueTextRqContact.getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+                           	if(blueTextRqContact.getPhoneNumber().equalsIgnoreCase(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
                            		smallChatNum = i;
                            		break;
                             }
@@ -67,7 +67,7 @@ public class TextMessageManager extends Thread
                             
                         sendTexts = false;
                                                                             
-                        for(int i = 0; i < size;i++){
+                        for(int i = 0; Global.phoneTextHistory.size() > 0;i++){
                             try {
                             	Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
                             	TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
@@ -91,7 +91,7 @@ public class TextMessageManager extends Thread
 						}
                         matchR = false;
                         for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
-                        	if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
+                        	if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
                         		try {
                         			Conversation.updateConv(TaskBar.myTextArray.get(0));
                         			TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
