@@ -57,8 +57,9 @@ public class EditContact {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(EditContact.class.getResource("/bigsky/BlueText.gif")));
-
+        if (!System.getProperty("os.name").contains("Mac")){
+        	frame.setIconImage(Toolkit.getDefaultToolkit().getImage(EditContact.class.getResource("/bigsky/BlueText.gif")));
+        }
 		frame.setSize(355, 301);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);

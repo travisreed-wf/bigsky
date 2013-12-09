@@ -36,7 +36,9 @@ public class PopUp_FacebookContacts extends JFrame{
 	
 	public PopUp_FacebookContacts(){
 		thisFrame = this;
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/bigsky/BlueText.gif")));
+		}
 		setResizable(false);
 		setSize(new Dimension(481, 346));
 		this.setLocationRelativeTo(null);

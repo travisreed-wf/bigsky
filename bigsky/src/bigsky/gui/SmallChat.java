@@ -99,7 +99,9 @@ public class SmallChat  {
 		send = new JButton("Send");
 		
 		frmBluetext = new JFrame();
-		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(SmallChat.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(SmallChat.class.getResource("/bigsky/BlueText.gif")));
+		}
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);
@@ -255,8 +257,7 @@ public class SmallChat  {
 				defaultSettings();
 				}
 		});
-		
-
+	
 	}
 	
 	/**
