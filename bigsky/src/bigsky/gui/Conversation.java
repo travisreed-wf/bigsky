@@ -691,7 +691,6 @@ public class Conversation {
 		}
 		//Checks if the user is the sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
-			System.out.println(TaskBar.me.getPhoneNumber() + " " + text.getSender().getPhoneNumber());
 			if(!TaskBar.doNotSend){
 				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
@@ -706,7 +705,6 @@ public class Conversation {
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
 					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
 						TaskBar.doNotSend = true;
-						//System.out.println(text.getReceiver().getFirstName() + text.getSender().getFirstName());
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
