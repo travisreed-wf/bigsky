@@ -21,6 +21,7 @@ import bigsky.BlueTextResponse;
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
+import bigsky.TextMessage;
 import bigsky.gui.Conversation;
 import bigsky.gui.Notification;
 import bigsky.gui.SmallChat;
@@ -193,12 +194,16 @@ public class TextMessageManager extends Thread
 				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
 			}
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
+				blueTextRqContact = resp.getOriginalRequest().getContact();
 				Global.phoneTextHistory = resp.getChatHistory();
+				if(Global.phoneTextHistory.isEmpty()){
+					Global.phoneTextHistory.add(new TextMessage(TaskBar.me, blueTextRqContact, "BlueText - Start Conversation: (this message is not sent)"));
+				}
 				if(!TaskBar.myTextArray.isEmpty()){
 					Global.phoneTextHistory.add(TaskBar.myTextArray.get(0));
 					TaskBar.myTextArray.remove(0);
 				}
-				 blueTextRqContact = resp.getOriginalRequest().getContact();
+				 
 			}
 			else if(REQUEST.CONTACT_PICTURE == req){
 				
