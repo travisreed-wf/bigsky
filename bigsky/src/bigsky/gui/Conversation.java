@@ -102,8 +102,10 @@ public class Conversation {
 
 	private void initialize() {
 		frmBluetext = new JFrame();
-		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
-		frmBluetext.setTitle("BlueText");
+        if (!System.getProperty("os.name").contains("Mac")){
+        	frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(Conversation.class.getResource("/bigsky/BlueText.gif")));
+        }
+        frmBluetext.setTitle("BlueText");
 		frmBluetext.setSize(new Dimension(800,650));
 		frmBluetext.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frmBluetext.setLocationRelativeTo(null);

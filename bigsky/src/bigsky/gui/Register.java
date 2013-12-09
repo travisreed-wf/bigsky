@@ -58,7 +58,9 @@ public class Register extends JFrame {
 	 */
 	public Register() {
 		JFrame frame = new JFrame();
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/bigsky/BlueText.gif")));
+		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(521, 434);
 		getContentPane().setLayout(null);

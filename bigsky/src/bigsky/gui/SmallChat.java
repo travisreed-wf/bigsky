@@ -73,10 +73,7 @@ public class SmallChat  {
 	private ButtonGroup notiGroup;
 	private JMenuBar menuBar;
 	private ButtonGroup previewMessageGroup;
-    private JMenuItem defaultSettings;
-
-	//private TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
-	
+    private JMenuItem defaultSettings;	
 
 	/**
 	 * Launch the application.
@@ -121,7 +118,9 @@ public class SmallChat  {
 		send = new JButton("Send");
 		
 		frmBluetext = new JFrame();
-		frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(SmallChat.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			frmBluetext.setIconImage(Toolkit.getDefaultToolkit().getImage(SmallChat.class.getResource("/bigsky/BlueText.gif")));
+		}
 		frmBluetext.getRootPane().setDefaultButton(send);
 		frmBluetext.setResizable(false);
 		frmBluetext.getContentPane().setBackground(Color.DARK_GRAY);

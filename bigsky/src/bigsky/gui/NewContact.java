@@ -46,7 +46,9 @@ public class NewContact {
 	private void initialize() {
 		frmNewContact = new JFrame();
 		frmNewContact.setTitle("New Contact");
-		frmNewContact.setIconImage(Toolkit.getDefaultToolkit().getImage(NewContact.class.getResource("/bigsky/BlueText.gif")));
+        if (!System.getProperty("os.name").contains("Mac")){
+			frmNewContact.setIconImage(Toolkit.getDefaultToolkit().getImage(NewContact.class.getResource("/bigsky/BlueText.gif")));
+		}
 		frmNewContact.setSize(355, 301);
 		frmNewContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewContact.getContentPane().setLayout(null);
