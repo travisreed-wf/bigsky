@@ -706,7 +706,6 @@ public class Conversation {
 					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
 						TaskBar.doNotSend = true;
 						//System.out.println(text.getReceiver().getFirstName() + text.getSender().getFirstName());
-						System.out.println(text.getContent());
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
@@ -753,7 +752,7 @@ public class Conversation {
 			JTextPane textPane = new JTextPane();
 			DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 			textPane.setEditable(false);
 			textPanes.add(textPane);
 			JScrollPane scroll = new JScrollPane(textPane);
