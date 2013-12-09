@@ -14,6 +14,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.io.FileOutputStream;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
@@ -62,14 +63,14 @@ public class SmallChat  {
 	private Contact you;
 	private TextMessage sent;
 	private JTextField textField_1;
-	private JMenu settings;
+	protected JMenu settings;
 	private JMenu messagePreview;
 	private JMenu notification;
 	private JMenu fontSize;
-	private JRadioButtonMenuItem notificationON;
-	private JRadioButtonMenuItem notificationOFF;
-	private JRadioButtonMenuItem messagePreviewON;
-	private JRadioButtonMenuItem messagePreviewOFF;
+	protected static JRadioButtonMenuItem notificationON;
+	protected static JRadioButtonMenuItem notificationOFF;
+	protected static JRadioButtonMenuItem messagePreviewON;
+	protected static JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup notiGroup;
 	private JMenuBar menuBar;
 	private ButtonGroup previewMessageGroup;
@@ -210,6 +211,7 @@ public class SmallChat  {
 				if(notificationON.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
 					notificationOFF.setSelected(false);
+					Conversation.selectNotificationOn();
 				}				
 			}
 		});
@@ -219,6 +221,7 @@ public class SmallChat  {
 				if(notificationOFF.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
 					notificationON.setSelected(false);
+					Conversation.selectNotificationOff();
 				}						
 			}
 		});
@@ -228,6 +231,7 @@ public class SmallChat  {
 				if(messagePreviewON.isSelected()){
 					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
 					messagePreviewOFF.setSelected(false);
+					Conversation.selectPreviewOn();
 				}				
 			}
 		});
@@ -237,6 +241,7 @@ public class SmallChat  {
 						if(messagePreviewOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
 							messagePreviewON.setSelected(false);
+							Conversation.selectPreviewOff();
 						}						
 					}
 				});
@@ -325,11 +330,16 @@ public class SmallChat  {
 		boolean check = false;
 		int temp = 0;
 		
+		String person1 = text.getSender().getFirstName() + ":";
+		
+		for(int i = person1.length(); i < 17;i++){
+			person1 = person1 + " ";
+		}
 		
 		//checks if user is sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
-			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPane.getDocument().insertString(offset, person1 + text.getContent() + "\n\n", null);
+			offset += (person1 + text.getContent() + "\n\n").length();
 			textCount++;
 			myTextHistory.add(text);
 			you.setSecondPhone("");
@@ -345,8 +355,8 @@ public class SmallChat  {
 						TaskBar.doNotSend = true;
 						Conversation.updateConv(text);
 						temp = Conversation.offset.get(i);
-						Conversation.textPanes.get(i).getDocument().insertString(Conversation.offset.get(i), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-						temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+						Conversation.textPanes.get(i).getDocument().insertString(Conversation.offset.get(i), person1 + text.getContent() + "\n\n", null);
+						temp += (person1 + text.getContent() + "\n\n").length();
 						Conversation.offset.set(i, temp);
 						TaskBar.outGoingInSmall.remove(0);
 						TaskBar.doNotSend = false;
@@ -384,8 +394,8 @@ public class SmallChat  {
 		
 			
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equals(you.getPhoneNumber())){
-			textPane.getDocument().insertString(offset, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			offset += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPane.getDocument().insertString(offset, person1 + text.getContent() + "\n\n", null);
+			offset += (person1 + text.getContent() + "\n\n").length();
 		}
 		//attempt to scroll on creation
 		textPane.setAutoscrolls(true);
@@ -464,5 +474,28 @@ public class SmallChat  {
 		}
 		return false;
 	}
+	/**
+	 * All of these below update help update
+	 * smallchats settings when they are 
+	 * changed in the conversation window
+	 * 
+	 */
+	public static void selectPreviewOn(){
+		messagePreviewON.setSelected(true);
+		messagePreviewOFF.setSelected(false);
+	}
+	public static void selectPreviewOff(){
+		messagePreviewOFF.setSelected(true);
+		messagePreviewON.setSelected(false);
+	}
+	public static void selectNotificationOn(){
+		notificationON.setSelected(true);
+		notificationOFF.setSelected(false);
+	}
+	public static void selectNotificationOff(){
+		notificationOFF.setSelected(true);
+		notificationON.setSelected(false);
+	}
+	
 	
 }

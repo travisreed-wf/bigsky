@@ -39,8 +39,6 @@ public class TextMessageManager extends Thread
 	public void run()
 	{
 		boolean matchR = false;
-		@SuppressWarnings("unused")
-		String phoneHLine;
 		
 		try {
 			synchronized(this){
@@ -64,12 +62,12 @@ public class TextMessageManager extends Thread
                         	TaskBar.smallChatWindows.add(new SmallChat(TaskBar.me, blueTextRqContact));
                            	TaskBar.updateAddTaskbarSmallChatWindows();
                         	smallChatNum = TaskBar.smallChatWindows.size() - 1;
+                        	
                         }
                             
                         sendTexts = false;
                                                                             
                         for(int i = 0; i < size;i++){
-                        	phoneHLine = Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getSender().getFirstName() + ":  " + Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1).getContent();
                             try {
                             	Conversation.updateConv(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
                             	TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
@@ -91,7 +89,6 @@ public class TextMessageManager extends Thread
 							@SuppressWarnings("unused")
 							Notification notify = new Notification(TaskBar.myTextArray.get(0));
 						}
-							//TaskBar.trayIcon.displayMessage("New Message", TaskBar.myTextArray.get(0).getSender().getFirstName() + " " + TaskBar.myTextArray.get(0).getSender().getLastName(), MessageType.INFO);
                         matchR = false;
                         for(int i=0; i < TaskBar.smallChatWindows.size(); i++){
                         	if(TaskBar.myTextArray.get(0).getSender().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber())){
@@ -196,6 +193,9 @@ public class TextMessageManager extends Thread
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
 				blueTextRqContact = resp.getOriginalRequest().getContact();
 				Global.phoneTextHistory = resp.getChatHistory();
+				if(!Global.phoneTextHistory.isEmpty() && Global.phoneTextHistory.get(0).getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
+					Global.phoneTextHistory.add(Global.phoneTextHistory.size()-1, new TextMessage(blueTextRqContact,TaskBar.me,"hey"));
+				}
 				if(Global.phoneTextHistory.isEmpty()){
 					Global.phoneTextHistory.add(new TextMessage(TaskBar.me, blueTextRqContact, "BlueText - Start Conversation: (this message is not sent)"));
 				}

@@ -2,12 +2,9 @@ package bigsky.gui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,13 +12,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +25,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -75,12 +67,12 @@ public class Conversation {
 	private JMenu settings;
 	private JMenu notification;
 	private JMenu fontSize;
-	private  JRadioButtonMenuItem notificationON;
-	private  JRadioButtonMenuItem notificationOFF;
+	private static JRadioButtonMenuItem notificationON;
+	private static JRadioButtonMenuItem notificationOFF;
 	private ButtonGroup notiGroup;
 	private JMenu messagePreview;
-	private  JRadioButtonMenuItem messagePreviewON;
-	private  JRadioButtonMenuItem messagePreviewOFF;
+	private static JRadioButtonMenuItem messagePreviewON;
+	private static JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
 	private JMenuItem defaultSettings;
 
@@ -175,6 +167,7 @@ public class Conversation {
 				if(notificationON.isSelected()){
 					Login.saveInProp(Global.username,Global.NOTIFICATION, Global.ON);
 					notificationOFF.setSelected(false);
+					SmallChat.selectNotificationOn();
 				}				
 			}
 		});
@@ -184,6 +177,7 @@ public class Conversation {
 						if(notificationOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.NOTIFICATION, Global.OFF);
 							notificationON.setSelected(false);
+							SmallChat.selectNotificationOff();
 						}						
 					}
 				});
@@ -193,6 +187,8 @@ public class Conversation {
 				if(messagePreviewON.isSelected()){
 					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.ON);
 					messagePreviewOFF.setSelected(false);
+					SmallChat.selectPreviewOn();
+
 				}				
 			}
 		});
@@ -202,6 +198,8 @@ public class Conversation {
 						if(messagePreviewOFF.isSelected()){
 							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
 							messagePreviewON.setSelected(false);
+							SmallChat.selectPreviewOff();
+
 						}						
 					}
 				});
@@ -279,17 +277,30 @@ public class Conversation {
 		mntmImportContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sortListModel();
+				JOptionPane.showMessageDialog(null, "Contacts updated. Happy conversations!");
 			}
 		});
 		mnView.add(mntmImportContacts);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
+		JMenu mnHidden = new JMenu("                                                                                                                                         ");
+		mnHidden.setEnabled(false);
+		mnHidden.setFocusable(false);
+		menuBar.add(mnHidden);
 
 		JMenuItem mntmAboutBluetext = new JMenuItem("About BlueText");
+		mntmAboutBluetext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AboutDialog about = new AboutDialog();
+				about.getFrame().setVisible(true);
+			}
+		});
 		mnHelp.add(mntmAboutBluetext);
 		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
+		Global.batteryIndicator.setArmed(false);
+		Global.batteryIndicator.setFocusable(false);
 
 		JPanel panel = new JPanel();
 		frmBluetext.getContentPane().add(panel);
@@ -348,7 +359,7 @@ public class Conversation {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+				TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
             	try {
             		System.out.println(text.getReceiver().getFirstName());
 					updateConv(text);
@@ -376,7 +387,7 @@ public class Conversation {
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
-	            	TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+	            	TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
 	            	try {
 	            		System.out.println(text.getReceiver().getFirstName());
 						updateConv(text);
@@ -544,7 +555,7 @@ public class Conversation {
 			tempList[i] = (String)Global.listModel.get(i);
 		}
 		Global.listModel.removeAllElements();
-		Arrays.sort(tempList);
+		Arrays.sort(tempList, 0, tempList.length, String.CASE_INSENSITIVE_ORDER);
 		for (int i=0; i<tempList.length;i++){
 			Global.listModel.addElement(tempList[i]);
 		}
@@ -685,15 +696,20 @@ public class Conversation {
 		boolean check1 = false;
 		boolean check2 = false;
 		boolean check3 = false;
+		String person1 = text.getSender().getFirstName() + ":";
+		
+		for(int i = person1.length(); i < 17;i++){
+			person1 = person1 + " ";
+		}
 		if(Global.conversationPane.getTabCount()!=0){
 			current = Global.conversationPane.getSelectedIndex();
 			temp = offset.get(current);
 		}
 		//Checks if the user is the sender
-		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
 			if(!TaskBar.doNotSend){
-				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+				textPanes.get(current).getDocument().insertString(offset.get(current), person1 + text.getContent() + "\n\n", null);
+				temp += (person1 + text.getContent() + "\n\n").length();
 				offset.set(current, temp);
 			}
 			
@@ -705,8 +721,6 @@ public class Conversation {
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
 					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
 						TaskBar.doNotSend = true;
-						//System.out.println(text.getReceiver().getFirstName() + text.getSender().getFirstName());
-						System.out.println(text.getContent());
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
 						TaskBar.doNotSend = false;
@@ -745,15 +759,15 @@ public class Conversation {
 		}	
 		if(!text.getContent().trim().isEmpty() && check2){
 			temp = offset.get(current);
-			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPanes.get(current).getDocument().insertString(temp, person1 + text.getContent() + "\n\n", null);
+			temp += (person1 + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		}
 		else if(!text.getContent().trim().isEmpty() && you == null && !check1){
 			JTextPane textPane = new JTextPane();
 			DefaultCaret caret = (DefaultCaret)textPane.getCaret();
 			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
+			textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 			textPane.setEditable(false);
 			textPanes.add(textPane);
 			JScrollPane scroll = new JScrollPane(textPane);
@@ -764,8 +778,8 @@ public class Conversation {
 			current = offset.size() - 1;
 			temp = offset.get(current);
 			currentConvs.add(text.getSender());
-			textPanes.get(current).getDocument().insertString(temp, text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
-			temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
+			textPanes.get(current).getDocument().insertString(temp, person1 + text.getContent() + "\n\n", null);
+			temp += (person1 + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
 		};
 	}
@@ -872,8 +886,32 @@ public class Conversation {
 			String array = TaskBar.menuItemArrays.get(j).getLabel();
 			if(array.equalsIgnoreCase(name)){
 				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
+				TaskBar.menuItemArrays.remove(j);
 				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
 			}
 		}
+	}
+	
+	/**
+	 * All of these below update help update
+	 * smallchats settings when they are 
+	 * changed in the SmallChat window
+	 * 
+	 */
+	public static void selectPreviewOn(){
+		messagePreviewON.setSelected(true);
+		messagePreviewOFF.setSelected(false);
+	}
+	public static void selectPreviewOff(){
+		messagePreviewOFF.setSelected(true);
+		messagePreviewON.setSelected(false);
+	}
+	public static void selectNotificationOn(){
+		notificationON.setSelected(true);
+		notificationOFF.setSelected(false);
+	}
+	public static void selectNotificationOff(){
+		notificationOFF.setSelected(true);
+		notificationON.setSelected(false);
 	}
 }

@@ -350,17 +350,15 @@ public class Login extends JFrame {
 		try {
 			prop.load(new FileInputStream("system.properties"));
 			
-		} catch (Exception e) {
-			prop.setProperty("lastLoggedIn", getUsername());
-			try{
-				prop.store(new FileOutputStream("system.properties"), null);
-			}
-			catch(Exception e1){
-				System.out.println("System store file problem");				
-			}
-
-		}
+		} catch (Exception e) {}
 		
+		prop.setProperty("lastLoggedIn", getUsername());
+		try{
+			prop.store(new FileOutputStream("system.properties"), null);
+		}
+		catch(Exception e1){
+			System.out.println("System store file problem");				
+		}
 	}
 	
 }
