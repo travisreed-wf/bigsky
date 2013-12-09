@@ -596,11 +596,11 @@ public class Conversation {
 			}
 		}
 		if(!match){
-			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, selectedContactCon);
-			TaskBar.messageHost.sendObject(rq);
-			
 			currentConvs.add(selectedContactCon);
 			createTab(selectedContactCon);
+			
+			rq = new BlueTextRequest(BlueTextRequest.REQUEST.CONTACT_CHAT_HISTORY, selectedContactCon);
+			TaskBar.messageHost.sendObject(rq);
 			
 			setThumbnailPicture(selectedContactCon);	
 		}
