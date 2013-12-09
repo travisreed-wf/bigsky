@@ -348,7 +348,7 @@ public class Conversation {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+				TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
             	try {
             		System.out.println(text.getReceiver().getFirstName());
 					updateConv(text);
@@ -376,7 +376,7 @@ public class Conversation {
 	        {
 	            if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 	            {
-	            	TextMessage text = new TextMessage(me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
+	            	TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
 	            	try {
 	            		System.out.println(text.getReceiver().getFirstName());
 						updateConv(text);
@@ -690,7 +690,8 @@ public class Conversation {
 			temp = offset.get(current);
 		}
 		//Checks if the user is the sender
-		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(me.getPhoneNumber())){
+		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
+			System.out.println(TaskBar.me.getPhoneNumber() + " " + text.getSender().getPhoneNumber());
 			if(!TaskBar.doNotSend){
 				textPanes.get(current).getDocument().insertString(offset.get(current), text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n", null);
 				temp += (text.getSender().getFirstName() + ":\t" + text.getContent() + "\n\n").length();
