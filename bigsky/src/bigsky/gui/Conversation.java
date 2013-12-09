@@ -289,6 +289,7 @@ public class Conversation {
 		mnHelp.add(mntmAboutBluetext);
 		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
+		Global.batteryIndicator.setArmed(false);
 
 		JPanel panel = new JPanel();
 		frmBluetext.getContentPane().add(panel);
