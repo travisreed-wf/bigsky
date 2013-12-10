@@ -645,7 +645,7 @@ public class Conversation {
 			if(facebookID == null)
 				throw new Exception("Unable to find facebook id in username.properties file");
 			
-			URL url = new URL("http://graph.facebook.com/" + facebookID + "/picture?type=square");
+			URL url = new URL("http://graph.facebook.com/" + facebookID + "/picture?type=large");
 			BufferedImage bi = ImageIO.read(url);
 			ImageIcon img = new ImageIcon(bi.getScaledInstance(180, 180, Image.SCALE_SMOOTH));
 			Global.contactTOimageIcon.put(c.getPhoneNumber(), img);
@@ -689,14 +689,7 @@ public class Conversation {
 	 * @throws BadLocationException
 	 */
 	public static void updateConv(TextMessage text) throws BadLocationException{
-		
-		System.out.println("update convo sizes: " +
-				 offset.size() + ' ' +
-				 Global.conversationPane.getTabCount() + ' ' +
-				 textPanes.size() + ' ' +
-				 currentConvs.size() + ' ' +
-				 TaskBar.smallChatWindows.size() + ' ');
-		
+				
 		int current = 0;
 		int temp = 0;
 		Contact you = null;
@@ -907,7 +900,6 @@ public class Conversation {
 			if(array.equalsIgnoreCase(name)){
 				TaskBar.smallChat.remove(TaskBar.menuItemArrays.get(j));
 				TaskBar.menuItemArrays.remove(j);
-				System.out.println("menu array size " + TaskBar.menuItemArrays.size());
 				break;
 			}
 		}
