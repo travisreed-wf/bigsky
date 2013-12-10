@@ -787,7 +787,7 @@ public class Conversation {
 			textPanes.get(current).getDocument().insertString(temp, person1 + text.getContent() + "\n\n", null);
 			temp += (person1 + text.getContent() + "\n\n").length();
 			offset.set(current, temp);
-		};
+		}
 	}
 	
 	/**
