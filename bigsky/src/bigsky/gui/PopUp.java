@@ -2,7 +2,6 @@ package bigsky.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -16,6 +15,7 @@ import bigsky.Global;
  * @author Travis Reed
  *
  */
+@SuppressWarnings("serial")
 public class PopUp extends JPopupMenu {
 	private final int returnsNull = 99999;
 
@@ -57,7 +57,6 @@ public class PopUp extends JPopupMenu {
      * @return - the position of the contact in the array list
      */
     private int findContactInListModel(String selectedValue){
-    	ArrayList<Contact> contactList = Global.contactAList;
 		for (int i=0;i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
 			if (con.getFirstName().equals(selectedValue)){

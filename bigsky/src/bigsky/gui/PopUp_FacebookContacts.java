@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JButton;
 
 import bigsky.Global;
@@ -32,13 +31,6 @@ public class PopUp_FacebookContacts extends JFrame{
 	private static final long serialVersionUID = -5289641047430720306L;
 	private JTextField textField;
 	private JFrame thisFrame;
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new PopUp_FacebookContacts();
-	}
 	
 	public PopUp_FacebookContacts(){
 		getContentPane().setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -52,6 +44,7 @@ public class PopUp_FacebookContacts extends JFrame{
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
+		// Open browser listener on the "Open Browser" button
 		JButton btnOpenBrowser = new JButton("Open Browser");
 		btnOpenBrowser.setBounds(154, 71, 121, 23);
 		getContentPane().add(btnOpenBrowser);
@@ -61,7 +54,7 @@ public class PopUp_FacebookContacts extends JFrame{
 				try {
 					java.awt.Desktop.getDesktop().browse(new URI("https://developers.facebook.com/tools/explorer?method=GET&path=me%2Ffriends"));
 				} catch (Exception e1) {
-					System.out.println("Unable to open web page, please go to this website: https://developers.facebook.com/tools/explorer?method=GET&path=me%2Ffriends");
+					System.err.println("Unable to open web page, please go to this website: https://developers.facebook.com/tools/explorer?method=GET&path=me%2Ffriends");
 				}
 			}
 		});
@@ -71,6 +64,7 @@ public class PopUp_FacebookContacts extends JFrame{
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
+		// Close and dispose the window
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.setBounds(10, 286, 89, 23);
 		getContentPane().add(btnCancel);
@@ -105,6 +99,8 @@ public class PopUp_FacebookContacts extends JFrame{
 		lblClickButton.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 16));
 		lblClickButton.setBounds(62, 23, 301, 16);
 		getContentPane().add(lblClickButton);
+		
+		// "Done" button action listener
 		btnDone.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -126,11 +122,14 @@ public class PopUp_FacebookContacts extends JFrame{
 		String urlString = "https://graph.facebook.com/me/friends?access_token=" + accessString;
 		
 		try{
+			// Read in facebook contacts using access token
 			URL url = new URL(urlString);
 	        URLConnection cnt = url.openConnection();
 	        BufferedReader br = new BufferedReader(new InputStreamReader(cnt.getInputStream()));
 	        String content = br.readLine();
 	        br.close();
+	        
+	        // Parse out the 1 line contacts list to usable properties
 	        content = content.replace("{", "")
 	        		.replace("\"name\"", "")
 		            .replace("\"id\"", "")
@@ -149,7 +148,6 @@ public class PopUp_FacebookContacts extends JFrame{
 	        int i;
 	        for(i = 2; i < tokens.length-4; i +=2){
 	        	if(prop.getProperty(tokens[i]) == null){
-	        		//System.out.println("name is: " + String.format("%-30s", tokens[i]) + " id is: " + tokens[i+1]);
 	        		prop.setProperty(tokens[i].toLowerCase(), tokens[i+1]);
 	        	}
 	        }            	       

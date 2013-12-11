@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
@@ -33,11 +32,7 @@
 package bigsky.gui;
  
 import javax.swing.*;
-import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
-
-import bigsky.TaskBar;
-
 import java.awt.*;
 import java.awt.event.*;
  
@@ -46,6 +41,7 @@ import java.awt.event.*;
  * Contains a JLabel to show the text and 
  * a JButton to close the tab it belongs to 
  */
+@SuppressWarnings("serial")
 public class ButtonTabComponent extends JPanel {
     private final JTabbedPane pane;
  

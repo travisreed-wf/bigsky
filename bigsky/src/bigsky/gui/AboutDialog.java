@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class AboutDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -43,48 +44,40 @@ public class AboutDialog extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmAbtDialog.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		{
-			JLabel lblBluetextBroughtTo = new JLabel("BlueText brought to you by:");
-			lblBluetextBroughtTo.setBounds(30, 48, 175, 16);
-			contentPanel.add(lblBluetextBroughtTo);
-		}
-		{
-			JLabel lblAndrewGuibert = new JLabel("Andrew Guibert");
-			lblAndrewGuibert.setBounds(30, 86, 141, 16);
-			contentPanel.add(lblAndrewGuibert);
-		}
-		{
-			JLabel lblAndrewHartman = new JLabel("Andrew Hartman");
-			lblAndrewHartman.setBounds(30, 114, 113, 16);
-			contentPanel.add(lblAndrewHartman);
-		}
-		{
-			JLabel lblJonathanMielke = new JLabel("Jonathan Mielke");
-			lblJonathanMielke.setBounds(30, 143, 199, 16);
-			contentPanel.add(lblJonathanMielke);
-		}
-		{
-			JLabel lblTravisReed = new JLabel("Travis Reed");
-			lblTravisReed.setBounds(30, 171, 141, 16);
-			contentPanel.add(lblTravisReed);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
+
+		JLabel lblBluetextBroughtTo = new JLabel("BlueText brought to you by:");
+		lblBluetextBroughtTo.setBounds(30, 48, 175, 16);
+		contentPanel.add(lblBluetextBroughtTo);
+
+		JLabel lblAndrewGuibert = new JLabel("Andrew Guibert");
+		lblAndrewGuibert.setBounds(30, 86, 141, 16);
+		contentPanel.add(lblAndrewGuibert);
+
+		JLabel lblAndrewHartman = new JLabel("Andrew Hartman");
+		lblAndrewHartman.setBounds(30, 114, 113, 16);
+		contentPanel.add(lblAndrewHartman);
+
+		JLabel lblJonathanMielke = new JLabel("Jonathan Mielke");
+		lblJonathanMielke.setBounds(30, 143, 199, 16);
+		contentPanel.add(lblJonathanMielke);
+
+		JLabel lblTravisReed = new JLabel("Travis Reed");
+		lblTravisReed.setBounds(30, 171, 141, 16);
+		contentPanel.add(lblTravisReed);
+
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		JButton okButton = new JButton("OK");
+		okButton.setActionCommand("OK");
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton);
 	}
+	
 	public JFrame getFrame(){
 		return frmAbtDialog;
 	}

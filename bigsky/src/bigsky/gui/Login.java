@@ -2,7 +2,6 @@ package bigsky.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +27,9 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.messaging.MessageHost;
-import bigsky.messaging.TextMessageManager;
+import bigsky.messaging.RequestManager;
 
+@SuppressWarnings("serial")
 public class Login extends JFrame {
 
 	private JPanel contentPane;
@@ -39,22 +39,6 @@ public class Login extends JFrame {
 	private JLabel wrongInfo;
 	private JRadioButton saveInfo;
 	private boolean hit = false;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -68,10 +52,8 @@ public class Login extends JFrame {
 		
         JLabel image = new JLabel();
         contentPane = (JPanel) getContentPane();
-       // contentPane.setLayout(new BorderLayout());
         setSize(new Dimension(576, 320));
-        ImageIcon icon = new ImageIcon(this.getClass().getResource(
-                "Login_Image.png"));
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("Login_Image.png"));
         image.setIcon(icon);       
         contentPane.add(image, java.awt.BorderLayout.CENTER);
         this.setLocationRelativeTo(null);
@@ -126,19 +108,16 @@ public class Login extends JFrame {
 		image.add(saveInfo);
 		saveInfo.setOpaque(false);
 
-		
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-            	            	
             	try {
 					if(login()){
-
 						dispose();
 						TaskBar.putIconInSystemTray();
 						if(TaskBar.messageHost==null){   
 				   	   		TaskBar.messageHost = new MessageHost();
 				   	   		TaskBar.messageHost.start();
-				   	   		TaskBar.textManager = new TextMessageManager();
+				   	   		TaskBar.textManager = new RequestManager();
 				   	   		TaskBar.textManager.start();
 				        }			
 						LoginInfo();
@@ -148,13 +127,12 @@ public class Login extends JFrame {
 						}
 					}
 					else{
-						System.out.println("Login checks fail");
+						throw new Exception();
 					}
-				} catch (Exception e1) {System.out.println("Login checks fail");}			
+				} catch (Exception e1) {
+					System.out.println("Login checks fail");}			
             }
         });
-		
-
 		
 		register.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -165,14 +143,14 @@ public class Login extends JFrame {
         });	
 		
 		//save password and username button
-				saveInfo.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-		            	  
-		            	hit = true;
-		            }
-		        });	
-
+		saveInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	  
+            	hit = true;
+            }
+        });	
 	}
+	
 	/**
 	 * gets the password typed in password field
 	 * @param Jpass
@@ -186,6 +164,7 @@ public class Login extends JFrame {
 		}
 		return password;	
 	}
+	
 	/**
 	 * retrieves string from textfield of login screen
 	 * @return string from textfield
@@ -201,7 +180,6 @@ public class Login extends JFrame {
 	
 	//returns row number of users database row
 	public boolean login(){
-		
 		try{
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
@@ -222,15 +200,12 @@ public class Login extends JFrame {
 			con.close();
 			return false;			
 		}
-			
 		else if(!getUsername().equals(rs.getString("phonenumber")) || !getPassword(passwordField_1).equals(rs.getString("password"))){
 			wrongInfo.setVisible(true);
 			rs.close();		
 			con.close();
 			return false;
 		}
-
-		
 		else if(!getUsername().equals(rs.getString("phonenumber")) && !getPassword(passwordField_1).equals(rs.getString("password"))){
 			promptRegister.setVisible(true);
 			rs.close();		
@@ -244,46 +219,39 @@ public class Login extends JFrame {
 		
 		rs.close();		
 		con.close();
-		}
-		
-		catch(Exception e){
-			System.out.println("Login fail" + e.getMessage());
+		}catch(Exception e){
+			System.err.println("Login fail" + e.getMessage());
 		}
 		
 		return true;
-		
 	}
+	
 	/**
 	 * initializes the preference file
 	 */
 	public void LoginInfo(){
-		
 		Properties prop = new Properties();
 		
 		try {
 			prop.load(new FileInputStream(getUsername() +".properties"));
-		}
-		
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-	
-		prop.setProperty("username", getUsername());
-		prop.setProperty("password", getPassword(passwordField_1));
-		prop.setProperty("save", Global.OFF);
-		prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
-		prop.setProperty(Global.NOTIFICATION,Global.ON);
-		prop.setProperty(Global.smallChatFontSize, "12");
-		prop.setProperty(Global.conversationFontSize, "12");
-		
+		}catch (Exception e) {
+			prop.setProperty("username", getUsername());
+			prop.setProperty("password", getPassword(passwordField_1));
+			prop.setProperty("save", Global.OFF);
+			prop.setProperty(Global.MESSAGEPREVIEW,Global.ON);
+			prop.setProperty(Global.NOTIFICATION,Global.ON);
+			prop.setProperty(Global.smallChatFontSize, "12");
+			prop.setProperty(Global.conversationFontSize, "12");
+			
 			try {
 				prop.store(new FileOutputStream(getUsername() + ".properties"),null);
 				
 			} catch (Exception e1) {
-				System.out.println("file load problem.");
+				System.err.println("file load problem.");
 			}
 		}
-		
 	}
+	
 	/**
 	 * Create Contact for phone
 	 * @return me contact
@@ -291,25 +259,19 @@ public class Login extends JFrame {
 	 public static Contact setContactMe(){
 	    	Contact me = null;
     	try{
-    	Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
-		
-		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + Global.username + "'");
-    	
-		if(rs.next());{
-
-			me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
-		}
-		
-		rs.close();		
-		con.close();
-
-
-		
-		}
-		
-		catch(Exception e){
-			System.out.println("Login fail" + e.getMessage());
+	    	Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
+			
+			ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + Global.username + "'");
+	    	
+			if(rs.next()){
+				me = new Contact(rs.getString("firstName"),rs.getString("lastName"), rs.getString("phoneNumber"),null);
+			}
+			
+			rs.close();		
+			con.close();
+		}catch(Exception e){
+			System.err.println("Login fail" + e.getMessage());
 		}
 		
     	return me;
@@ -328,25 +290,26 @@ public class Login extends JFrame {
 		try {
 			prop.load(new FileInputStream(user +".properties"));
 		} catch (Exception e) {
-			System.out.println("File load problem.");
+			System.err.println("File load problem.");
 		}
 		
 		prop.setProperty(property, value);
 	
 		try {
 			prop.store(new FileOutputStream(user+".properties"),null);
-			
 		} catch (Exception e) {
-			System.out.println("file store problem.");
+			System.err.println("file store problem.");
 		}
 		
 	}
+	
 	/**
 	 * Sets up the system preference file
 	 */
 	public void systemPrefs(){
 		
-		Properties prop = new Properties();		
+		Properties prop = new Properties();	
+		
 		try {
 			prop.load(new FileInputStream("system.properties"));
 			
@@ -355,10 +318,8 @@ public class Login extends JFrame {
 		prop.setProperty("lastLoggedIn", getUsername());
 		try{
 			prop.store(new FileOutputStream("system.properties"), null);
-		}
-		catch(Exception e1){
-			System.out.println("System store file problem");				
+		}catch(Exception e1){
+			System.err.println("System store file problem");				
 		}
 	}
-	
 }

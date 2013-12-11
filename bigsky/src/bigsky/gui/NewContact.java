@@ -34,7 +34,7 @@ public class NewContact {
 	private JButton btnCancel;
 
 	/**
-	 * Create the application.
+	 * Create the new contact window
 	 */
 	public NewContact() {
 		initialize();
@@ -101,12 +101,11 @@ public class NewContact {
 				if (contactToAdd != null){
 					Global.contactAList.add(contactToAdd);
 					addContactToListModel(first, last);
-		    		
 					frmNewContact.setVisible(false);
-					
 				}	
 			}
 		});
+		
 		frmNewContact.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frmNewContact.getContentPane().add(btnSubmit);
@@ -117,10 +116,11 @@ public class NewContact {
 				frmNewContact.setVisible(false);
 			}
 		});
+		
 		btnCancel.setBounds(33, 230, 117, 29);
 		frmNewContact.getContentPane().add(btnCancel);
-		
 	}
+	
 	public JFrame getFrmNewContact(){
 		return frmNewContact;
 	}
@@ -137,6 +137,7 @@ public class NewContact {
 				}
 			}
 		}
+		
 		if (phone.equals("")){
 			if (secondPhone.equals("")){
 				JOptionPane.showMessageDialog(null, "Please Enter a Phone Number");
@@ -154,6 +155,7 @@ public class NewContact {
 				return null;
 			}
 		}
+		
 		if (!secondPhone.equals("")){
 			secondPhone = secondPhone.replaceAll("\\D+","");
 			if (secondPhone.length() != 10){
@@ -161,6 +163,7 @@ public class NewContact {
 				return null;
 			}
 		}
+		
 		for (int i = 0; i<Global.contactAList.size();i++){
 			Contact con = Global.contactAList.get(i);
 			if (con.getFirstName().equals(firstName)){
@@ -186,6 +189,7 @@ public class NewContact {
 		return c;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean addContactToListModel(String firstName, String lastName){
 		String newEntry;
 		if (!firstName.equals("")){
