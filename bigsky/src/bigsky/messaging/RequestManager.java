@@ -74,7 +74,6 @@ public class RequestManager extends Thread
 		
 		/* Handle incoming text messages */
         if(!TaskBar.myTextArray.isEmpty()){
-        	System.out.println("hit manager sending");
 			if(TaskBar.savedInfo(Global.NOTIFICATION, Global.ON) && !SmallChat.hasFucusedSmallChat(TaskBar.myTextArray.get(0).getSender().getPhoneNumber())){
 				new Notification(TaskBar.myTextArray.get(0));
 			}
