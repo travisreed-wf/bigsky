@@ -48,7 +48,7 @@ import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.messaging.TextMessageManager;
+import bigsky.messaging.RequestManager;
 
 /**
  * The main window for our application
@@ -61,7 +61,6 @@ public class Conversation {
 	private final JTextArea txtrEnterMessageHere = new JTextArea();
 	public static ArrayList<JTextPane> textPanes = new ArrayList<JTextPane>();
 	public static ArrayList<Contact> currentConvs = new ArrayList<Contact>(); 
-	private static Contact me = TaskBar.me;
 	public static ArrayList<Integer> offset = new ArrayList<Integer>();
 	private JTextField textField_1;
 	private JMenu settings;
@@ -75,12 +74,9 @@ public class Conversation {
 	private static JRadioButtonMenuItem messagePreviewOFF;
 	private ButtonGroup previewMessageGroup;
 	private JMenuItem defaultSettings;
-
 	private static BlueTextRequest rq;
-
 	private JFrame frmBluetext;
 	private JTextField txtSearch;
-	
 	private final int returnsNull = -1;
 
 
@@ -91,7 +87,6 @@ public class Conversation {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-
 	private void initialize() {
 		frmBluetext = new JFrame();
         if (!System.getProperty("os.name").contains("Mac")){
@@ -116,8 +111,6 @@ public class Conversation {
 		});
 		mnFile.add(mnu_new_contact);
 		
-		
-		//*****************Andrew's Additions*****************//
 		settings = new JMenu("Settings");
 		mnFile.add(settings);
 		
@@ -130,6 +123,7 @@ public class Conversation {
 		
 		notification.add(notificationON);
 		notification.add(notificationOFF);
+		
 		// Adding buttons to group so only 1 radio button can be selected at any times
 		notiGroup = new ButtonGroup();
 		notiGroup.add(notificationON);
@@ -157,6 +151,7 @@ public class Conversation {
 		textField_1 = new JTextField();
 		fontSize.add(textField_1);
 		textField_1.setColumns(10);
+		
 		//default settings button
 		defaultSettings = new JMenuItem("Default Settings");
 		settings.add(defaultSettings);
@@ -193,16 +188,16 @@ public class Conversation {
 			}
 		});
 		//MessagePreview setting
-			messagePreviewOFF.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(messagePreviewOFF.isSelected()){
-							Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
-							messagePreviewON.setSelected(false);
-							SmallChat.selectPreviewOff();
+		messagePreviewOFF.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(messagePreviewOFF.isSelected()){
+					Login.saveInProp(Global.username,Global.MESSAGEPREVIEW, Global.OFF);
+					messagePreviewON.setSelected(false);
+					SmallChat.selectPreviewOff();
 
-						}						
-					}
-				});
+				}						
+			}
+		});
 		
 		//Font Size setting
 		textField_1.addActionListener(new ActionListener() {
@@ -219,15 +214,10 @@ public class Conversation {
 			public void actionPerformed(ActionEvent e) {
 				defaultSettings();
 				updateTabFonts();
-				}
+			}
 		});
-		
-				checkButtons();
-				
-				//*****************************************************//
-		
-		
-		
+
+		checkButtons();
 
 		JMenuItem mnu_new_conversation = new JMenuItem("New Conversation");
 		mnu_new_conversation.addActionListener(new ActionListener() {
@@ -235,8 +225,7 @@ public class Conversation {
 				startNewConv();
 			}
 		});
-		mnu_new_conversation.addMouseListener(new MouseAdapter() {
-		});
+
 		mnFile.add(mnu_new_conversation);
 
 		JMenuItem mnu_logout = new JMenuItem("Log Out");
@@ -265,9 +254,9 @@ public class Conversation {
 		mntmEditContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				editContactAction();
-				
 			}
 		});
+		
 		mnEdit.add(mntmEditContact);
 
 		JMenu mnView = new JMenu("View");
@@ -280,6 +269,7 @@ public class Conversation {
 				JOptionPane.showMessageDialog(null, "Contacts updated. Happy conversations!");
 			}
 		});
+		
 		mnView.add(mntmImportContacts);
 
 		JMenu mnHelp = new JMenu("Help");
@@ -296,6 +286,7 @@ public class Conversation {
 				about.getFrame().setVisible(true);
 			}
 		});
+		
 		mnHelp.add(mntmAboutBluetext);
 		updateBatteryIndicator(Global.battery_remaining);
 		menuBar.add(Global.batteryIndicator);
@@ -344,7 +335,6 @@ public class Conversation {
 		Global.list.setFont(new Font("Franklin Gothic Medium", Font.PLAIN,16));
 		scrollPane.setViewportView(Global.list);
 
-
 		JPanel conversationPanel = new JPanel();
 		conversationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		conversationPanel.setBounds(212, 26, 504, 435);
@@ -361,25 +351,21 @@ public class Conversation {
 				
 				TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
             	try {
-            		System.out.println(text.getReceiver().getFirstName());
 					updateConv(text);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
-					System.out.println("updateConv in Conversation - FAILED");
+					System.err.println("updateConv in Conversation - FAILED");
 				}
             	txtrEnterMessageHere.setText("");
 			}
 		});
 		btnSend.setBounds(599, 536, 117, 29);
 		panel.add(btnSend);
-	
 		
 		txtrEnterMessageHere.setText("New Message...");
 		txtrEnterMessageHere.setBounds(212, 472, 504, 93);
 		panel.add(txtrEnterMessageHere);
 		txtrEnterMessageHere.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
-
-	
 		
 		txtrEnterMessageHere.addKeyListener(new KeyAdapter()
 	    {
@@ -389,14 +375,12 @@ public class Conversation {
 	            {
 	            	TextMessage text = new TextMessage(TaskBar.me,currentConvs.get(Global.conversationPane.getSelectedIndex()),txtrEnterMessageHere.getText());
 	            	try {
-	            		System.out.println(text.getReceiver().getFirstName());
 						updateConv(text);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
-						System.out.println("updateConv in Conversation - FAILED");
+						System.err.println("updateConv in Conversation - FAILED");
 					}
 	            	txtrEnterMessageHere.setText("");
-	            	
 	            }
 	        }
 	        public void keyReleased(KeyEvent evt){
@@ -454,7 +438,7 @@ public class Conversation {
 				EditContact editCon = new EditContact(selectedContactCon, i, selectedValue);
 				editCon.getFrmEditContact().setVisible(true);
 			}
-			else System.out.println("Error in Edit Contact");
+			else System.err.println("Error in Edit Contact");
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "Please select a contact to edit.");
@@ -468,10 +452,12 @@ public class Conversation {
 		NewContact newCon = new NewContact();
 		newCon.getFrmNewContact().setVisible(true);
 	}
+	
 	/**
 	 * Modify the list model to only display items that match the requirements of the searchTerm
 	 * @param searchTerm - The text entered into the search bar
 	 */
+	@SuppressWarnings("unchecked")
 	private void searchContact(String searchTerm){
 		Global.listModel.removeAllElements();
 		if (!searchTerm.equals("")){
@@ -509,6 +495,7 @@ public class Conversation {
 	 * @param firstName - First name of contact to be added
 	 * @param lastName - Last name of contact to be added
 	 */
+	@SuppressWarnings("unchecked")
 	private void addContactToListModel(String firstName, String lastName){
 		if (!firstName.equals("")){
 			String newEntry = firstName + " " + lastName;
@@ -549,6 +536,7 @@ public class Conversation {
 	/**
 	 * Sort List Model Alphabetically by last first name
 	 */
+	@SuppressWarnings("unchecked")
 	private void sortListModel(){
 		String[] tempList = new String[Global.listModel.size()];
 		for (int i=0; i<Global.listModel.size(); i++) {
@@ -587,7 +575,7 @@ public class Conversation {
 		String selectedValue = (String)Global.list.getSelectedValue();
 		int j = findContactInListModel(selectedValue);
 		Contact selectedContactCon = Global.contactAList.get(j);
-		System.out.println(selectedContactCon.getPhoneNumber());
+
 		for(int i = 0; i < currentConvs.size(); i++){
 			if(selectedContactCon.getFirstName().equals(currentConvs.get(i).getFirstName()) &&
 					selectedContactCon.getPhoneNumber().equals(currentConvs.get(i).getPhoneNumber())){
@@ -620,11 +608,18 @@ public class Conversation {
 			
 			return prop.getProperty(contactName);			
 		} catch(Exception e){
-			System.out.println("unable to find facebook id for: " + contactName);
 			return null;
 		}
 	}
 	
+	/**
+	 * Set the thumbnail picture for a given Contact c.
+	 * The contact image can be:
+	 * <LI> from Facebook
+	 * <LI> from phone contacts list
+	 * <LI> default image
+	 * @param c
+	 */
 	public static void setThumbnailPicture(Contact c)
 	{
 		if(c == null){
@@ -658,7 +653,6 @@ public class Conversation {
 			BlueTextRequest req1 = new BlueTextRequest(REQUEST.CONTACT_PICTURE, c);
 			TaskBar.messageHost.sendObject(req1);
 		}
-		
 	}
 	
 	/**
@@ -706,11 +700,12 @@ public class Conversation {
 			// added if check
 			if(offset.size() <= current){
 				current = offset.size()-1;
-				System.out.println("Error in updateConv()");
+				System.err.println("Error in updateConv()");
 			}
 				
 			temp = offset.get(current);
 		}
+		
 		//Checks if the user is the sender
 		if(!text.getContent().trim().isEmpty() && text.getSender().getPhoneNumber().equalsIgnoreCase(TaskBar.me.getPhoneNumber())){
 			if(!TaskBar.doNotSend){
@@ -719,13 +714,13 @@ public class Conversation {
 				offset.set(current, temp);
 			}
 			
-			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
+			if(!TaskBar.doNotSend && RequestManager.sendTexts){
 				TaskBar.outGoingInConv.add(text);
 			}
 			
 			if(TaskBar.outGoingInConv.size() != 0){
 				for(int i = 0; i < TaskBar.smallChatWindows.size();i++){
-					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && TextMessageManager.sendTexts){
+					if(TaskBar.outGoingInConv.get(0).getReceiver().getPhoneNumber().equals(TaskBar.smallChatWindows.get(i).getFromContact().getPhoneNumber()) && RequestManager.sendTexts){
 						TaskBar.doNotSend = true;
 						TaskBar.smallChatWindows.get(i).receivedText(text);
 						TaskBar.outGoingInConv.remove(0);
@@ -734,7 +729,7 @@ public class Conversation {
 						break;
 					}
 				}
-				if(check3 == false && TextMessageManager.sendTexts){
+				if(check3 == false && RequestManager.sendTexts){
 					TaskBar.smallChatWindows.add(new SmallChat(text.getSender(), text.getReceiver()));
 					TaskBar.updateAddTaskbarSmallChatWindows();
 					TaskBar.doNotSend = true;
@@ -745,9 +740,8 @@ public class Conversation {
 					TaskBar.doNotSend = false;
 				}
 			}
-
 			
-			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
+			if(!TaskBar.doNotSend && RequestManager.sendTexts){
 				TaskBar.messageHost.sendObject(text);
 			}
 			
@@ -798,24 +792,23 @@ public class Conversation {
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
 		} catch (Exception e) {
-			System.out.println("file load problem.");
+			e.printStackTrace();
 		}
 		
-			
-			if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
-				notificationON.setSelected(true);
-			}
-			else if(prop.getProperty(Global.NOTIFICATION).equals(Global.OFF)){
-				notificationOFF.setSelected(true);
-			}
-			
-			if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
-				messagePreviewON.setSelected(true);
-			}
-			else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
-				messagePreviewOFF.setSelected(true);
-			}
+		if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
+			notificationON.setSelected(true);
 		}
+		else if(prop.getProperty(Global.NOTIFICATION).equals(Global.OFF)){
+			notificationOFF.setSelected(true);
+		}
+		
+		if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
+			messagePreviewON.setSelected(true);
+		}
+		else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
+			messagePreviewOFF.setSelected(true);
+		}
+	}
 	
 	/**
 	 * Allows user to reset the settings of the specified window to that of manufacturers
@@ -826,7 +819,7 @@ public class Conversation {
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
 		} catch (Exception e) {
-			System.out.println("file load problem.");
+			e.printStackTrace();
 		}
 		
 		prop.setProperty("save", Global.OFF);
@@ -834,17 +827,17 @@ public class Conversation {
 		prop.setProperty(Global.NOTIFICATION,Global.ON);
 		prop.setProperty(Global.conversationFontSize, "12");	
 
-		
 		try{
 			prop.store(new FileOutputStream(Global.username + ".properties"), null);
 		}
 		catch(Exception e1){
-			System.out.println("Problem saving default settings in small chat");
-			
+			e1.printStackTrace();
+			System.err.println("Problem saving default settings in small chat");
 		}
 		
 		updateTabFonts();
 	}
+	
 	/**
 	 * This updates the textpanes fonts immediately
 	 */
@@ -853,7 +846,6 @@ public class Conversation {
 		for(int i = 0 ; i < tabCount ; i++){
 			textPanes.get(i).setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
 		}
-		
 	}
 	
 	/**
@@ -868,10 +860,12 @@ public class Conversation {
 				int j = Global.conversationPane.getSelectedIndex();
 				if(j >= currentConvs.size())
 					j = currentConvs.size()-1;
-				if(j < 0)
+				if(j < 0){
 					setThumbnailPicture(null);
-				else
+				}
+				else{
 					setThumbnailPicture(currentConvs.get(j));
+				}
 			}
 		});
 	}  
@@ -880,14 +874,7 @@ public class Conversation {
 	 * removes tab from conversationPane
 	 * @param i index of tab being removed
 	 */
-	public static void removeTab(int i){
-		System.out.println("removeTab array sizes: " +
-				TaskBar.smallChatWindows.size() + ' ' +
-				Conversation.offset.size() + ' ' +
-				Conversation.textPanes.size() + ' ' + 
-				Conversation.currentConvs.size() + ' ' + 
-				TaskBar.menuItemArrays.size());
-		
+	public static void removeTab(int i){		
 		TaskBar.smallChatWindows.get(i).getFrmBluetext().dispose();
     	Conversation.offset.remove(i);
     	Conversation.textPanes.remove(i);

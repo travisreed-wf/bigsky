@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -17,9 +16,12 @@ import java.sql.Statement;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+@SuppressWarnings("serial")
 public class Register extends JFrame {
 
+	@SuppressWarnings("unused")
 	private JPanel contentPane;
+	@SuppressWarnings("unused")
 	private JTextField textField;
 	private JTextField firstName;
 	private JTextField lastName;
@@ -38,24 +40,9 @@ public class Register extends JFrame {
 	private JLabel requiredToRegister;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Register frame = new Register();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("unused")
 	public Register() {
 		JFrame frame = new JFrame();
         if (!System.getProperty("os.name").contains("Mac")){
@@ -155,7 +142,6 @@ public class Register extends JFrame {
 		getContentPane().add(usernameAlreadyRegistered);
 		usernameAlreadyRegistered.setVisible(false);
 		
-		
 		Login = new JButton("Login");
 		Login.setBounds(188, 328, 117, 29);
 		getContentPane().add(Login);
@@ -173,27 +159,18 @@ public class Register extends JFrame {
 		getContentPane().add(requiredToRegister);
 		requiredToRegister.setVisible(false);
 		
-	
-	
 		Register.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        
 	        	if(registerChecks()){
-
 					try {
 						putInSystem();
-						
 						Register.setVisible(false);
 						Login.setVisible(true);
 						finishLogin.setVisible(true);
-						
-						
 					} catch (Exception e1) {
 						System.out.println("Register error");
 					}
-					        		
 				}
-     
 	        }
 	    });
 		
@@ -204,7 +181,6 @@ public class Register extends JFrame {
 	        	log.setVisible(true);
 	        }
 	    });
-		
 	}
 	
 	
@@ -226,11 +202,11 @@ public class Register extends JFrame {
 	private String getFirstName(){
 		String user = firstName.getText();
 		return  user.trim();	
-		}
+	}
 	private String getLastName(){
 		String user = lastName.getText();
 		return  user.trim();	
-		}
+	}
 		
 	
 	private boolean registerChecks(){
@@ -247,22 +223,18 @@ public class Register extends JFrame {
 		lastNameIncorrect.setVisible(false);
 		requiredToRegister.setVisible(false);
 		try{
-			
-		
-		if(isInSystem()){
-			usernameAlreadyRegistered.setVisible(true);
-			return false;
-		}
-		}
-		catch(Exception e){
-			System.out.println("Register Checks error" + e.getMessage());
+			if(isInSystem()){
+				usernameAlreadyRegistered.setVisible(true);
+				return false;
+			}
+		}catch(Exception e){
+			System.err.println("Register Checks error" + e.getMessage());
 		}
 		if(pass == null || confirmPass == null || pass.equals("")|| confirmPass.equals("")|| !pass.equals(confirmPass)){
 			passwordIncorrect.setVisible(true);
 			confirmPasswordIncorrect.setVisible(true);
 			count++;
 		}
-		
 		if(username == null || username.length() != 10){
 			usernameIncorrect.setVisible(true);
 			count++;
@@ -284,6 +256,7 @@ public class Register extends JFrame {
 		
 		return false;
 	}
+	
 	/**
 	 * Puts a system file in the system with the last user
 	 */
@@ -299,9 +272,8 @@ public class Register extends JFrame {
 	
 		stmt.executeUpdate(query);
 		con.close();	
-		}
-		catch(Exception e){
-			System.out.println("put in system error");
+		}catch(Exception e){
+			System.err.println("put in system error");
 		}
 	}
 	
@@ -310,14 +282,11 @@ public class Register extends JFrame {
 	 * @return true if in system
 	 */
 	private boolean isInSystem(){
-		
 		try{
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://mysql.cs.iastate.edu/db30901", "adm309", "EXbDqudt4");
-		Statement stmt = con.createStatement();
 	
 		ResultSet rs = con.createStatement().executeQuery("select * from testTable where phoneNumber='" + getUsername() + "'");
-		//boolean temp = rs.next();
 		if(rs.next() == true){
 			
 			rs.close();		
@@ -327,9 +296,8 @@ public class Register extends JFrame {
 		
 		rs.close();		
 		con.close();
-		}
-		catch(Exception e){
-			System.out.println("in system error");
+		}catch(Exception e){
+			System.err.println("in system error");
 		}
 		return false;
 	}

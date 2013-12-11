@@ -1,6 +1,5 @@
 package bigsky.gui;
 
-import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -14,24 +13,13 @@ import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-
 import java.awt.Font;
-
-
-
-
-
-
 import java.util.ArrayList;
-
-import javax.swing.JLabel;
-
 
 public class Notification {
 
@@ -46,7 +34,6 @@ public class Notification {
 	private int windowNum = 0;
 	private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	public static ArrayList<Notification> openNotifications = new ArrayList<Notification>();
-	
 
 	/**
 	 * Create the application.
@@ -62,13 +49,11 @@ public class Notification {
 		try {
 			initialize();
 		} catch (BadLocationException e) {
-			System.out.println("ERROR in Notification Initialize()");
+			System.err.println("ERROR in Notification Initialize()");
 			e.printStackTrace();
 		}
 		
 		frame.setVisible(true);
-		
-		
 		 
 		 timer1.addActionListener(new ActionListener() {
 			 @Override
@@ -85,9 +70,9 @@ public class Notification {
 					 openNotifications.remove(windowNum);
 		         }
 		         fade = fade - 0.0125F;
-		//         frame.setOpacity(fade);
 		     }
 		 });
+		 
 		 timer1.setInitialDelay(3000);
 		 timer1.start();
 		 this.animate();
@@ -210,7 +195,6 @@ public class Notification {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 			 public void mouseMoved(MouseEvent e) {
 				 fade = 1.0f;
-			//	 frame.setOpacity(fade);
 				 timer1.stop();
 				 timer1.setInitialDelay(3000);
 				 timer1.start();
@@ -221,6 +205,7 @@ public class Notification {
 			}
 		});
 	}
+	
 	/**
 	 * starts the animation of notification pop-ups will cause all gaps to be closed once a notification
 	 * has expired.  Notifications will remain as close to bottom of screen as possible.
@@ -229,7 +214,6 @@ public class Notification {
 		 timer2.addActionListener(new ActionListener() {
 			 @Override
 		     public void actionPerformed(ActionEvent e) {
-				 
 				 if ((positionY > ((gd.getDisplayMode().getHeight() - 50) - (180 * windowNum)))){
 					 positionY = positionY - 10;
 					 openNotifications.get(windowNum - 1).frame.setLocation(gd.getDisplayMode().getWidth() - 260, (int)positionY);

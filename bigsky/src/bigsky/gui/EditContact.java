@@ -12,8 +12,6 @@ import javax.swing.JTextField;
 import bigsky.Contact;
 import bigsky.Global;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 /**
@@ -118,11 +116,9 @@ public class EditContact {
 					addContactToListModel(txtFirstName.getText(), txtLastName.getText());
 					frame.setVisible(false);
 				}
-
-				//TODO Place in correct order
-				
 			}
 		});
+		
 		frame.getRootPane().setDefaultButton(btnSubmit);
 		btnSubmit.setBounds(189, 230, 117, 29);
 		frame.getContentPane().add(btnSubmit);
@@ -135,8 +131,8 @@ public class EditContact {
 		});
 		btnCancel.setBounds(33, 230, 117, 29);
 		frame.getContentPane().add(btnCancel);
-		
 	}
+	
 	/**
 	 * Return the frame
 	 * @return the frame for this window
@@ -211,6 +207,7 @@ public class EditContact {
 	 * @param lastName - last name of new contact
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private boolean addContactToListModel(String firstName, String lastName){
 		String newEntry;
 		if (!firstName.equals("")){
@@ -253,6 +250,4 @@ public class EditContact {
 		}
 		return j;
 	}
-	
-	
 }

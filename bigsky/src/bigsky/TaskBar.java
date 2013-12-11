@@ -14,15 +14,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.*;
 import bigsky.gui.*;
 import bigsky.messaging.MessageHost;
-import bigsky.messaging.TextMessageManager;
+import bigsky.messaging.RequestManager;
 
 public class TaskBar
 {
@@ -31,19 +29,19 @@ public class TaskBar
 	public static TrayIcon notification = new TrayIcon(new ImageIcon(TaskBar.class.getResource("BlueText.gif"), "tray icon").getImage());
 	public static ArrayList<SmallChat> smallChatWindows = new ArrayList<SmallChat>();
 	public static Contact me = new Contact("Me", "", "1234567890","");
-	public static Contact you = new Contact("Andy", "G",    "+1 5072542815", "");
 	public static final TrayIcon trayIcon = createTrayIconImage();
 	private static final SystemTray tray = SystemTray.getSystemTray();
 	public static MessageHost messageHost = null;
 	public static ConcurrentLinkedQueue<Contact> incomingContactQueue = new ConcurrentLinkedQueue<Contact>(); 
 	public static ConcurrentLinkedQueue<BlueTextResponse> responseQueue = new ConcurrentLinkedQueue<BlueTextResponse>();
-	public static TextMessageManager textManager = null;
+	public static RequestManager textManager = null;
 	public static Conversation convo;
 	public static ArrayList<TextMessage> outGoingInConv = new ArrayList<TextMessage>();
 	public static ArrayList<TextMessage> outGoingInSmall = new ArrayList<TextMessage>();
 	public static boolean doNotSend = false;
 	public static Menu smallChat;
 	public static ArrayList<MenuItem> menuItemArrays = new ArrayList<MenuItem>();
+	public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
 
     public static void main(String[] args) {
         try {
@@ -63,7 +61,7 @@ public class TaskBar
 			if(messageHost==null){
 	   	   		messageHost = new MessageHost();
 	   	   		messageHost.start();
-	   	   		textManager = new TextMessageManager();
+	   	   		textManager = new RequestManager();
 	   	   		textManager.start();
 	        }
         }
@@ -129,9 +127,10 @@ public class TaskBar
         try {
             tray.add(trayIcon);
         } catch (AWTException e) {
-            System.out.println("TrayIcon could not be added.");
+            System.err.println("TrayIcon could not be added.");
         }
     }
+    
     /**
      * Obtain system tray icon
      * @return tray icon
@@ -149,6 +148,7 @@ public class TaskBar
             return tray;
         }
     }
+    
     /**
      *Compares the value of a compare with the saved value
      * @return true if value of compare is the same as saved value
@@ -203,6 +203,7 @@ public class TaskBar
 		
 		return (String) prop.get("lastLoggedIn");
 	}
+    
     /**
      * Logout of current session.Closes connection between phone and computer
      * Brings to login screen
@@ -228,15 +229,16 @@ public class TaskBar
 		try {
 			prop.load(new FileInputStream(lastLoggedIn() +".properties"));
 		} catch (Exception e) {
-			System.out.println("loading file problem.");
+			System.err.println("loading file problem.");
 		}		
 		prop.setProperty("save", Global.OFF);
 		try {
 			prop.store(new FileOutputStream(lastLoggedIn() +".properties"),null);
 		} catch (Exception e) {
-			System.out.println("storing file problem");
+			System.err.println("storing file problem");
 		}
     }
+    
     /**
      * After logout this is called for the relogin screen to load 
      */
@@ -245,6 +247,7 @@ public class TaskBar
 		Login login = new Login();
        	login.setVisible(true);
     }
+    
     /**
      * Puts IP address in sql database when user has automatic login
      * @throws ClassNotFoundException
@@ -260,11 +263,11 @@ public class TaskBar
 		String iP =InetAddress.getLocalHost().getHostAddress();	
 		stmt.executeUpdate("UPDATE testTable SET IP_Computer='" + iP + "' WHERE phoneNumber='" + lastLoggedIn() + "';");
     	} catch (Exception e) {
-    		System.out.println("Automatic login fail\n" + e.getMessage());
+    		System.err.println("Automatic login fail\n" + e.getMessage());
     	}
 		
     }
-    public static HashMap<ActionListener, MenuItem> menuItemTOactionListener = new HashMap<ActionListener, MenuItem>();
+    
     /**
      * Adds menus to the taksbar small chat menu when a new tab is opened
      */
@@ -290,7 +293,6 @@ public class TaskBar
 		menuItemTOactionListener.put(curListener, curMenuItem);
 		curMenuItem.addActionListener(curListener);
 		smallChat.add(menuItemArrays.get(i));
-		System.out.println("small chat adding to " +i);
 	}
 }
 

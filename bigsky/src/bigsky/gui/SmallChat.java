@@ -1,9 +1,6 @@
 package bigsky.gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GraphicsDevice;
@@ -25,28 +22,22 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 
 import bigsky.Contact;
 import bigsky.Global;
 import bigsky.TaskBar;
 import bigsky.TextMessage;
-import bigsky.messaging.TextMessageManager;
+import bigsky.messaging.RequestManager;
 
 import java.awt.Toolkit;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class SmallChat  {
 
 	private JFrame frmBluetext;
 	public final JTextField textField = new JTextField();
-	private JButton btnName;
-	private JButton btnNewButton;
 	private ArrayList<TextMessage> myTextHistory = new ArrayList<TextMessage>();
-	
 	
 	private JButton send;
 	private JScrollPane scrollPane;
@@ -128,8 +119,6 @@ public class SmallChat  {
 		textPane = new JTextPane();
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 12));
 		textPane.setEditable(false);
-		//textPane.setAutoscrolls(true);
-
 		
 		scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(0, 24, 230, 264);
@@ -187,14 +176,11 @@ public class SmallChat  {
 		defaultSettings = new JMenuItem("Default Settings");
 		settings.add(defaultSettings);
 		
-		
 		checkButtons();
 		
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				sent = new TextMessage(me, you, textField.getText());
-
 				try {			
 					updateConv(sent);
 				} catch (BadLocationException e1) {
@@ -262,10 +248,8 @@ public class SmallChat  {
 			public void actionPerformed(ActionEvent e) {
 				defaultSettings();
 				updateSmallChatFontSize();
-
 				}
 		});
-	
 	}
 	
 	/**
@@ -277,24 +261,23 @@ public class SmallChat  {
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
 		} catch (Exception e) {
-			System.out.println("file load problem.");
+			System.err.println("file load problem.");
+		}
+			
+		if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
+			notificationON.setSelected(true);
+		}
+		else if(prop.getProperty(Global.NOTIFICATION).equals(Global.OFF)){
+			notificationOFF.setSelected(true);
 		}
 		
-			
-			if(prop.getProperty(Global.NOTIFICATION).equals(Global.ON)){
-				notificationON.setSelected(true);
-			}
-			else if(prop.getProperty(Global.NOTIFICATION).equals(Global.OFF)){
-				notificationOFF.setSelected(true);
-			}
-			
-			if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
-				messagePreviewON.setSelected(true);
-			}
-			else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
-				messagePreviewOFF.setSelected(true);
-			}
+		if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.ON)){
+			messagePreviewON.setSelected(true);
 		}
+		else if(prop.getProperty(Global.MESSAGEPREVIEW).equals(Global.OFF)){
+			messagePreviewOFF.setSelected(true);
+		}
+	}
 	
 	/**
 	 * Allows user to reset the settings of the specified window to that of manufacturers
@@ -305,7 +288,7 @@ public class SmallChat  {
 		try {
 			prop.load(new FileInputStream(Global.username +".properties"));
 		} catch (Exception e) {
-			System.out.println("file load problem.");
+			System.err.println("file load problem.");
 		}
 		
 		prop.setProperty("save", Global.OFF);
@@ -317,11 +300,9 @@ public class SmallChat  {
 			prop.store(new FileOutputStream(Global.username + ".properties"), null);
 		}
 		catch(Exception e1){
-			System.out.println("Problem saving default settings in small chat");
-			
+			System.err.println("Problem saving default settings in small chat");
 		}
 		textPane.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.conversationFontSize))));
-
 	}
 	
 	/**
@@ -348,11 +329,11 @@ public class SmallChat  {
 			you.setSecondPhone("");
 			text.setReceiver(you);
 			
-			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
+			if(!TaskBar.doNotSend && RequestManager.sendTexts){
 				TaskBar.outGoingInSmall.add(text);
 			}
 			
-			if(TaskBar.outGoingInSmall.size() != 0 && TextMessageManager.sendTexts){
+			if(TaskBar.outGoingInSmall.size() != 0 && RequestManager.sendTexts){
 				for(int i = 0; i < Conversation.currentConvs.size();i++){
 					if(TaskBar.outGoingInSmall.get(0).getReceiver().getPhoneNumber().equalsIgnoreCase(Conversation.currentConvs.get(i).getPhoneNumber())){
 						TaskBar.doNotSend = true;
@@ -367,7 +348,7 @@ public class SmallChat  {
 						break;
 					}
 				}
-				if(check == false && TextMessageManager.sendTexts){
+				if(check == false && RequestManager.sendTexts){
 					TaskBar.doNotSend = true;
 					
 					JTextPane textPane = new JTextPane();
@@ -389,7 +370,7 @@ public class SmallChat  {
 				}
 			}
 
-			if(!TaskBar.doNotSend && TextMessageManager.sendTexts){
+			if(!TaskBar.doNotSend && RequestManager.sendTexts){
 				TaskBar.messageHost.sendObject(text);
 			}
 
@@ -400,18 +381,17 @@ public class SmallChat  {
 			textPane.getDocument().insertString(offset, person1 + text.getContent() + "\n\n", null);
 			offset += (person1 + text.getContent() + "\n\n").length();
 		}
+		
 		//attempt to scroll on creation
 		textPane.setAutoscrolls(true);
 		scrollPane.scrollRectToVisible(new Rectangle(0,textPane.getBounds(null).height,1,1));
-		
 	}
 	
 	/**
 	 * returns the user as Contact object
 	 * @return user contact
 	 */
-	public Contact getLocalContact()
-	{
+	public Contact getLocalContact(){
 		return me;
 	}
 	
@@ -507,5 +487,4 @@ public class SmallChat  {
 			TaskBar.smallChatWindows.get(i).getTextPane().setFont(new Font("Franklin Gothic Medium", Font.PLAIN, Integer.valueOf(TaskBar.savedInfo(Global.smallChatFontSize))));
 		}
 	}
-	
 }

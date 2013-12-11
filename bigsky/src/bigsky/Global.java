@@ -16,12 +16,14 @@ import javax.swing.JTabbedPane;
  * @author Travis Reed, Jonathan Mielke, Andrew Hartman
  *
  */
+@SuppressWarnings("rawtypes")
 public class Global {
 	//These are used by the contactList or contact search is one way or another
 	public static ArrayList<Contact> contactAList = new ArrayList<Contact>();
 	public static DefaultListModel listModel = new DefaultListModel();
 	public static JTabbedPane conversationPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 	public static JLabel contactThumbnail = new JLabel("");
+	@SuppressWarnings("unchecked")
 	public static JList list = new JList(listModel);
 	public static JMenuItem batteryIndicator = new JMenu();
 	public static  Integer battery_remaining = 100;
