@@ -64,7 +64,7 @@ public class RequestManager extends Thread
                 	TaskBar.smallChatWindows.get(smallChatNum).receivedText(Global.phoneTextHistory.get(Global.phoneTextHistory.size()-1));
                 } catch (BadLocationException e) {
                 	e.printStackTrace();
-                    System.out.println("Updating in chat history -FAILED");
+                    System.err.println("Updating in chat history -FAILED");
                 }
                         
                 Global.phoneTextHistory.remove(Global.phoneTextHistory.size()-1);
@@ -85,7 +85,7 @@ public class RequestManager extends Thread
             			TaskBar.smallChatWindows.get(i).receivedText(TaskBar.myTextArray.get(0));
             		} catch (BadLocationException e) {
             			e.printStackTrace();
-            			System.out.println("Updating a small chat conversation -FAILED");
+            			System.err.println("Updating a small chat conversation -FAILED");
             		}
             		TaskBar.myTextArray.remove(0);
             		matchR = true;
@@ -174,7 +174,6 @@ public class RequestManager extends Thread
 			
 			if(REQUEST.BATTERY_PERCENTAGE == req)
 			{
-				System.out.println("Updating battery percentage to: " + resp.getBatteryLevel());
 				Conversation.updateBatteryIndicator(resp.getBatteryLevel());
 			}
 			else if(REQUEST.CONTACT_CHAT_HISTORY == req){
