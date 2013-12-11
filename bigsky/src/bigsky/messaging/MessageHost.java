@@ -24,13 +24,12 @@ import bigsky.gui.LoadScreen;
  * 
  * @author Andy Guibert
  */
-class ClientConn implements Runnable {
-	
-	
+class ReadThread implements Runnable 
+{
 	Thread t;
 	Socket client = null;
 
-	ClientConn(Socket client) {
+	ReadThread(Socket client) {
 		this.client = client;
 		t = new Thread(this);
 		t.start();
@@ -70,13 +69,14 @@ class ClientConn implements Runnable {
 					}
 				}
 				else{
-					System.out.println("ERROR: Unknown object sent through stream");
+					System.err.println("ERROR: Unknown object sent through stream");
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("MessageHost's ClientConn is now closing");
-			if(TaskBar.messageHost != null)
+			System.err.println("MessageHost's ClientConn is now closing");
+			if(TaskBar.messageHost != null){
 				TaskBar.messageHost.closeHost(true);
+			}
 		}
 	}
 }
@@ -91,7 +91,7 @@ class ClientConn implements Runnable {
  */
 public class MessageHost extends Thread{
 	
-	public ClientConn conn = null;
+	public ReadThread conn = null;
 	private ObjectOutputStream ps2 = null;
 	private ServerSocket socket = null;
 	private boolean alreadyCleaningUp = false;
@@ -100,22 +100,27 @@ public class MessageHost extends Thread{
 		
 		LoadScreen load = new LoadScreen();
 		try{
-			
+			// Establish socket and connection with PC
 			socket = new ServerSocket(1300);
 			load.setVisible(true);
 			Socket client = socket.accept();
-			conn = new ClientConn(client);
+			
+			// Start thread to read information sent by phone
+			conn = new ReadThread(client);
+			
+			// Close splash screen and create main window
 			load.dispose();
 			TaskBar.convo = new Conversation();
 			TaskBar.convo.getFrmBluetext().setVisible(true);
+			
+			// Establish output stream
 			ps2 = new ObjectOutputStream(client.getOutputStream());
 			
 			// Send initial request for phone battery percentage
 			sendObject(new BlueTextRequest(REQUEST.BATTERY_PERCENTAGE, null));
-			
 		} catch(Exception e){
-			System.out.println("Caught exception while setting up MessageHost" + e.getMessage());
-			TaskBar.logout();
+			e.printStackTrace();
+			System.err.println("Caught exception while setting up MessageHost" + e.getMessage());
 			closeHost(true);
 		}
 	}
@@ -130,8 +135,9 @@ public class MessageHost extends Thread{
 	 */
 	public void closeHost(boolean callLogout){
 		
-		if(alreadyCleaningUp)
+		if(alreadyCleaningUp){
 			return;
+		}
 		
 		alreadyCleaningUp = true;
 		
@@ -158,11 +164,12 @@ public class MessageHost extends Thread{
 		}
 		TaskBar.messageHost = null;
 		
-		TextMessageManager.yield();
+		RequestManager.yield();
 		TaskBar.textManager = null;
 		
-		if(callLogout)
+		if(callLogout){
 			TaskBar.logout();
+		}
 	}
 	
 	/**
@@ -173,9 +180,11 @@ public class MessageHost extends Thread{
 	{
 		try{
 			ps2.writeObject(o);
+			// Always remember to flush
 			ps2.flush();
 		} catch(Exception e){
-			System.out.println("Got exception in MessageHost.sendObject(): " + e.getMessage());
+			e.printStackTrace();
+			System.err.println("Got exception in MessageHost.sendObject(): " + e.getMessage());
 		}
 	}
 }
