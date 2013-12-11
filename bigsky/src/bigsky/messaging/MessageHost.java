@@ -73,7 +73,7 @@ class ReadThread implements Runnable
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("MessageHost's ClientConn is now closing");
+			System.out.println("MessageHost's ClientConn is now closing");
 			if(TaskBar.messageHost != null){
 				TaskBar.messageHost.closeHost(true);
 			}
